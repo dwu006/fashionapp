@@ -1,17 +1,21 @@
 import mongoose from "mongoose";
+import dotenv from 'dotenv';
+dotenv.config(); 
 
-if (!process.env.MONGODB_URI) {
+// const uri = process.env;
+// console.log(uri);
+const uri = "mongodb+srv://dwu28:Dwu123@cluster.iqqmw.mongodb.net/?retryWrites=true&w=majority&appName=cluster";
+
+
+if (!uri) {
   throw new Error('Missing API Key: "MONGODB_URI"');
 }
 
-const uri = process.env.MONGODB_URI;
-
-const connectToDb = async () => {
+const db = async () => {
   try {
     if (mongoose.connection.readyState === 1) {
       return mongoose.connection.asPromise();
     }
-
     await mongoose.connect(uri);
     console.log("Connected to MongoDB");
   } catch (error) {
@@ -20,4 +24,4 @@ const connectToDb = async () => {
   }
 };
 
-export default connectToDb;
+export default db;
