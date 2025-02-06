@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 const wardrobeItemSchema = new mongoose.Schema({
   itemName: {
     type: String,
-    required: true
   },
   description: {
     type: String
@@ -13,7 +12,6 @@ const wardrobeItemSchema = new mongoose.Schema({
   },
   imageURL: {
     type: String,
-    required: true
   },
   category: {
     type: String
@@ -23,8 +21,7 @@ const wardrobeItemSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: 'User'
   }
 });
 
