@@ -1,23 +1,9 @@
 import mongoose from 'mongoose';
 
 const wardrobeItemSchema = new mongoose.Schema({
-  itemName: {
-    type: String,
-  },
-  description: {
-    type: String
-  },
-  color: {
-    type: String
-  },
-  imageURL: {
-    type: String,
-  },
-  category: {
-    type: String
-  },
-  style: {
-    type: String
+  image: {
+    data: Buffer,
+    contentType: String
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
