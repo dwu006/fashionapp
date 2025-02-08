@@ -21,16 +21,10 @@ const wardrobeController = {
             });
 
             await wardrobeItem.save();
-            res.status(201).json({ 
-                id: wardrobeItem._id,
-                imageDetails: {
-                    contentType: req.file.mimetype,
-                    size: req.file.size
-                }
-            });
+            res.status(201).send('Upload successful');
         } catch (err) {
             console.error('error', err);
-            res.status(400).json({ error: err.message });
+            res.status(400).send('Upload failed');
         }
     },
 
