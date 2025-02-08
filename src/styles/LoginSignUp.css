@@ -1,0 +1,21 @@
+.box {
+    display: grid;
+    background-color:rgb(220, 220, 220);
+    border: 1px solid black;
+    border-radius: 20px;
+    width: 300px;
+    justify-self:center;
+    justify-items:center;
+}
+
+.input-info {
+    width: 80%;
+    padding: 10px;
+}
+
+.login-btn {
+    width: 100px;
+    color:black;
+    border: 1px solid black;
+    padding: 10px;
+}
