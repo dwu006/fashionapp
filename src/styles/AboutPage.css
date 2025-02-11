@@ -1,0 +1,8 @@
+.about {
+    /* display:flex; */
+    justify-content:space-around;
+}
+
+.split-div {
+    display:flex;
+}
