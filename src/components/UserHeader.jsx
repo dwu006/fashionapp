@@ -6,10 +6,11 @@ import { useState, useRef, useEffect } from "react";
 function UserHeader() {
     const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [username, setUsername] = useState('Profile');
+    const [username, setUsername] = useState(localStorage.getItem('username') || 'Profile');
     const dropdownRef = useRef(null);
 
     useEffect(() => {
+        let isMounted = true;
         // Fetch user profile when component mounts
         const fetchProfile = async () => {
             try {
@@ -19,17 +20,26 @@ function UserHeader() {
                     }
                 });
                 
-                if (response.ok) {
+                if (response.ok && isMounted) {
                     const data = await response.json();
                     // Set username, truncate if longer than 8 characters
-                    setUsername(data.name.length > 8 ? data.name.substring(0, 8) + '...' : data.name);
+                    const displayName = data.name.length > 8 ? data.name.substring(0, 8) + '...' : data.name;
+                    setUsername(displayName);
+                    localStorage.setItem('username', displayName);
                 }
             } catch (error) {
                 console.error('Failed to fetch profile:', error);
             }
         };
 
-        fetchProfile();
+        // Only fetch if we don't have the username in localStorage
+        if (!localStorage.getItem('username')) {
+            fetchProfile();
+        }
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     // Close dropdown when clicking outside
@@ -59,6 +69,7 @@ function UserHeader() {
         }
         if (id === "logout") {
             localStorage.removeItem('token');
+            localStorage.removeItem('username'); // Clear username on logout
             navigate("/");
             setIsDropdownOpen(false);
         }
@@ -105,7 +116,7 @@ function UserHeader() {
                 )}
             </div>
         </div>
-    )
+    );
 }
 
 export default UserHeader;

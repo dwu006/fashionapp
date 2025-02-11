@@ -1,6 +1,7 @@
 import Header from "../components/Header.jsx";
 import UserHeader from "../components/UserHeader.jsx";
 import Footer from "../components/Footer.jsx";
+import PostOutfit from "../components/PostOutfit.jsx";
 import { Navigate } from "react-router-dom";
 
 function OutfitsPage() {
@@ -15,7 +16,7 @@ function OutfitsPage() {
             <UserHeader />
             <div className="content">
                 <h1>My Outfits</h1>
-                {/* Outfit content will go here */}
+                <PostOutfit />
             </div>
             <Footer />
         </div>
