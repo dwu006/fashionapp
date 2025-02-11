@@ -15,12 +15,15 @@ function Header() {
         if (id === "login") {
             navigate("/login");
         }
+        if (id === "wardrobe") {
+            navigate("/wardrobe");
+        }
     }
 
     return (
         <>
             <div className="menu header">
-                <h1 style={{ margin: '0px' }}>fitchck</h1>
+                <h1 style={{ margin: '0px' }}><a href="./" style={{ color: "inherit"}}>fitchck</a></h1>
                 <div style={{ margin: 'auto' }}>
                     <button className="button" id="home" onClick={() => handleClick("home")}>Home</button>
                     <button className="button" id="wardrobe" onClick={() => handleClick("wardrobe")}>Wardrobe</button>

@@ -1,23 +1,50 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { useState } from "react";
 import "../styles/LoginSignUp.css";
-
 
 function LoginPage() {
     const navigate = useNavigate();
-    function handleClick() {
-        navigate("/");
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    async function handleLogin() {
+        try {
+            const response = await fetch('http://localhost:5000/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({email, password})
+            });
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Store the token in localStorage
+                localStorage.setItem('token', data.token);
+                // Navigate to wardrobe page on successful login
+                navigate("/wardrobe");
+            } else {
+                // Handle login error
+                alert(data.message || 'Login failed. Please check your credentials.');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('An error occurred during login. Please try again.');
+        }
     }
+
     return (
         <div className="page">
-        <h1>fitchck</h1>
+        <h1><Link to="/" style={{ color: "inherit"}}>fitchck</Link></h1>
         <div className="box">
             <h1>Login</h1>
-            <input className="input-info" type="text" id="email"/>
-            <input className="input-info" type="password" id="password"/>
-            <button className="button login-btn" onClick={handleClick}>Login</button>
-            <p>Don't have an account? <a href="./signup">Register</a></p>
+            <input className="input-info" type="text" id="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}/> <br />
+            <input className="input-info" type="password" id="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/> <br />
+            <button className="button login-btn" onClick={handleLogin}>Login</button>
+            <p>Don't have an account? <Link to="/signup">Register</Link></p>
         </div>
-        <p>©2024 Fitchck All Rights Reserved</p>
+        <p>©2025 Fitchck All Rights Reserved</p>
         </div>
     )
 }
