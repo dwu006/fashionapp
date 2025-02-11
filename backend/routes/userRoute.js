@@ -7,6 +7,7 @@ const userRouter = express.Router();
 // Public routes
 userRouter.post('/register', userController.createUser);
 userRouter.post('/login', userController.loginUser);
+userRouter.post('/logout', userController.logoutUser);
 
 // Protected routes
 userRouter.get('/profile', protect, userController.getProfile);
