@@ -133,6 +133,17 @@ const userController = {
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
+    },
+
+    // Logout user
+    logoutUser: async (req, res) => {
+        try {
+            // In a real-world scenario, you might want to invalidate the token on the server-side
+            // For now, we'll handle logout on the client-side by removing the token
+            res.status(200).json({ message: 'Logged out successfully' });
+        } catch (error) {
+            res.status(500).json({ message: 'Error during logout', error: error.message });
+        }
     }
 };
 

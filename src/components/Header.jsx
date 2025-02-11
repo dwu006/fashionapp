@@ -2,8 +2,8 @@ import "../styles/HeaderFooter.css";
 import { useNavigate } from "react-router-dom";
 
 function Header() {
-
     const navigate = useNavigate();
+    const isAuthenticated = localStorage.getItem('token');
 
     function handleClick(id) {
         if (id === "home") {
@@ -16,7 +16,15 @@ function Header() {
             navigate("/login");
         }
         if (id === "wardrobe") {
-            navigate("/wardrobe");
+            if (isAuthenticated) {
+                navigate("/wardrobe");
+            } else {
+                navigate("/login");
+            }
+        }
+        if (id === "logout") {
+            localStorage.removeItem('token');
+            navigate("/");
         }
     }
 
@@ -31,7 +39,11 @@ function Header() {
                     <button className="button" id="feed" onClick={() => handleClick("feed")}>Feed</button>
                     <button className="button" id="about" onClick={() => handleClick("about")}>About</button>
                 </div>
-                <button className="button login" onClick={() => handleClick("login")}>Login</button>
+                {isAuthenticated ? (
+                    <button className="button login" onClick={() => handleClick("logout")}>Logout</button>
+                ) : (
+                    <button className="button login" onClick={() => handleClick("login")}>Login</button>
+                )}
             </div>
         </>
     )

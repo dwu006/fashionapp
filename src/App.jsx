@@ -5,6 +5,7 @@ import AboutPage from "./pages/AboutPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import WardrobePage from "./pages/WardrobePage.jsx";
+import UpdateProfilePage from "./pages/UpdateProfilePage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -20,6 +21,14 @@ function App() {
           element={
             <ProtectedRoute>
               <WardrobePage />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/update-profile" 
+          element={
+            <ProtectedRoute>
+              <UpdateProfilePage />
             </ProtectedRoute>
           } 
         />
