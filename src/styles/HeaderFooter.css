@@ -1,0 +1,42 @@
+.menu {
+    display: flex;
+    background-color: rgb(53, 53, 53);
+    color: white;
+    width: 100%;
+    left: 0;
+    place-content: space-between;
+    margin: auto;
+    padding: 10px;
+  }
+  
+  .header {
+    top: 0;
+  }
+  
+  .footer {
+    bottom: 0;
+    position: absolute;
+  }
+  
+  .button {
+    background-color: transparent;
+    color:grey;
+    transition: .5s;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 5px 10px;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  
+  .button:hover, :focus {
+    background-color:rgb(93, 93, 93);
+    color:white;
+  }
+  
+  .login {
+    border-radius: 30px;
+    width: 150px;
+  }
