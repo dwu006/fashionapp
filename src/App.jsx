@@ -17,6 +17,9 @@ function App() {
         <Route path="/about" element={<AboutPage/>} />
       </Routes>
     </BrowserRouter>
+
+        <UploadClothes />
+
   )
 }
 

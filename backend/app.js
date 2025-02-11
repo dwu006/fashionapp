@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
-import userRoutes from './routes/userRoute.js';
-import wardrobeRoutes from './routes/wardrobeRoute.js'
+import userRouter from './routes/userRoute.js';
+import wardrobeRouter from './routes/wardrobeRoute.js';
 import { fileURLToPath } from 'url';
 // import dotenv from 'dotenv';
 
@@ -17,14 +17,17 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Enable CORS for frontend connections
+// connect to frontend
 app.use(cors());
+// app.use(cors({
+//   origin: 'http://localhost:5173',
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   allowedHeaders: ['Content-Type']
+// }));
 
-// Connection to frontend
 app.use(express.static(path.join(__dirname, '../src')));
 
-// API Routes: Adjust the route prefixes as needed
-app.use('/api/users', userRoutes);
-app.use('/api/wardrobe', wardrobeRoutes);
+app.use('/users', userRouter);
+app.use('/wardrobe', wardrobeRouter);
 
 export default app;

@@ -6,9 +6,9 @@ const port = process.env.PORT || 5000;
 
 // Create HTTP server
 const server = http.createServer(app);
+//test mongodb connection then start server
 db()
 .then(() => {
-    // Start server
     server.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });
@@ -17,4 +17,3 @@ db()
     console.error('Server encountered an error:', error);
   });
 })
-

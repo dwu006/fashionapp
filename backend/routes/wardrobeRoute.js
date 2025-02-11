@@ -1,20 +1,22 @@
 import express from 'express';
 import wardrobeController from '../controllers/wardrobeController.js';
+import upload from '../middleware/upload.js';
 
-const router = express.Router();
-// CREATE: Add a new wardrobe item
-router.post('/', wardrobeController.createWardrobeItem);
+const wardrobeRouter = express.Router();
 
-// READ: Get all wardrobe items (optionally filter by query, e.g., ?user=USER_ID)
-router.get('/', wardrobeController.getAllWardrobeItems);
+// CREATE: Add a new wardrobe item with image
+wardrobeRouter.post('/', upload.single('image'), wardrobeController.createWardrobeItem);
+
+// READ: Get all wardrobe items (
+wardrobeRouter.get('/', wardrobeController.getAllWardrobeItems);
 
 // READ: Get a specific wardrobe item by ID
-router.get('/:id', wardrobeController.getWardrobeItemById);
+wardrobeRouter.get('/:id', wardrobeController.getWardrobeItemById);
 
 // UPDATE: Update a wardrobe item by ID
-router.put('/:id', wardrobeController.updateWardrobeItem);
+wardrobeRouter.put('/:id', upload.single('image'), wardrobeController.updateWardrobeItem);
 
 // DELETE: Remove a wardrobe item by ID
-router.delete('/:id', wardrobeController.deleteWardrobeItem);
+wardrobeRouter.delete('/:id', wardrobeController.deleteWardrobeItem);
 
-export default router;
+export default wardrobeRouter;
