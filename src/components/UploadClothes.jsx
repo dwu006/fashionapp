@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 //connect to backend server
@@ -10,6 +10,29 @@ const UploadClothes = () => {
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    // Fetch user profile to get user ID when component mounts
+    const fetchUserId = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/users/profile', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setUserId(data._id);
+        }
+      } catch (error) {
+        console.error('Error fetching user ID:', error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
 
   // Handle image upload
   const handleImageUpload = (e) => {
@@ -46,24 +69,35 @@ const UploadClothes = () => {
       return;
     }
 
+    if (!userId) {
+      alert("Please log in to upload clothes");
+      return;
+    }
+
     try {
       setLoading(true);
       const formData = new FormData();
-      formData.append("image", file);
+      formData.append('image', file);
+      formData.append('userId', userId); // Add user ID to the form data
 
-      const response = await axios2.post("/wardrobe", formData, {
+      const config = {
         headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      };
 
-      if (response.status === 201) {
+      const response = await axios2.post('/wardrobe/upload', formData, config);
+
+      if (response.status === 200) {
+        alert('Image uploaded successfully');
+        // Clear form
         setImage(null);
         setFile(null);
       }
     } catch (error) {
-      console.error("Error uploading image:", error);
-      alert("Failed");
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image');
     } finally {
       setLoading(false);
     }

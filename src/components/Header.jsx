@@ -22,6 +22,20 @@ function Header() {
                 navigate("/login");
             }
         }
+        if (id === "outfits") {
+            if (isAuthenticated) {
+                navigate("/outfits");
+            } else {
+                navigate("/login");
+            }
+        }
+        if (id === "feed") {
+            if (isAuthenticated) {
+                navigate("/feed");
+            } else {
+                navigate("/login");
+            }
+        }
         if (id === "logout") {
             localStorage.removeItem('token');
             navigate("/");
