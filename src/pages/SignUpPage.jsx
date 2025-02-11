@@ -45,7 +45,7 @@ function SignUpPage() {
             <button className="button" onClick={handleSignUp}>Sign Up</button>
             <p>Already have an account? <Link to="/login">Login</Link></p>
         </div>
-        <p>2025 Fitchck All Rights Reserved</p>
+        <p>©2025 Fitchck All Rights Reserved</p>
         </div>
     )
 }

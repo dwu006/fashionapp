@@ -13,25 +13,33 @@ const wardrobeController = {
                     error: 'no image uploaded'
                 });
             }
+
+            // Get user ID from the authenticated request
+            const userId = req.user._id;
+
             const wardrobeItem = new WardrobeItem({
                 image: {
                     data: req.file.buffer,
                     contentType: req.file.mimetype
-                }
+                },
+                user: userId // Add the user ID to the wardrobe item
             });
 
             await wardrobeItem.save();
-            res.status(201).send('Upload successful');
+            res.status(200).json({ message: 'Upload successful' });
         } catch (err) {
             console.error('error', err);
-            res.status(400).send('Upload failed');
+            res.status(400).json({ error: 'Upload failed' });
         }
     },
 
     getAllWardrobeItems: async (req, res) => {
         try {
-            const filter = req.query.user ? { user: req.query.user } : {};
-            const items = await WardrobeItem.find(filter);
+            // Get user ID from the authenticated request
+            const userId = req.user._id;
+            
+            // Only return items for the current user
+            const items = await WardrobeItem.find({ user: userId });
             res.status(200).json(items);
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -41,32 +49,59 @@ const wardrobeController = {
     getWardrobeItemById: async (req, res) => {
         try {
             const item = await WardrobeItem.findById(req.params.id);
-            if (!item) return res.status(404).json({ error: 'not found' });
+            if (!item) {
+                return res.status(404).json({ error: 'Item not found' });
+            }
+
+            // Check if the item belongs to the current user
+            if (item.user.toString() !== req.user._id.toString()) {
+                return res.status(403).json({ error: 'Not authorized to view this item' });
+            }
+
             res.status(200).json(item);
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
     },
 
-    updateWardrobeItem: async (req, res) => {  
+    updateWardrobeItem: async (req, res) => {
         try {
+            const item = await WardrobeItem.findById(req.params.id);
+            if (!item) {
+                return res.status(404).json({ error: 'Item not found' });
+            }
+
+            // Check if the item belongs to the current user
+            if (item.user.toString() !== req.user._id.toString()) {
+                return res.status(403).json({ error: 'Not authorized to update this item' });
+            }
+
             const updatedItem = await WardrobeItem.findByIdAndUpdate(
                 req.params.id,
                 req.body,
                 { new: true }
             );
-            if (!updatedItem) return res.status(404).json({ error: 'not found' });
+
             res.status(200).json(updatedItem);
         } catch (err) {
-            res.status(400).json({ error: err.message });
+            res.status(500).json({ error: err.message });
         }
     },
 
     deleteWardrobeItem: async (req, res) => {
         try {
-            const deletedItem = await WardrobeItem.findByIdAndDelete(req.params.id);
-            if (!deletedItem) return res.status(404).json({ error: 'not found' });
-            res.status(200).json({ message: 'Ideleted' });
+            const item = await WardrobeItem.findById(req.params.id);
+            if (!item) {
+                return res.status(404).json({ error: 'Item not found' });
+            }
+
+            // Check if the item belongs to the current user
+            if (item.user.toString() !== req.user._id.toString()) {
+                return res.status(403).json({ error: 'Not authorized to delete this item' });
+            }
+
+            await WardrobeItem.findByIdAndDelete(req.params.id);
+            res.status(200).json({ message: 'Item deleted successfully' });
         } catch (err) {
             res.status(500).json({ error: err.message });
         }

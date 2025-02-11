@@ -62,6 +62,12 @@ function UserHeader() {
             navigate("/");
             setIsDropdownOpen(false);
         }
+        if (id === "feed") {
+            navigate("/feed");
+        }
+        if (id === "outfits") {
+            navigate("/outfits");
+        }
     }
 
     return (

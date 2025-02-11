@@ -5,6 +5,9 @@ const wardrobeItemSchema = new mongoose.Schema({
     data: Buffer,
     contentType: String
   },
+  category: {
+    type: String
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

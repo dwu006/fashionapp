@@ -1,20 +1,28 @@
 import express from 'express';
+import multer from 'multer';
 import wardrobeController from '../controllers/wardrobeController.js';
-import upload from '../middleware/upload.js';
+import { protect } from '../middleware/auth.js';
 
 const wardrobeRouter = express.Router();
 
-// CREATE: Add a new wardrobe item with image
-wardrobeRouter.post('/', upload.single('image'), wardrobeController.createWardrobeItem);
+// Configure multer for memory storage
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-// READ: Get all wardrobe items (
+// All routes are protected and require authentication
+wardrobeRouter.use(protect);
+
+// CREATE: Add a new wardrobe item with image
+wardrobeRouter.post('/upload', upload.single('image'), wardrobeController.createWardrobeItem);
+
+// READ: Get all wardrobe items
 wardrobeRouter.get('/', wardrobeController.getAllWardrobeItems);
 
 // READ: Get a specific wardrobe item by ID
 wardrobeRouter.get('/:id', wardrobeController.getWardrobeItemById);
 
 // UPDATE: Update a wardrobe item by ID
-wardrobeRouter.put('/:id', upload.single('image'), wardrobeController.updateWardrobeItem);
+wardrobeRouter.put('/:id', wardrobeController.updateWardrobeItem);
 
 // DELETE: Remove a wardrobe item by ID
 wardrobeRouter.delete('/:id', wardrobeController.deleteWardrobeItem);
