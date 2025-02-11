@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import userRouter from './routes/userRoute.js';
 import wardrobeRouter from './routes/wardrobeRoute.js';
+import outfitRouter from './routes/outfitRoute.js';
 import { fileURLToPath } from 'url';
 import http from 'http';
 import db from './config/db.js';
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, '../src')));
 
 app.use('/users', userRouter);
 app.use('/wardrobe', wardrobeRouter);
+app.use('/outfits', outfitRouter);
 
 
 const port = process.env.PORT || 5000;
@@ -47,4 +49,3 @@ db()
     console.error('Server encountered an error:', error);
   });
 })
-
