@@ -1,0 +1,22 @@
+/* Common page layout styles */
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #1a1a1a;
+}
+
+.page .content {
+    flex: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.page .menu.footer {
+    margin-top: auto;
+    width: 100%;
+}
