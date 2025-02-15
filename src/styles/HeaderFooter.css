@@ -7,17 +7,17 @@
     place-content: space-between;
     margin: auto;
     padding: 10px;
-  }
+}
   
-  .header {
+.header {
     top: 0;
-  }
+}
   
-  .footer {
+.footer {
     bottom: 0;
-  }
+}
   
-  .button {
+.button {
     background-color: transparent;
     color:grey;
     transition: .5s;
@@ -28,14 +28,14 @@
     font-weight: 500;
     font-family: inherit;
     cursor: pointer;
-  }
+}
   
-  .button:hover, :focus {
+.button:hover, :focus {
     background-color:rgb(93, 93, 93);
     color:white;
-  }
+}
   
-  .login {
+.login {
     border-radius: 30px;
     width: 150px;
-  }
+}

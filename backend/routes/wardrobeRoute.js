@@ -1,7 +1,7 @@
 import express from 'express';
-import wardrobeController from '../controllers/wardrobeController.js';
 import multer from 'multer';
-import protect from 'protect';
+import wardrobeController from '../controllers/wardrobeController.js';
+import { protect } from '../middleware/auth.js';
 
 const wardrobeRouter = express.Router();
 const storage = multer.memoryStorage();
