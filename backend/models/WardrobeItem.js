@@ -6,11 +6,14 @@ const wardrobeItemSchema = new mongoose.Schema({
     contentType: String
   },
   category: {
-    type: String
+    type: String,
+    required: true,
+    enum: ['top', 'bottom', 'outerwear', 'accessories', 'other']
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   }
 });
 

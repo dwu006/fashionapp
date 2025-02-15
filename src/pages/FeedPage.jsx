@@ -2,6 +2,7 @@ import Header from "../components/Header.jsx";
 import UserHeader from "../components/UserHeader.jsx";
 import Footer from "../components/Footer.jsx";
 import { Navigate } from "react-router-dom";
+import "../styles/PageLayout.css";
 
 function FeedPage() {
     const isAuthenticated = localStorage.getItem('token');
