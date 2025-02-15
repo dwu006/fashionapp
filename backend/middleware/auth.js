@@ -3,12 +3,14 @@ import User from '../models/User.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'; 
 
+// creates token for each user like sessions
 export const generateToken = (userId) => {
   return jwt.sign({ id: userId }, JWT_SECRET, {
     expiresIn: '30d',
   });
 };
 
+// makes sure only users that are login in can access certain pages
 export const protect = async (req, res, next) => {
   let token;
 

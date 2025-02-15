@@ -4,8 +4,6 @@ import outfitController from '../controllers/outfitController.js';
 import { protect } from '../middleware/auth.js';
 
 const outfitRouter = express.Router();
-
-// Configure multer for memory storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -18,11 +16,7 @@ outfitRouter.get('/', outfitController.getAllOutfits);
 outfitRouter.get('/:id', outfitController.getOutfitById);
 outfitRouter.put('/:id', upload.single('image'), outfitController.updateOutfit);
 outfitRouter.delete('/:id', outfitController.deleteOutfit);
-
-// Visibility toggle
 outfitRouter.post('/:id/toggle-visibility', outfitController.toggleVisibility);
-
-// Social features
 outfitRouter.post('/:id/like', outfitController.toggleLike);
 outfitRouter.post('/:id/comment', outfitController.addComment);
 
