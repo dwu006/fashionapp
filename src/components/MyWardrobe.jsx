@@ -97,9 +97,7 @@ const MyWardrobe = () => {
       
       // Refresh wardrobe items
       await fetchWardrobeItems();
-      
-      // Show success message
-      // alert('Item deleted successfully');
+
     } catch (error) {
       console.error('Error deleting item:', error);
       alert(error.response?.data?.error || 'Failed to delete item. Please try again.');

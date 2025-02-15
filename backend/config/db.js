@@ -4,6 +4,7 @@ dotenv.config();
 
 // const uri = process.env;
 // console.log(uri);
+// note: process.env didnt work for me idk why will figure out eventually
 const uri = "mongodb+srv://dwu28:Dwu123@cluster.iqqmw.mongodb.net/?retryWrites=true&w=majority&appName=cluster";
 
 
