@@ -97,7 +97,7 @@ const UploadClothes = () => {
         onMouseOver={(e) => e.target.style.backgroundColor = '#45a049'}
         onMouseOut={(e) => e.target.style.backgroundColor = '#4CAF50'}
       >
-        Upload Clothes
+        Upload Clothing
       </label>
 
       {image && (

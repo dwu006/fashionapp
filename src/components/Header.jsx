@@ -9,6 +9,15 @@ function Header() {
         if (id === "home") {
             navigate("/");
         }
+        if (id === "wardrobe") {
+            navigate("/wardrobe");
+        }
+        if (id === "outfits") {
+            navigate("/outfits");
+        }
+        if (id === "feed") {
+            navigate("/feed");
+        }
         if (id === "about") {
             navigate("/about");
         }
