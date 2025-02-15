@@ -1,21 +1,19 @@
 import express from 'express';
 import userController from '../controllers/userController.js';
+import { protect } from '../middleware/auth.js';
 
 const userRouter = express.Router();
 
-// CREATE: Add a new user
-userRouter.post('/', userController.createUser);
+// Public routes
+userRouter.post('/register', userController.createUser);
+userRouter.post('/login', userController.loginUser);
+userRouter.post('/logout', userController.logoutUser);
 
-// READ: Get all users
-userRouter.get('/', userController.getAllUsers);
-
-// READ: Get a specific user by ID
-userRouter.get('/:id', userController.getUserById);
-
-// UPDATE: Update a user by ID
-userRouter.put('/:id', userController.updateUser);
-
-// DELETE: Remove a user by ID
-userRouter.delete('/:id', userController.deleteUser);
+// Protected routes
+userRouter.get('/profile', protect, userController.getProfile);
+userRouter.get('/', protect, userController.getAllUsers);
+userRouter.get('/:id', protect, userController.getUserById);
+userRouter.put('/:id', protect, userController.updateUser);
+userRouter.delete('/:id', protect, userController.deleteUser);
 
 export default userRouter;

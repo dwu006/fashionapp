@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate } from "react-router-dom";
 import axios from 'axios';
+import Header from "../components/Header.jsx";
 import UserHeader from "../components/UserHeader.jsx";
 import Footer from "../components/Footer.jsx";
 import PostOutfit from "../components/PostOutfit.jsx";
-import "../styles/PostOutfit.css";
+import "../styles/PageLayout.css";
 
 function OutfitsPage() {
     const [outfits, setOutfits] = useState([]);
@@ -42,7 +43,7 @@ function OutfitsPage() {
 
     return (
         <div className="page outfits">
-            <UserHeader />
+            {isAuthenticated ? <UserHeader /> : <Header />}
             <div className="content">
                 <h1>My Outfits</h1>
                 <PostOutfit onOutfitPosted={handleOutfitPosted} />

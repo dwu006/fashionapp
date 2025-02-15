@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 //connect to backend server
@@ -10,6 +10,30 @@ const UploadClothes = () => {
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  useEffect(() => {
+    // Fetch user profile to get user ID when component mounts
+    const fetchUserId = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/users/profile', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setUserId(data._id);
+        }
+      } catch (error) {
+        console.error('Error fetching user ID:', error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
 
   // Handle image upload
   const handleImageUpload = (e) => {
@@ -46,24 +70,44 @@ const UploadClothes = () => {
       return;
     }
 
+    if (!selectedCategory) {
+      alert("Please select a category for your item");
+      return;
+    }
+
+    if (!userId) {
+      alert("Please log in to upload clothes");
+      return;
+    }
+
     try {
       setLoading(true);
+      
+      // Create form data with both image and category
       const formData = new FormData();
-      formData.append("image", file);
+      formData.append('image', file);
+      formData.append('category', selectedCategory);  
 
-      const response = await axios2.post("/wardrobe", formData, {
+      const config = {
         headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      };
 
-      if (response.status === 201) {
+      console.log('Uploading with category:', selectedCategory);
+
+      // Send data to backend
+      const response = await axios2.post('/wardrobe/upload', formData, config);
+
+      if (response.status === 200) {
         setImage(null);
         setFile(null);
+        setSelectedCategory(null);
       }
     } catch (error) {
-      console.error("Error uploading image:", error);
-      alert("Failed");
+      console.error('Error uploading image:', error);
+      console.error('Error details:', error.response?.data);
+      alert('Failed to upload image: ' + (error.response?.data?.error || error.message));
     } finally {
       setLoading(false);
     }
@@ -109,6 +153,7 @@ const UploadClothes = () => {
           width: '100%',
           maxWidth: '300px'
         }}>
+<<<<<<< HEAD
         <div className="image-preview" style={{ 
           marginTop: '20px',
           display: 'flex',
@@ -118,21 +163,56 @@ const UploadClothes = () => {
           maxWidth: '300px'
         }}>
           <h3>Preview</h3>
+=======
+>>>>>>> 28db1a7
           <img 
             src={image} 
             alt="Clothes" 
             style={{ 
               width: "100%", 
               maxWidth: "200px", 
+              marginBottom: '20px',
               borderRadius: '8px',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-              marginBottom: '20px'
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
             }} 
           />
+
+          {/* Category Selection Buttons */}
+          <div style={{
+            display: 'flex',
+            gap: '10px',
+            marginBottom: '20px',
+            justifyContent: 'center',
+            width: '100%',
+            maxWidth: '600px'
+          }}>
+            {['top', 'bottom', 'outerwear', 'accessories', 'other'].map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(prev => prev === category ? null : category)}
+                style={{
+                  padding: '8px 12px',
+                  backgroundColor: selectedCategory === category ? '#4CAF50' : '#f0f0f0',
+                  color: selectedCategory === category ? 'white' : 'black',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  textTransform: 'capitalize',
+                  transition: 'all 0.3s',
+                  flex: '1',
+                  minWidth: 'fit-content',
+                  fontSize: '0.9rem'
+                }}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
           <button 
             onClick={handleSubmit}
-            disabled={loading}
-            style={{ 
+            disabled={loading || !selectedCategory}
+            style={{
               marginTop: "20px",
               padding: '10px 20px',
               backgroundColor: '#2196F3',
