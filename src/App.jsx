@@ -24,8 +24,6 @@ function App() {
       </Routes>
     </BrowserRouter>
 
-        <UploadClothes />
-
   )
 }
 

@@ -149,6 +149,7 @@ const UploadClothes = () => {
             {loading ? "Uploading..." : "Upload to Wardrobe"}
           </button>
         </div>
+      </div>
       )}
     </div>
   );
