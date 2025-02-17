@@ -42,10 +42,10 @@ function SignUpPage() {
             <input className="input-info" type="text" id="name" placeholder="Username" value={name} onChange={(e) => setName(e.target.value)}/> <br />
             <input className="input-info" type="text" id="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}/> <br />
             <input className="input-info" type="password" id="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/> <br />
-            <button className="button" onClick={handleSignUp}>Sign Up</button>
+            <button className="button login-btn" onClick={handleSignUp}>Sign Up</button>
             <p>Already have an account? <Link to="/login">Login</Link></p>
         </div>
-        <p>©2025 Fitchck All Rights Reserved</p>
+        <p> 2025 Fitchck All Rights Reserved</p>
         </div>
     )
 }

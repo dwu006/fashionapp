@@ -6,7 +6,7 @@ const axios2 = axios.create({
   baseURL: 'http://localhost:5000'
 });
 
-const UploadClothes = () => {
+const UploadClothes = ({ onUploadSuccess }) => {
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -103,6 +103,10 @@ const UploadClothes = () => {
         setImage(null);
         setFile(null);
         setSelectedCategory(null);
+        // Call the callback to refresh the parent component
+        if (onUploadSuccess) {
+          onUploadSuccess();
+        }
       }
     } catch (error) {
       console.error('Error uploading image:', error);
