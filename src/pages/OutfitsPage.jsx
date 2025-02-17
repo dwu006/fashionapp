@@ -19,7 +19,7 @@ function OutfitsPage() {
             const userId = localStorage.getItem('userId');
             console.log('Fetching outfits for user:', userId);
             
-            const response = await axios.get(`http://localhost:5000/outfits?userId=${userId}`, {
+            const response = await axios.get(`http://localhost:3000/outfits?userId=${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }

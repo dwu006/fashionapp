@@ -13,18 +13,18 @@ const wardrobeController = {
                     error: 'no image uploaded'
                 });
             }
-
-            // Get user ID from the authenticated request
+    
             const userId = req.user._id;
-
+    
             const wardrobeItem = new WardrobeItem({
                 image: {
                     data: req.file.buffer,
                     contentType: req.file.mimetype
                 },
-                user: userId // Add the user ID to the wardrobe item
+                category: req.body.category, // Add category from form data
+                user: userId
             });
-
+    
             await wardrobeItem.save();
             res.status(200).json({ message: 'Upload successful' });
         } catch (err) {

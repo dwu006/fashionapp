@@ -35,7 +35,7 @@ app.use('/wardrobe', wardrobeRouter);
 app.use('/outfits', outfitRouter);
 
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 // Create HTTP server
 const server = http.createServer(app);
 //test mongodb connection then start server

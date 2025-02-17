@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-//connect to backend server
 const axios2 = axios.create({
-  baseURL: 'http://localhost:5000'
+  baseURL: 'http://localhost:3000'
 });
 
 const UploadClothes = () => {
@@ -11,12 +10,21 @@ const UploadClothes = () => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [category, setCategory] = useState(''); // New state for category
+
+  const categories = [
+    'tops',
+    'bottoms',
+    'outerwear',
+    'shoes',
+    'accessories',
+    'other'
+  ];
 
   useEffect(() => {
-    // Fetch user profile to get user ID when component mounts
     const fetchUserId = async () => {
       try {
-        const response = await fetch('http://localhost:5000/users/profile', {
+        const response = await fetch('http://localhost:3000/users/profile', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -34,18 +42,15 @@ const UploadClothes = () => {
     fetchUserId();
   }, []);
 
-  // Handle image upload
   const handleImageUpload = (e) => {
     const selectedFile = e.target.files[0];
     
-    // Clear previous image and file
     setImage(null);
     setFile(null);
     
     if (selectedFile) {
-      // Validate file type
       if (!selectedFile.type.startsWith('image/')) {
-        alert('Upload an image');
+        alert('Please upload an image file');
         return;
       }
       
@@ -65,7 +70,12 @@ const UploadClothes = () => {
 
   const handleSubmit = async () => {
     if (!file) {
-      alert("Select an image");
+      alert("Please select an image");
+      return;
+    }
+
+    if (!category) {
+      alert("Please select a category");
       return;
     }
 
@@ -78,7 +88,8 @@ const UploadClothes = () => {
       setLoading(true);
       const formData = new FormData();
       formData.append('image', file);
-      formData.append('userId', userId); // Add user ID to the form data
+      formData.append('userId', userId);
+      formData.append('category', category); // Add category to form data
 
       const config = {
         headers: {
@@ -90,10 +101,10 @@ const UploadClothes = () => {
       const response = await axios2.post('/wardrobe/upload', formData, config);
 
       if (response.status === 200) {
-        alert('Image uploaded successfully');
-        // Clear form
+        alert('Item uploaded successfully');
         setImage(null);
         setFile(null);
+        setCategory('');
       }
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -104,73 +115,49 @@ const UploadClothes = () => {
   };
 
   return (
-    <div className="upload-clothes" style={{ textAlign: 'center', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      {/* Hidden file input */}
+    <div className="upload-clothes flex flex-col items-center p-6">
       <input 
         type="file" 
         accept="image/*" 
         onChange={handleImageUpload}
-        style={{ display: 'none' }}
+        className="hidden"
         id="file-upload"
       />
       
-      {/* Styled label as button */}
       <label 
         htmlFor="file-upload" 
-        style={{
-          padding: '10px 20px',
-          backgroundColor: '#4CAF50',
-          color: 'white',
-          borderRadius: '5px',
-          cursor: 'pointer',
-          display: 'inline-block',
-          marginBottom: '20px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          transition: 'background-color 0.3s'
-        }}
-        onMouseOver={(e) => e.target.style.backgroundColor = '#45a049'}
-        onMouseOut={(e) => e.target.style.backgroundColor = '#4CAF50'}
+        className="px-6 py-3 bg-green-500 text-white rounded cursor-pointer mb-6 hover:bg-green-600 transition-colors shadow-md"
       >
-        Upload Clothes
+        Select Image
       </label>
 
       {image && (
-        <div className="image-preview" style={{ 
-          marginTop: '20px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          width: '100%',
-          maxWidth: '300px'
-        }}>
-          <h3>Preview</h3>
+        <div className="flex flex-col items-center w-full max-w-md">
+          <h3 className="text-xl font-semibold mb-4">Preview</h3>
+          
           <img 
             src={image} 
-            alt="Clothes" 
-            style={{ 
-              width: "100%", 
-              maxWidth: "200px", 
-              borderRadius: '8px',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-              marginBottom: '20px'
-            }} 
+            alt="Clothes preview" 
+            className="w-full max-w-xs rounded-lg shadow-md mb-6" 
           />
+
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full max-w-xs mb-6 p-2 border rounded-md shadow-sm"
+          >
+            <option value="">Select Category</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+              </option>
+            ))}
+          </select>
+
           <button 
             onClick={handleSubmit}
-            disabled={loading}
-            style={{ 
-              marginTop: "20px",
-              padding: '10px 20px',
-              backgroundColor: '#2196F3',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              opacity: loading ? 0.7 : 1,
-              transition: 'opacity 0.3s',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-              width: '200px'
-            }}
+            disabled={loading || !category}
+            className="w-full max-w-xs px-6 py-3 bg-blue-500 text-white rounded shadow-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors"
           >
             {loading ? "Uploading..." : "Upload to Wardrobe"}
           </button>
