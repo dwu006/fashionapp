@@ -2,7 +2,7 @@ import http from 'http';
 import app from './app.js';
 import db from './config/db.js';
 
-const port = process.env.PORT || 5001;
+const port = process.env.PORT || 5000;
 
 // Create HTTP server
 const server = http.createServer(app);

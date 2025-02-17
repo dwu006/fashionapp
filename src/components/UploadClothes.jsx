@@ -17,7 +17,7 @@ const UploadClothes = () => {
     // Fetch user profile to get user ID when component mounts
     const fetchUserId = async () => {
       try {
-        const response = await fetch('http://localhost:5000/users/profile', {
+        const response = await fetch('http://localhost:5001/users/profile', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -153,18 +153,6 @@ const UploadClothes = () => {
           width: '100%',
           maxWidth: '300px'
         }}>
-<<<<<<< HEAD
-        <div className="image-preview" style={{ 
-          marginTop: '20px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          width: '100%',
-          maxWidth: '300px'
-        }}>
-          <h3>Preview</h3>
-=======
->>>>>>> 28db1a7
           <img 
             src={image} 
             alt="Clothes" 
@@ -229,7 +217,6 @@ const UploadClothes = () => {
             {loading ? "Uploading..." : "Upload to Wardrobe"}
           </button>
         </div>
-      </div>
       )}
     </div>
   );

@@ -15,13 +15,10 @@ function HomePage() {
         <div className="page home">
             {isAuthenticated ? <UserHeader /> : <Header />}
             <div className="content">
-                {/* Your existing home page content */}
+                <h1>AI-Powered</h1>
+                <h2>Outfit Recommendations</h2>
+                <button className="button" onClick={handleGetStarted}>Get Started</button>
             </div>
-            <Header />
-            <h1>AI-Powered</h1>
-            <h2>Outfit Recommendations</h2>
-            {/* <UploadClothes /> */}
-            <button className="button" onClick={handleGetStarted}>Get Started</button>
             <Footer />
         </div>
     );

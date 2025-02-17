@@ -10,7 +10,7 @@ function LoginPage() {
 
     async function handleLogin() {
         try {
-            const response = await fetch('http://localhost:5000/users/login', {
+            const response = await fetch('http://localhost:5001/users/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -37,14 +37,16 @@ function LoginPage() {
     return (
         <div className="page">
         <h1><Link to="/" style={{ color: "inherit"}}>fitchck</Link></h1>
-        <div className="box">
-            <h1>Login</h1>
-            <input className="input-info" type="text" id="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}/> <br />
-            <input className="input-info" type="password" id="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/> <br />
-            <button className="button login-btn" onClick={handleLogin}>Login</button>
-            <p>Don't have an account? <Link to="/signup">Register</Link></p>
+        <div className="center">
+            <div className="box">
+                <h1>Login</h1>
+                <input className="input-info" type="text" id="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}/> <br />
+                <input className="input-info" type="password" id="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/> <br />
+                <button className="button login-btn" onClick={handleLogin}>Login</button>
+                <p>Don't have an account? <Link to="/signup">Register</Link></p>
+            </div>
+            <p>©2025 Fitchck All Rights Reserved</p>    
         </div>
-        <p>©2025 Fitchck All Rights Reserved</p>
         </div>
     )
 }
