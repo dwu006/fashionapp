@@ -1,7 +1,6 @@
 import Header from "../components/Header.jsx";
 import UserHeader from "../components/UserHeader.jsx";
 import Footer from "../components/Footer.jsx";
-import UploadClothes from "../components/UploadClothes.jsx";
 import MyWardrobe from "../components/MyWardrobe.jsx";
 import WeatherBox from "../components/WeatherBox.jsx";
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +13,7 @@ function WardrobePage() {
 
     useEffect(() => {
         if (!isAuthenticated) {
-            navigate('/login');
+            navigate('/login');a
         }
     }, [isAuthenticated, navigate]);
 
@@ -34,8 +33,7 @@ function WardrobePage() {
                     My Wardrobe
                 </h1>
                 <WeatherBox />  {/* Added WeatherBox here */}
-                <UploadClothes />
-                <div style={{ marginTop: '40px' }}>
+                <div>
                     <MyWardrobe />
                 </div>
             </div>

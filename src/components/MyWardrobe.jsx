@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import UploadClothes from './UploadClothes';
 
 //connect to backend server
 const axios2 = axios.create({
@@ -132,6 +133,11 @@ const MyWardrobe = () => {
 
   return (
     <div className="my-wardrobe">
+      {/* Upload Component */}
+      <div style={{ marginBottom: '10px' }}>
+        <UploadClothes onUploadSuccess={fetchWardrobeItems} />
+      </div>
+
       {/* Category Tabs */}
       <div style={{
         display: 'flex',
