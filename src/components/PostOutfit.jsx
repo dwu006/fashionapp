@@ -47,7 +47,7 @@ const PostOutfit = ({ onOutfitPosted }) => {
                 caption
             });
 
-            const response = await axios.post('http://localhost:5000/outfits/upload', formData, {
+            const response = await axios.post('http://localhost:5001/outfits/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
