@@ -3,6 +3,7 @@ import UserHeader from "../components/UserHeader.jsx";
 import Footer from "../components/Footer.jsx";
 import UploadClothes from "../components/UploadClothes.jsx";
 import MyWardrobe from "../components/MyWardrobe.jsx";
+import WeatherBox from "../components/WeatherBox.jsx";
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import "../styles/WardrobePage.css";
@@ -32,6 +33,7 @@ function WardrobePage() {
                 }}>
                     My Wardrobe
                 </h1>
+                <WeatherBox />  {/* Added WeatherBox here */}
                 <UploadClothes />
                 <div style={{ marginTop: '40px' }}>
                     <MyWardrobe />
