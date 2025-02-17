@@ -1,7 +1,7 @@
 /* ============================
    General Layout & Structure
    ============================ */
-   .home-container {
+.home-container {
     text-align: center;
     padding: 50px 20px;
 }
@@ -10,14 +10,19 @@
    Heading Styles
    ============================ */
 .main-heading {
-    font-size: 110px; /* Large text for main heading */
+    font-size: 110px;
+    font-weight: bold;
+    margin-top: 0px; /* Removes extra space above */
+    padding-top: 0px; /* Ensures no extra padding */
+    margin-bottom: 5px
+}
+
+
+.sub-heading {
+    font-size: 60px; /* Secondary heading */
     font-weight: bold;
 }
 
-.sub-heading {
-    font-size: 60px; /* Secondary heading size */
-    font-weight: bold;
-}
 
 h1, h2 {
     font-size: 3rem;
@@ -49,6 +54,11 @@ h1, h2 {
     margin-top: 20px;
     background-color: transparent;
     transition: background 0.3s ease, color 0.3s ease;
+
+    text-align: center;
+    white-space: nowrap; /* Prevents text from breaking */
+    width: auto; /* Prevents unwanted stretching */
+    max-width: fit-content; /* Button only takes up the space needed */
 }
 
 /* Hover effect for the Get Started button */
