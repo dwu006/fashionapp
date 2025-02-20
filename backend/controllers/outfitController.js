@@ -27,10 +27,11 @@ const outfitController = {
     getAllOutfits: async (req, res) => {
         try {
             let filter = {};
+            const userId = req.user._id;
             
             if (req.query.userId) {
                 // If looking at specific user's outfits
-                if (req.query.userId === req.user._id.toString()) {
+                if (req.query.userId === userId.toString()) {
                     // User viewing their own outfits - show all
                     filter.user = req.query.userId;
                 } else {
@@ -46,9 +47,20 @@ const outfitController = {
             }
 
             const outfits = await Outfit.find(filter)
-                .populate('user', 'username')
+                .populate('user', 'username profileImage')
+                .populate('comments.user', 'username profileImage')
                 .sort({ createdAt: -1 });
-            res.json(outfits);
+
+            // Transform outfits to include user-specific like status
+            const safeOutfits = outfits.map(outfit => {
+                const outfitObj = outfit.toObject();
+                outfitObj.likes = Array.isArray(outfitObj.likes) ? outfitObj.likes : [];
+                outfitObj.userHasLiked = outfitObj.likes.some(id => id.toString() === userId.toString());
+                outfitObj.likesCount = outfitObj.likes.length;
+                return outfitObj;
+            });
+
+            res.json({ outfits: safeOutfits });
         } catch (error) {
             res.status(500).json({ message: 'Error fetching outfits', error: error.message });
         }
@@ -173,12 +185,28 @@ const outfitController = {
                 return res.status(403).json({ message: 'Not authorized to like this outfit' });
             }
 
-            outfit.likes += 1;
+            const userId = req.user._id;
+            const userLikeIndex = outfit.likes.findIndex(id => id.toString() === userId.toString());
+
+            if (userLikeIndex === -1) {
+                // User hasn't liked the post yet, add their like
+                outfit.likes.push(userId);
+            } else {
+                // User already liked the post, remove their like
+                outfit.likes.splice(userLikeIndex, 1);
+            }
+
             await outfit.save();
             
-            res.json({ message: 'Outfit liked successfully', likes: outfit.likes });
+            // Return the updated likes array and whether the user has liked the post
+            res.json({ 
+                message: userLikeIndex === -1 ? 'Outfit liked successfully' : 'Outfit unliked successfully',
+                likes: outfit.likes,
+                userHasLiked: userLikeIndex === -1,
+                likesCount: outfit.likes.length
+            });
         } catch (error) {
-            res.status(500).json({ message: 'Error liking outfit', error: error.message });
+            res.status(500).json({ message: 'Error toggling like', error: error.message });
         }
     },
 
@@ -196,13 +224,24 @@ const outfitController = {
                 return res.status(403).json({ message: 'Not authorized to comment on this outfit' });
             }
 
-            outfit.comments.push({
-                userId: req.user._id,
-                text: req.body.text
-            });
+            const newComment = {
+                user: req.user._id,
+                content: req.body.content
+            };
 
+            outfit.comments.push(newComment);
             await outfit.save();
-            res.json({ message: 'Comment added successfully', outfit });
+
+            // Populate the user info for the new comment
+            const populatedOutfit = await Outfit.findById(outfit._id)
+                .populate('comments.user', 'username profileImage');
+
+            const addedComment = populatedOutfit.comments[populatedOutfit.comments.length - 1];
+
+            res.json({
+                message: 'Comment added successfully',
+                comment: addedComment
+            });
         } catch (error) {
             res.status(500).json({ message: 'Error adding comment', error: error.message });
         }
