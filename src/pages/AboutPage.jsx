@@ -16,8 +16,8 @@ const teamMembers = [
         name: "Daniel Wu",
         image: team1,
         university: "University of California, Los Angeles",
-        year: "3rd Year",
-        major: "Computer Science",
+        year: "1st Year",
+        major: "Computer Science and Engineering",
     },
     {
         name: "Victor Acuna",
@@ -31,21 +31,21 @@ const teamMembers = [
         image: team3,
         university: "University of California, Los Angeles",
         year: "2nd Year",
-        major: "Data Science",
+        major: "Linguistics and Computer Science, Economics",
     },
     {
         name: "Kevin Trinh",
         image: team4,
         university: "University of California, Los Angeles",
-        year: "4th Year",
-        major: "Cybersecurity",
+        year: "2nd Year",
+        major: "Linguistics and Computer Science",
     },
     {
         name: "Chianie Chi",
         image: team5,
         university: "University of California, Los Angeles",
-        year: "PhD Student",
-        major: "Artificial Intelligence",
+        year: "2nd Year",
+        major: "Linguistics and Computer Science",
     },
 ];
 
