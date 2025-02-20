@@ -10,10 +10,10 @@ const outfitSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    likes: {
-        type: Number,
-        default: 0
-    },
+    likes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     tags: {
         type: [String],
         default: []
@@ -27,20 +27,22 @@ const outfitSchema = new mongoose.Schema({
         default: ""
     },
     comments: [{
-        userId: {
+        user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true
         },
-        text: {
+        content: {
             type: String,
             required: true
         },
-        timestamp: {
+        createdAt: {
             type: Date,
             default: Date.now
         }
     }]
+}, {
+    timestamps: true
 });
 
 const Outfit = mongoose.model('Outfit', outfitSchema);

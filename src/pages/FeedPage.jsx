@@ -1,11 +1,19 @@
-import React, { useState, useEffect } from 'react';
 import { data, Navigate } from "react-router-dom";
 import axios from 'axios';
 import Header from "../components/Header.jsx";
 import UserHeader from "../components/UserHeader.jsx";
 import Footer from "../components/Footer.jsx";
-import PostOutfit from "../components/PostOutfit.jsx";
+import { Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import "../styles/PageLayout.css";
+import "../styles/FeedPage.css";
+import axios from "axios";
+
+// Set default base URL for API requests
+axios.defaults.baseURL = 'http://localhost:5000';
+
+// Default profile image (using data URI to avoid external dependencies)
+const DEFAULT_PROFILE_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
 
 function FeedPage() {
     const [outfits, setOutfits] = useState([]);
@@ -13,182 +21,127 @@ function FeedPage() {
     const [selectedItem, setSelectedItem] = useState(null);
     const isAuthenticated = localStorage.getItem('token');
 
-    function handleClick(outfit) {
-        setSelectedItem(outfit);
-    }
-
-    useEffect(() => {
-        // Fetch user profile to get user ID when component mounts
-        const fetchUserId = async () => {
-            try {
-                const response = await fetch('http://localhost:5001/users/profile', {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setUserId(data._id);
-                }
-            } catch (error) {
-                console.error('Error fetching user ID:', error);
-            }
-        };
-
-        fetchUserId();
-    }, []);
-
-
-    useEffect(() => {
-        if (!userId) return;
-        const fetchUserOutfits = async () => {
-            try {
-                console.log('Fetching outfits for user:', userId);
-                
-                const responseUser = await axios.get(`http://localhost:5001/users`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-
-                const temp = responseUser.data;
-                const userIds = temp.map(user => user._id);
-                const allOutfits = [];
-
-                for (let i = 0; i < userIds.length; i++) {
-                    const response = await axios.get(`http://localhost:5001/outfits?userId=${userIds[i]}`, {
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem('token')}`
-                        }
-                    });
-                    if (response.data.length > 0) {
-                        allOutfits.push(response.data);
-                    }
-                }
-
-                setOutfits(allOutfits.flat());
-                console.log("Fetched outfits", allOutfits);
-
-            } catch (error) {
-                console.error('Error fetching outfits:', error);
-            }
-        };
-        fetchUserOutfits();
-    }, [userId]);
-
-    const handleOutfitPosted = () => {
-        console.log('New outfit posted, refreshing...');
-        fetchUserOutfits();
-    };
-
     if (!isAuthenticated) {
         return <Navigate to="/login" />;
     }
 
     return (
-        <div className="page outfits">
-            {isAuthenticated ? <UserHeader /> : <Header />}
-            <div className="content">
-                <div style={{ display: 'flex', justifyContent: 'space-around', color:'white' }}>
-                    <h1>Community Outfits</h1>
-                    <PostOutfit onOutfitPosted={handleOutfitPosted} />
-                </div>
-                <div className="outfits-grid">
-                    {outfits && outfits.length > 0 ? (
-                        outfits.map((outfit) => (
-                            <div key={outfit._id} className="outfit-card">
-                                <img
-                                    src={`data:${outfit.image.contentType};base64,${arrayBufferToBase64(outfit.image.data.data)}`}
-                                    alt="Outfit"
-                                    className="outfit-image"
-                                    onClick={() => handleClick(outfit)}
+        <div className="page feed">
+            <UserHeader />
+            <div className="feed-container">
+                {loading ? (
+                    <div>Loading...</div>
+                ) : posts.length === 0 ? (
+                    <div>No posts to show</div>
+                ) : (
+                    posts.map(post => (
+                        <div key={post._id} className="feed-card">
+                            <div className="feed-card-header">
+                                <img 
+                                    src={post.user.profileImage} 
+                                    alt={post.user.username} 
+                                    className="user-avatar"
                                 />
-                                <p>{outfit.caption}</p>
+                                <span className="username">{post.user.username}</span>
                             </div>
-                        ))
-                    ) : (
-                        <p>No outfits found. Post your first outfit!</p>
-                    )}
-                    {selectedItem &&
-                        <div style={{
-                            position: 'fixed',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            backgroundColor: 'rgba(0,0,0,0.8)',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            zIndex: 1000
-                        }} onClick={() => setSelectedItem(null)}>
-                            <div style={{
-                                backgroundColor: '#1a1a1a',
-                                padding: '30px',
-                                borderRadius: '15px',
-                                maxWidth: '90%',
-                                maxHeight: '90%',
-                                overflow: 'hidden',
-                                position: 'relative',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                boxShadow: '0 10px 25px rgba(0,0,0,0.5)'
-                            }} onClick={e => e.stopPropagation()}>
-                                <div style={{
-                                    width: '100%',
-                                    height: '70vh',
-                                    display: 'block',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    marginTop: '20px',
-                                    overflowX: 'hidden',
-                                    overflowY: 'auto',
-                                    color: 'white'
-                                }}>
-                                    <button
-                                        onClick={() => setSelectedItem(null)}
-                                        style={{
-                                            position: 'absolute',
-                                            top: '15px',
-                                            right: '15px',
-                                            border: 'none',
-                                            background: 'none',
-                                            color: 'white',
-                                            fontSize: '28px',
-                                            cursor: 'pointer',
-                                            padding: '5px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            width: '40px',
-                                            height: '40px',
-                                            borderRadius: '50%',
-                                            transition: 'background-color 0.3s'
-                                        }}
-                                        onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}
-                                        onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                            <img 
+                                src={post.imageUrl} 
+                                alt="Outfit" 
+                                className="feed-image"
+                            />
+                            <div className="feed-card-actions">
+                                <div className="action-buttons">
+                                    <button 
+                                        className={`action-button ${post.userHasLiked ? 'liked' : ''}`}
+                                        onClick={() => handleLike(post._id)}
+                                        title={post.userHasLiked ? "Unlike" : "Like"}
                                     >
-                                        ×
+                                        {post.userHasLiked ? '❤️' : '🤍'}
+                                        <span>{post.likesCount || 0} likes</span>
                                     </button>
-                                    <img
-                                        src={`data:${selectedItem.image};base64,${arrayBufferToBase64(selectedItem.image.data.data)}`}
-                                        alt="Selected item"
-                                        style={{
-                                            maxWidth: '100%',
-                                            maxHeight: '100%',
-                                            objectFit: 'contain',
-                                            borderRadius: '8px'
-                                        }}
-                                    />
-                                    <p>{selectedItem.caption}</p>
+                                    <button 
+                                        className="action-button"
+                                        onClick={() => setSelectedPost(post)}
+                                        title="Comments"
+                                    >
+                                        💬
+                                        <span>{post.comments ? post.comments.length : 0} comments</span>
+                                    </button>
                                 </div>
+                                <div className="caption">
+                                    <strong>{post.user.username}</strong> {post.caption}
+                                </div>
+                                {post.comments && post.comments.length > 0 && (
+                                    <div 
+                                        className="view-comments"
+                                        onClick={() => setSelectedPost(post)}
+                                    >
+                                        View all {post.comments.length} comments
+                                    </div>
+                                )}
                             </div>
                         </div>
-                    }
-                </div>
+                    ))
+                )}
             </div>
+
+            {selectedPost && (
+                <div className="comments-modal" onClick={() => setSelectedPost(null)}>
+                    <button className="close-modal" title="Close">✕</button>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <div className="modal-image">
+                            <img src={selectedPost.imageUrl} alt="Outfit" />
+                        </div>
+                        <div className="comments-section">
+                            <div className="comments-header">
+                                <img 
+                                    src={selectedPost.user.profileImage} 
+                                    alt={selectedPost.user.username} 
+                                    className="user-avatar"
+                                />
+                                <span className="username">{selectedPost.user.username}</span>
+                            </div>
+                            <div className="comments-list">
+                                {selectedPost.comments && selectedPost.comments.map((comment, index) => (
+                                    <div key={index} className="comment">
+                                        <img 
+                                            src={comment.user.profileImage} 
+                                            alt={comment.user.username} 
+                                            className="user-avatar"
+                                        />
+                                        <div className="comment-content">
+                                            <span className="comment-username">{comment.user.username}</span>
+                                            {comment.content}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="add-comment">
+                                <textarea
+                                    className="comment-input"
+                                    placeholder="Add a comment..."
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                    onKeyPress={(e) => {
+                                        if (e.key === 'Enter' && !e.shiftKey) {
+                                            e.preventDefault();
+                                            handleComment(selectedPost._id);
+                                        }
+                                    }}
+                                />
+                                <button 
+                                    className="send-comment-btn"
+                                    onClick={() => handleComment(selectedPost._id)}
+                                    disabled={!newComment.trim()}
+                                    title="Send comment"
+                                >
+                                    ➤
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
             <Footer />
         </div>
     );
