@@ -1,0 +1,149 @@
+/* ============================
+   General Layout & Structure
+   ============================ */
+.home-container {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+/* ============================
+   Heading Styles
+   ============================ */
+.main-heading {
+    font-size: 110px;
+    font-weight: bold;
+    margin-top: 0px; /* Removes extra space above */
+    padding-top: 0px; /* Ensures no extra padding */
+    margin-bottom: 5px
+}
+
+
+.sub-heading {
+    font-size: 60px; /* Secondary heading */
+    font-weight: bold;
+}
+
+
+h1, h2 {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+/* ============================
+   Profile Image
+   ============================ */
+.profile-image {
+    width: 650px;
+    border-radius: 25px;
+    flex-shrink: 0; /* Prevents the image from shrinking */
+    margin: 20px 0;
+}
+
+/* ============================
+   Get Started Button
+   ============================ */
+.get-started-btn {
+    display: inline-block;
+    padding: 15px 40px; /* Increased padding for a larger button */
+    font-size: 40px;
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 50px; /* Makes the button fully rounded */
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    margin-top: 20px;
+    background-color: transparent;
+    transition: background 0.3s ease, color 0.3s ease;
+
+    text-align: center;
+    white-space: nowrap; /* Prevents text from breaking */
+    width: auto; /* Prevents unwanted stretching */
+    max-width: fit-content; /* Button only takes up the space needed */
+}
+
+/* Hover effect for the Get Started button */
+.get-started-btn:hover {
+    background-color: rgb(255, 255, 255);
+    color: black;
+}
+
+/* ============================
+   Intro Section (Text & Image)
+   ============================ */
+.intro-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Moves text to the left and image to the right */
+    gap: 50px; /* Adjust spacing between text and image */
+    padding: 0 100px; /* Adds padding to shift content */
+}
+
+.text-content {
+    text-align: left;
+    flex: 1; /* Allows text to take up more space */
+}
+
+/* ============================
+   Testimonials Section
+   ============================ */
+.testimonials {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-evenly; /* Distributes images evenly */
+    align-items: center;
+    flex-wrap: wrap; /* Ensures responsiveness */
+    padding: 0 50px; /* Adjust padding if needed */
+}
+
+/* Heading for Testimonials section */
+.testimonials-heading {
+    font-size: 32px;
+    font-style: italic;
+    text-align: left;
+    font-weight: bold;
+    width: 100%;
+    padding-left: 100px; /* Aligns with AI-Powered */
+    margin-top: 200px; /* Moves heading lower */
+    margin-bottom: 30px;
+}
+
+/* ============================
+   Testimonial Cards
+   ============================ */
+.testimonial-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 350px; /* Ensures equal width */
+}
+
+.testimonial-card img {
+    width: 350px; /* Smaller and uniform size */
+    height: 350px;
+    object-fit: cover;
+    border-radius: 25px;
+}
+
+/* Larger testimonial text */
+.testimonial-card p {
+    font-style: italic;
+    font-size: 20px; /* Increased font size */
+}
+
+/* Larger and bold testimonial names */
+.testimonial-card span {
+    font-size: 22px; /* Increase size */
+    font-weight: bold; /* Make it bold */
+}
+/* ============================
+   Star Ratings
+   ============================ */
+.stars {
+    font-size: 32px;
+    color: rgb(255, 255, 255); /* Star color */
+    margin-top: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}

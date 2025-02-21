@@ -230,21 +230,17 @@ const outfitController = {
                 return res.status(403).json({ message: 'Not authorized to comment on this outfit' });
             }
 
-
             const newComment = {
                 user: req.user._id,
                 content: req.body.content
             };
 
-
             outfit.comments.push(newComment);
             await outfit.save();
-              console.log("Outfit saved");
 
             // Populate the user info for the new comment
             const populatedOutfit = await Outfit.findById(outfit._id)
                 .populate('comments.user', 'username profileImage');
-            console.log("populated outfit: ", populatedOutfit);
 
             const addedComment = populatedOutfit.comments[populatedOutfit.comments.length - 1];
 

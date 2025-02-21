@@ -4,13 +4,15 @@
 }
 
 .box {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     background-color:rgb(220, 220, 220);
     border: 1px solid black;
     border-radius: 20px;
     width: 300px;
-    justify-self:center;
-    justify-items:center;
+    margin: auto;
+    align-items: center;
+    padding: 20px;
 }
 
 .input-info {
