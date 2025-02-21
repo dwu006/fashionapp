@@ -10,6 +10,7 @@ const outfitController = {
                     contentType: req.file.mimetype
                 },
                 user: req.user._id,
+                likes: req.body.likes || [],
                 tags: req.body.tags || [],
                 caption: req.body.caption || "",
                 comments: req.body.comments || [],
@@ -186,6 +187,10 @@ const outfitController = {
             }
 
             const userId = req.user._id;
+            console.log("outfit likes before liking: ", outfit.likes);
+            if (!outfit.likes) {
+                outfit.likes = [];
+            }
             const userLikeIndex = outfit.likes.findIndex(id => id.toString() === userId.toString());
 
             if (userLikeIndex === -1) {
@@ -206,6 +211,7 @@ const outfitController = {
                 likesCount: outfit.likes.length
             });
         } catch (error) {
+            console.log("Error while liking: ", error);
             res.status(500).json({ message: 'Error toggling like', error: error.message });
         }
     },
@@ -224,17 +230,21 @@ const outfitController = {
                 return res.status(403).json({ message: 'Not authorized to comment on this outfit' });
             }
 
+
             const newComment = {
                 user: req.user._id,
                 content: req.body.content
             };
 
+
             outfit.comments.push(newComment);
             await outfit.save();
+              console.log("Outfit saved");
 
             // Populate the user info for the new comment
             const populatedOutfit = await Outfit.findById(outfit._id)
                 .populate('comments.user', 'username profileImage');
+            console.log("populated outfit: ", populatedOutfit);
 
             const addedComment = populatedOutfit.comments[populatedOutfit.comments.length - 1];
 
@@ -243,6 +253,7 @@ const outfitController = {
                 comment: addedComment
             });
         } catch (error) {
+            console.log("Detailed error during adding, ", error);
             res.status(500).json({ message: 'Error adding comment', error: error.message });
         }
     }

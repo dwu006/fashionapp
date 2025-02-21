@@ -15,7 +15,16 @@ function OutfitsPage() {
         <div className="page feed">
             <UserHeader />
             <div className="content">
-                <h1>My Feed</h1>
+                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                    <h3>Generate Outfit</h3>
+                    <button className="button">Saved Outfits</button>
+                </div>
+                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-around' }}>
+                    <button className="button">Work</button>
+                    <button className="button">Casual</button>
+                    <button className="button">Gym</button>
+                    <button className="button">Date Night</button>
+                </div>
                 {/* Feed content will go here */}
             </div>
             <Footer />
