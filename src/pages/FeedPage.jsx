@@ -3,24 +3,19 @@ import axios from 'axios';
 import Header from "../components/Header.jsx";
 import UserHeader from "../components/UserHeader.jsx";
 import Footer from "../components/Footer.jsx";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "../styles/PageLayout.css";
 import "../styles/FeedPage.css";
-import axios from "axios";
 
 // Set default base URL for API requests
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = 'http://localhost:5001';
 
 // Default profile image (using data URI to avoid external dependencies)
 const DEFAULT_PROFILE_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
 
 function FeedPage() {
-    const [outfits, setOutfits] = useState([]);
-    const [userId, setUserId] = useState(null);
-    const [selectedItem, setSelectedItem] = useState(null);
     const isAuthenticated = localStorage.getItem('token');
-    // const userId = localStorage.getItem('userId');
     const [posts, setPosts] = useState([]);
     const [selectedPost, setSelectedPost] = useState(null);
     const [newComment, setNewComment] = useState("");
@@ -44,7 +39,7 @@ function FeedPage() {
             // Transform the posts to include proper image URLs and ensure likes is an array
             const transformedPosts = postsArray.map(post => ({
                 ...post,
-                imageUrl: `data:${post.image.contentType};base64,${arrayBufferToBase64(post.image.data.data)}`,
+                imageUrl: `data:${post.image.contentType};base64,${post.image.data}`,
                 likes: Array.isArray(post.likes) ? post.likes : [],
                 user: {
                     ...post.user,
@@ -67,15 +62,7 @@ function FeedPage() {
         }
     };
 
-    // Helper function to convert array buffer to base64
-    const arrayBufferToBase64 = (buffer) => {
-        let binary = '';
-        const bytes = new Uint8Array(buffer);
-        for (let i = 0; i < bytes.byteLength; i++) {
-            binary += String.fromCharCode(bytes[i]);
-        }
-        return window.btoa(binary);
-    };
+
 
     const handleLike = async (postId) => {
         try {
@@ -125,8 +112,9 @@ function FeedPage() {
                 if (p._id === postId) {
                     return {
                         ...p,
-                        userHasLiked: currentUserLiked,
-                        likesCount: currentLikesCount
+                        userHasLiked: p.userHasLiked,
+                        likesCount: p.likesCount,
+                        likes: p.likes
                     };
                 }
                 return p;
@@ -183,6 +171,10 @@ function FeedPage() {
         <div className="page feed">
             <UserHeader />
             <div className="feed-container">
+                <div style={{display:'flex', width: '100%', justifyContent:'space-between'}}>
+                    <h3>Community Feed</h3>
+                    <button className="button">Upload Clothes</button>
+                </div>
                 {loading ? (
                     <div>Loading...</div>
                 ) : posts.length === 0 ? (
