@@ -63,7 +63,6 @@ function FeedPage() {
     };
 
 
-
     const handleLike = async (postId) => {
         try {
             const post = posts.find(p => p._id === postId);
@@ -290,7 +289,7 @@ function FeedPage() {
             )}
             <Footer />
         </div>
-    )
+    );
 }
 
 export default FeedPage;

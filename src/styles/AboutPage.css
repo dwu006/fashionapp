@@ -1,12 +1,126 @@
-.about {
-    /* display:flex; */
-    justify-content:space-around;
+/* ============================
+   General Container Styling
+   ============================ */
+   .about-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 100px;
+    max-width: 1200px;
+    margin: auto;
 }
 
-.split-div {
-    display:flex;
+/* ============================
+   Section Styling (Our Story & Our Mission)
+   ============================ */
+.section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+    margin: 100px 0;
 }
 
-.content {
+.section-heading {
+    font-size: 60px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.text-content {
+    flex: 1;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 50%;
+}
+
+.text-content p {
+    font-size: 20px;
+    line-height: 1.6;
+}
+
+.section-image {
+    width: 50%;
+    max-width: 500px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+/* ============================
+   Our Team Section Styling
+   ============================ */
+.our-team {
+    text-align: center;
     width: 100%;
+    margin: 100px 0;
+}
+
+.our-team .section-heading {
+    margin-bottom: 50px;
+}
+
+.team-members {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 50px;
+}
+
+/* Team Member Container */
+.team-member {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Team Member Image */
+.team-member img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Name (Bold) */
+.team-member p:first-of-type {
+    font-weight: bold;
+    font-size: 25px;
+}
+
+/* University & Major */
+.team-member .team-info {
+    font-size: 18px;
+    font-style: italic;
+    color: #ccc;
+    font-weight: normal;
+    margin: 0;
+    line-height: 2.0;
+}
+
+/* ============================
+   Responsive Adjustments
+   ============================ */
+@media (max-width: 768px) {
+    .about-container {
+        padding: 30px 50px;
+    }
+
+    .section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .text-content,
+    .section-image {
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .team-members {
+        flex-direction: column;
+    }
 }
