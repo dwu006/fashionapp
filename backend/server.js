@@ -17,3 +17,6 @@ db()
     console.error('Server encountered an error:', error);
   });
 })
+
+
+//use app.js to run
