@@ -4,6 +4,7 @@ import path from 'path';
 import userRouter from './routes/userRoute.js';
 import wardrobeRouter from './routes/wardrobeRoute.js';
 import outfitRouter from './routes/outfitRoute.js';
+import { createClothing } from './api/gemini.js';
 import { fileURLToPath } from 'url';
 import http from 'http';
 import db from './config/db.js';
@@ -33,6 +34,7 @@ app.use(express.static(path.join(__dirname, '../src')));
 app.use('/users', userRouter);
 app.use('/wardrobe', wardrobeRouter);
 app.use('/outfits', outfitRouter);
+app.use('/ai', createClothing);
 
 
 export const port = process.env.PORT || 5001;

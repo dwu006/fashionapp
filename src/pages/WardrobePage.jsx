@@ -26,15 +26,16 @@ function WardrobePage() {
         <div className="page wardrobe">
             <UserHeader />
             <div className="content">
-                <h1 style={{ 
-                    textAlign: 'center', 
-                    marginBottom: '30px',
-                    color: 'white'
-                }}>
-                    My Wardrobe
-                </h1>
-                <WeatherBox />  {/* Added WeatherBox here */}
-                <UploadClothes />
+                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                    <h1 style={{
+                        textAlign: 'center',
+                        marginBottom: '30px'
+                    }}>
+                        My Wardrobe
+                    </h1>
+                    <WeatherBox />  {/* Added WeatherBox here */}
+                    <UploadClothes />
+                </div>
                 <div style={{ marginTop: '40px' }}>
                     <MyWardrobe />
                 </div>

@@ -1,6 +1,6 @@
-import Header from "../components/Header.jsx";
 import UserHeader from "../components/UserHeader.jsx";
 import Footer from "../components/Footer.jsx";
+import GenerateOutfit from "../components/GenerateOutfit.jsx";
 import { Navigate } from "react-router-dom";
 import "../styles/PageLayout.css";
 
@@ -19,13 +19,7 @@ function OutfitsPage() {
                     <h3>Generate Outfit</h3>
                     <button className="button">Saved Outfits</button>
                 </div>
-                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-around' }}>
-                    <button className="button">Work</button>
-                    <button className="button">Casual</button>
-                    <button className="button">Gym</button>
-                    <button className="button">Date Night</button>
-                </div>
-                {/* Feed content will go here */}
+                <GenerateOutfit />
             </div>
             <Footer />
         </div>

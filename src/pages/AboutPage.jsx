@@ -111,16 +111,6 @@ function AboutPage() {
                     </div>
                 </div>
             </div>
-            <div className="wide-box">
-                <h1>Our Team</h1>
-                <div style={{display:'flex', placeContent:'center', padding: 'auto'}}>
-                    <h2>Daniel Wu</h2>
-                    <h2>Victor Acuna</h2>
-                    <h2>Colin Murphy</h2>
-                    <h2>Kevin Trinh</h2>
-                    <h2>Chianie Chu</h2>
-                </div>
-            </div>
             <Footer />
         </div>
     );
