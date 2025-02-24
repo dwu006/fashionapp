@@ -1,38 +1,40 @@
-# React + Vite
+#Fashion App
+A digital wardrobe to collect your clothing, generate best outfits, and share fits with the community!
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+##Prerequisites
+- Node.js 
+- npm (included with Node.js)
+- git
 
-Currently, two official plugins are available:
+##Setup
+### 1. Clone the Repository
+'''bash
+git clone https://github.com/dwu006/fashionapp.git  
+cd fashionapp
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 2. Install Dependencies
+'''bash
+npm install  
 
-# Setup Instructions
+### 3. Start the Frontend
+'''bash 
+npm run dev  
+'''
+Visit https://localhost:5173 in your browser.
 
-## Clone the repository
+### 4. Start the Backend
+'''bash
+cd backend
+node app.js
+'''
+App is now ready to use!
 
-Clone the repository by running the following command:
+Contributing
+Fork the repo.
+Create a branch: git checkout -b your-feature
+Commit changes: git commit -m "Add feature"
+Push: git push origin your-feature
+Open a pull request.
 
-git clone https://github.com/dwu006/fashionapp.git
-
-## Install Dependencies
-
-Navigate to the project directory and install the necessary dependencies:
-
-npm install
-
-## Run Backend and Frontend
-
-To run the backend and frontend, open 2 terminals:
-
-1. In the first terminal, navigate to the backend folder and run:
-   
-   node app.js
-
-2. In the second terminal, run the frontend:
-
-   npm run dev
-
-## Access the Application
-
-Go to [https://localhost:5173](https://localhost:5173) to view the app.
+Please let us know in issues if theres any problems!
+Enjoy!
