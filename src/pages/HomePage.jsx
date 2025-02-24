@@ -3,7 +3,7 @@ import UserHeader from "../components/UserHeader.jsx";
 import Footer from "../components/Footer.jsx";
 import "../styles/PageLayout.css";
 import "../styles/HomePage.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import profileImage from "../assets/profile.jpg";
 import user1 from "../assets/user1.jpg";
 import user2 from "../assets/user2.jpg";

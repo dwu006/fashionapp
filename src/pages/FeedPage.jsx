@@ -1,9 +1,8 @@
 import { data, Navigate } from "react-router-dom";
 import axios from 'axios';
-import Header from "../components/Header.jsx";
 import UserHeader from "../components/UserHeader.jsx";
 import Footer from "../components/Footer.jsx";
-import { useNavigate } from "react-router-dom";
+import PostOutfit from "../components/PostOutfit.jsx";
 import { useState, useEffect } from "react";
 import "../styles/PageLayout.css";
 import "../styles/FeedPage.css";
@@ -25,6 +24,7 @@ function FeedPage() {
         fetchPosts();
     }, []);
 
+
     const fetchPosts = async () => {
         try {
             const response = await axios.get('/outfits', {
@@ -32,10 +32,10 @@ function FeedPage() {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
             });
-            
+
             // Check if response.data exists and is an array
             const postsArray = Array.isArray(response.data) ? response.data : response.data.outfits || [];
-            
+
             // Transform the posts to include proper image URLs and ensure likes is an array
             const transformedPosts = postsArray.map(post => ({
                 ...post,
@@ -53,7 +53,7 @@ function FeedPage() {
                     }
                 }))
             }));
-            
+
             setPosts(transformedPosts);
             setLoading(false);
         } catch (error) {
@@ -125,6 +125,7 @@ function FeedPage() {
         if (!newComment.trim()) return;
 
         try {
+
             const response = await axios.post(`/outfits/${postId}/comment`, {
                 content: newComment
             }, {
@@ -133,34 +134,38 @@ function FeedPage() {
                 }
             });
 
-            // Get current user's info
             const currentUser = {
                 _id: localStorage.getItem('userId'),
                 username: localStorage.getItem('username'),
                 profileImage: localStorage.getItem('profileImage') || DEFAULT_PROFILE_IMAGE
             };
-            
-            // Update the post in the local state with the new comment
-            setPosts(posts.map(post => {
-                if (post._id === postId) {
-                    const newCommentObj = {
-                        ...response.data.comment,
-                        user: currentUser
-                    };
-                    return {
-                        ...post,
-                        comments: [...post.comments, newCommentObj]
-                    };
-                }
-                return post;
-            }));
-            
-            // Clear the comment input
+
+            const newCommentObj = {
+                ...response.data.comment,
+                user: currentUser
+            };
+
+            setPosts((prevPosts) => {
+                const updatedPosts = prevPosts.map((post) =>
+                  post._id === postId
+                    ? { ...post, comments: [...post.comments, newCommentObj] }
+                    : post
+                );
+                // Update selectedPost if it's the one being commented on
+                const updatedSelectedPost = updatedPosts.find((post) => post._id === postId);
+                setSelectedPost(updatedSelectedPost);
+              
+                return updatedPosts;
+              });
+              
+
             setNewComment("");
         } catch (error) {
             console.error('Error adding comment:', error);
         }
     };
+
+
 
     if (!isAuthenticated) {
         return <Navigate to="/login" />;
@@ -170,9 +175,9 @@ function FeedPage() {
         <div className="page feed">
             <UserHeader />
             <div className="feed-container">
-                <div style={{display:'flex', width: '100%', justifyContent:'space-between'}}>
+                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
                     <h3>Community Feed</h3>
-                    <button className="button">Upload Clothes</button>
+                    <PostOutfit />
                 </div>
                 {loading ? (
                     <div>Loading...</div>
@@ -182,21 +187,21 @@ function FeedPage() {
                     posts.map(post => (
                         <div key={post._id} className="feed-card">
                             <div className="feed-card-header">
-                                <img 
-                                    src={post.user.profileImage} 
-                                    alt={post.user.username} 
+                                <img
+                                    src={post.user.profileImage}
+                                    alt={post.user.username}
                                     className="user-avatar"
                                 />
                                 <span className="username">{post.user.username}</span>
                             </div>
-                            <img 
-                                src={post.imageUrl} 
-                                alt="Outfit" 
+                            <img
+                                src={post.imageUrl}
+                                alt="Outfit"
                                 className="feed-image"
                             />
                             <div className="feed-card-actions">
                                 <div className="action-buttons">
-                                    <button 
+                                    <button
                                         className={`action-button ${post.userHasLiked ? 'liked' : ''}`}
                                         onClick={() => handleLike(post._id)}
                                         title={post.userHasLiked ? "Unlike" : "Like"}
@@ -204,7 +209,7 @@ function FeedPage() {
                                         {post.userHasLiked ? '❤️' : '🤍'}
                                         <span>{post.likesCount || 0} likes</span>
                                     </button>
-                                    <button 
+                                    <button
                                         className="action-button"
                                         onClick={() => setSelectedPost(post)}
                                         title="Comments"
@@ -217,7 +222,7 @@ function FeedPage() {
                                     <strong>{post.user.username}</strong> {post.caption}
                                 </div>
                                 {post.comments && post.comments.length > 0 && (
-                                    <div 
+                                    <div
                                         className="view-comments"
                                         onClick={() => setSelectedPost(post)}
                                     >
@@ -239,9 +244,9 @@ function FeedPage() {
                         </div>
                         <div className="comments-section">
                             <div className="comments-header">
-                                <img 
-                                    src={selectedPost.user.profileImage} 
-                                    alt={selectedPost.user.username} 
+                                <img
+                                    src={selectedPost.user.profileImage}
+                                    alt={selectedPost.user.username}
                                     className="user-avatar"
                                 />
                                 <span className="username">{selectedPost.user.username}</span>
@@ -249,9 +254,9 @@ function FeedPage() {
                             <div className="comments-list">
                                 {selectedPost.comments && selectedPost.comments.map((comment, index) => (
                                     <div key={index} className="comment">
-                                        <img 
-                                            src={comment.user.profileImage} 
-                                            alt={comment.user.username} 
+                                        <img
+                                            src={comment.user.profileImage}
+                                            alt={comment.user.username}
                                             className="user-avatar"
                                         />
                                         <div className="comment-content">
@@ -274,7 +279,7 @@ function FeedPage() {
                                         }
                                     }}
                                 />
-                                <button 
+                                <button
                                     className="send-comment-btn"
                                     onClick={() => handleComment(selectedPost._id)}
                                     disabled={!newComment.trim()}

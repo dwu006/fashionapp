@@ -3,9 +3,10 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: #1a1a1a;
+    background-color: white;
     width: 100vw; /* Ensures no horizontal scrolling */
     overflow-x: hidden;
+    color:black;
 }
 
 .page .content {
@@ -23,4 +24,11 @@
 .page .menu.footer {
     margin-top: auto;
     width: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+    .page {
+        background-color: #1a1a1a;
+        color: white;
+    }
 }

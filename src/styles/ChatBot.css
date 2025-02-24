@@ -1,0 +1,12 @@
+.textbox {
+    resize: none;
+    width: 95.6%;
+    height: 100px;
+    padding-right: 50px;
+}
+
+.textbox:focus {
+    border:none;
+    background-color:transparent;
+    color:black;
+}
