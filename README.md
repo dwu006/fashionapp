@@ -27,7 +27,7 @@ To run the backend and frontend, open 2 terminals:
 
 1. In the first terminal, navigate to the backend folder and run:
    
-   node server.js
+   node app.js
 
 2. In the second terminal, run the frontend:
 
