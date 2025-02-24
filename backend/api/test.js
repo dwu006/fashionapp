@@ -14,7 +14,7 @@ const uploadResult = await fileManager.uploadFile(
 );
 console.log(
   `Uploaded file ${uploadResult.file.displayName} as: ${uploadResult.file.uri}`,
-);
+);it 
 
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);

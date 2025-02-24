@@ -1,3 +1,9 @@
+/* Set comment color for better visibility */
+/*! Set comment color for better visibility */
+:not(pre) > comment {
+    color: #999999 !important;
+}
+
 /* Common page layout styles */
 .page {
     min-height: 100vh;

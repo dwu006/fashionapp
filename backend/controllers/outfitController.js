@@ -55,6 +55,15 @@ const outfitController = {
             // Transform outfits to include user-specific like status
             const safeOutfits = outfits.map(outfit => {
                 const outfitObj = outfit.toObject();
+                
+                // Properly handle the image buffer
+                if (outfitObj.image && outfitObj.image.data) {
+                    outfitObj.image = {
+                        data: outfitObj.image.data,
+                        contentType: outfitObj.image.contentType
+                    };
+                }
+                
                 outfitObj.likes = Array.isArray(outfitObj.likes) ? outfitObj.likes : [];
                 outfitObj.userHasLiked = outfitObj.likes.some(id => id.toString() === userId.toString());
                 outfitObj.likesCount = outfitObj.likes.length;
@@ -63,6 +72,7 @@ const outfitController = {
 
             res.json({ outfits: safeOutfits });
         } catch (error) {
+            console.error('Error in getAllOutfits:', error);
             res.status(500).json({ message: 'Error fetching outfits', error: error.message });
         }
     },
