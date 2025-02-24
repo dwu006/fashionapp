@@ -261,7 +261,7 @@ function FeedPage() {
                                         />
                                         <div className="comment-content">
                                             <span className="comment-username">{comment.user.username}</span>
-                                            {comment.content}
+                                            <span className="comment-text">{comment.content}</span>
                                         </div>
                                     </div>
                                 ))}
