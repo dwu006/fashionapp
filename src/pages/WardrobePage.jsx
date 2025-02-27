@@ -4,6 +4,7 @@ import Footer from "../components/Footer.jsx";
 import UploadClothes from "../components/UploadClothes.jsx";
 import MyWardrobe from "../components/MyWardrobe.jsx";
 import WeatherBox from "../components/WeatherBox.jsx";
+import DonationMap from "../components/DonationMap.jsx";
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import "../styles/WardrobePage.css";
@@ -33,11 +34,16 @@ function WardrobePage() {
                     }}>
                         My Wardrobe
                     </h1>
-                    <WeatherBox />  {/* Added WeatherBox here */}
+                    <WeatherBox />
                     <UploadClothes />
                 </div>
                 <div style={{ marginTop: '40px' }}>
                     <MyWardrobe />
+                </div>
+                {/* Donation Map Section */}
+                <div className="donation-map-container">
+                    <h2>Find Nearby Donation Centers</h2>
+                    <DonationMap />
                 </div>
             </div>
             <Footer />
