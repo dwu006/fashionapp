@@ -11,8 +11,9 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.22.0",
+    "@react-google-maps/api": "^2.20.6",
     "@types/node": "^22.13.1",
-    "axios": "^1.7.9",
+    "axios": "^1.8.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
