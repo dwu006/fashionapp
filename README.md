@@ -22,14 +22,17 @@ npm install
 ```bash 
 npm run dev  
 ```
-Visit https://localhost:5173 in your browser.
+
 
 ### 4. Start the Backend
+Split the terminal or open a new one
 ```bash
 cd backend
 node app.js
 ```
+Visit https://localhost:5173 in your browser
 App is now ready to use!
+
 
 ## Contributing
 
