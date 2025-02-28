@@ -4,8 +4,11 @@ import path from 'path';
 import userRouter from './routes/userRoute.js';
 import wardrobeRouter from './routes/wardrobeRoute.js';
 import outfitRouter from './routes/outfitRoute.js';
-import { createClothing } from './api/gemini.js';
+import { createClothing } from './api/g.js';
+<<<<<<< Updated upstream
 import donationCentersRoute from './api/donation_centers_api.js';
+=======
+>>>>>>> Stashed changes
 import { fileURLToPath } from 'url';
 import http from 'http';
 import db from './config/db.js';
