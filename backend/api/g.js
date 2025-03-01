@@ -1,11 +1,14 @@
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import WardrobeItem from "../models/WardrobeItem.js";
 import getWeather from "./weather.js";
-import dotenv from 'dotenv';
 
-dotenv.config();
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+const genAI = new GoogleGenerativeAI(process.env.MAIN_GEMINI_API_KEY);
 
 // Helper function to convert Buffer to base64
 const bufferToBase64 = (buffer) => {
@@ -51,6 +54,7 @@ const getWeatherSuggestions = (weatherData) => {
 
 export async function generateOutfit(userId, prompt, lat, lon) {
     try {
+        console.log("user id: ", userId)
         // 1. Get weather data
         const weatherData = await getWeather(lat, lon);
         const weatherSuggestions = getWeatherSuggestions(weatherData);

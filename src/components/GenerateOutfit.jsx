@@ -52,7 +52,7 @@ function GenerateOutfit() {
 
     async function handleSubmit(message) {
         try {
-            const { data } = await axios.post('http://localhost:5000/ai', { prompt: message }, {
+            const { data } = await axios.post('http://localhost:5001/ai', { prompt: message }, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`

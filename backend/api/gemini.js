@@ -11,7 +11,8 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+console.log(process.env.MAIN_GEMINI_API_KEY)
+const GEMINI_API_KEY = process.env.MAIN_GEMINI_API_KEY;
 const fileManager = new GoogleAIFileManager(GEMINI_API_KEY);
 
 
