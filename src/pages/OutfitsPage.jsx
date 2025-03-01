@@ -14,8 +14,13 @@ function OutfitsPage() {
     return (
         <div className="page feed">
             <UserHeader />
-            <div className="content">
-                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+            <div className="content" style={{ paddingTop: '0' }}>
+                <div style={{ 
+                    display: 'flex', 
+                    width: '100%', 
+                    justifyContent: 'space-between',
+                    padding: '20px'
+                }}>
                     <h3>Generate Outfit</h3>
                     <button className="button">Saved Outfits</button>
                 </div>
