@@ -4,7 +4,7 @@ import path from 'path';
 import userRouter from './routes/userRoute.js';
 import wardrobeRouter from './routes/wardrobeRoute.js';
 import outfitRouter from './routes/outfitRoute.js';
-import { generateOutfit } from './api/g.js';
+import { createClothing, generateOutfit } from './api/g.js';
 import donationCentersRoute from './api/donation_centers_api.js';
 import { fileURLToPath } from 'url';
 import http from 'http';

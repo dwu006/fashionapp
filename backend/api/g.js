@@ -69,7 +69,7 @@ export async function generateOutfit(userId, prompt, lat, lon) {
         }));
 
         // 4. Initialize Gemini model
-        const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         // 5. Prepare the prompt for Gemini
         const systemPrompt = `You are a professional fashion stylist. Analyze the following wardrobe items and create an outfit based on:
@@ -129,5 +129,25 @@ export async function generateOutfit(userId, prompt, lat, lon) {
     } catch (error) {
         console.error("Error in generateOutfit:", error);
         throw new Error("Failed to generate outfit recommendation");
+    }
+}
+
+export async function createClothing(req, res) {
+    try {
+        const { prompt } = req.body;
+        const model = genAI.getGenerativeModel({
+            model: "gemini-1.5-flash",
+        });
+        const result = await model.generateContent([`${prompt}`]);
+        const generatedTexts = result.response.text();
+
+        return res.json({
+            message: 'Clothing generated successfully',
+            data: generatedTexts
+        });
+    }
+    catch (error) {
+        console.error("Error generating clothing:", error);
+        throw new Error("Failed to generate clothing.");
     }
 }
