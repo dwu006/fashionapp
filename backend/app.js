@@ -4,7 +4,7 @@ import path from 'path';
 import userRouter from './routes/userRoute.js';
 import wardrobeRouter from './routes/wardrobeRoute.js';
 import outfitRouter from './routes/outfitRoute.js';
-import { createClothing } from './api/g.js';
+import aiRouter from './routes/aiRoute.js';
 import donationCentersRoute from './api/donation_centers_api.js';
 import { fileURLToPath } from 'url';
 import http from 'http';
@@ -30,7 +30,7 @@ app.use(express.static(path.join(__dirname, '../src')));
 app.use('/users', userRouter);
 app.use('/wardrobe', wardrobeRouter);
 app.use('/outfits', outfitRouter);
-app.use('/ai', createClothing);
+app.use('/ai', aiRouter);
 app.use('/api', donationCentersRoute);
 
 export const port = process.env.PORT || 5001;

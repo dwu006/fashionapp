@@ -6,7 +6,7 @@ const axios2 = axios.create({
   baseURL: 'http://localhost:5001'
 });
 
-const UploadClothes = () => {
+const UploadClothes = ({ onUploadSuccess }) => {
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -83,7 +83,6 @@ const UploadClothes = () => {
     try {
       setLoading(true);
       
-      // Create form data with both image and category
       const formData = new FormData();
       formData.append('image', file);
       formData.append('category', selectedCategory);  
@@ -96,13 +95,16 @@ const UploadClothes = () => {
 
       console.log('Uploading with category:', selectedCategory);
 
-      // Send data to backend
       const response = await axios2.post('/wardrobe/upload', formData, config);
 
       if (response.status === 200) {
+        // Clear form
         setImage(null);
         setFile(null);
         setSelectedCategory(null);
+        
+        // Notify parent to refresh wardrobe
+        onUploadSuccess();
       }
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -114,7 +116,16 @@ const UploadClothes = () => {
   };
 
   return (
-    <div className="upload-clothes" style={{ textAlign: 'center', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div className="upload-clothes" style={{ 
+      padding: '15px',
+      backgroundColor: '#2c2c2c',
+      borderRadius: '12px',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+      color: 'white',
+      height: image ? '400px' : 'auto',
+      transition: 'all 0.3s ease',
+      overflow: 'hidden'
+    }}>
       {/* Hidden file input */}
       <input 
         type="file" 
@@ -128,15 +139,16 @@ const UploadClothes = () => {
       <label 
         htmlFor="file-upload" 
         style={{
-          padding: '10px 20px',
+          padding: '8px 16px',
           backgroundColor: '#4CAF50',
           color: 'white',
           borderRadius: '5px',
           cursor: 'pointer',
           display: 'inline-block',
-          marginBottom: '20px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          transition: 'background-color 0.3s'
+          marginBottom: '15px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+          transition: 'background-color 0.3s',
+          fontSize: '0.9rem'
         }}
         onMouseOver={(e) => e.target.style.backgroundColor = '#45a049'}
         onMouseOut={(e) => e.target.style.backgroundColor = '#4CAF50'}
@@ -146,50 +158,49 @@ const UploadClothes = () => {
 
       {image && (
         <div className="image-preview" style={{ 
-          marginTop: '20px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          width: '100%',
-          maxWidth: '300px'
+          width: '100%'
         }}>
           <img 
             src={image} 
             alt="Clothes" 
             style={{ 
-              width: "100%", 
-              maxWidth: "200px", 
-              marginBottom: '20px',
+              width: "100%",
+              height: "180px",
+              objectFit: "contain",
+              marginBottom: '15px',
               borderRadius: '8px',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+              backgroundColor: '#1a1a1a'
             }} 
           />
 
           {/* Category Selection Buttons */}
           <div style={{
-            display: 'flex',
-            gap: '10px',
-            marginBottom: '20px',
-            justifyContent: 'center',
-            width: '100%',
-            maxWidth: '600px'
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '8px',
+            marginBottom: '15px',
+            width: '100%'
           }}>
-            {['top', 'bottom', 'outerwear', 'accessories', 'other'].map((category) => (
+            {['top', 'bottom', 'outerwear', 'shoes', 'accessories', 'other'].map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(prev => prev === category ? null : category)}
                 style={{
-                  padding: '8px 12px',
-                  backgroundColor: selectedCategory === category ? '#4CAF50' : '#f0f0f0',
-                  color: selectedCategory === category ? 'white' : 'black',
+                  padding: '8px',
+                  backgroundColor: selectedCategory === category ? '#4CAF50' : '#3c3c3c',
+                  color: 'white',
                   border: 'none',
-                  borderRadius: '5px',
+                  borderRadius: '6px',
                   cursor: 'pointer',
                   textTransform: 'capitalize',
                   transition: 'all 0.3s',
-                  flex: '1',
-                  minWidth: 'fit-content',
-                  fontSize: '0.9rem'
+                  fontSize: '0.8rem',
+                  fontWeight: selectedCategory === category ? 'bold' : 'normal',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                  whiteSpace: 'nowrap'
                 }}
               >
                 {category}
@@ -201,20 +212,20 @@ const UploadClothes = () => {
             onClick={handleSubmit}
             disabled={loading || !selectedCategory}
             style={{
-              marginTop: "20px",
-              padding: '10px 20px',
-              backgroundColor: '#2196F3',
+              padding: '8px 20px',
+              backgroundColor: loading || !selectedCategory ? '#404040' : '#4CAF50',
               color: 'white',
               border: 'none',
-              borderRadius: '5px',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              opacity: loading ? 0.7 : 1,
-              transition: 'opacity 0.3s',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-              width: '200px'
+              borderRadius: '6px',
+              cursor: loading || !selectedCategory ? 'not-allowed' : 'pointer',
+              fontSize: '0.9rem',
+              fontWeight: 'bold',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+              transition: 'all 0.3s',
+              width: 'fit-content'
             }}
           >
-            {loading ? "Uploading..." : "Upload to Wardrobe"}
+            {loading ? 'Uploading...' : 'Save to Wardrobe'}
           </button>
         </div>
       )}

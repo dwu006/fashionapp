@@ -82,40 +82,42 @@ function UserHeader() {
     }
 
     return (
-        <div className="menu header user-header">
-            <h1><Link to="/" style={{ color: "inherit"}}>fitchck</Link></h1>
-            <div className="menu-buttons">
-                <button className="button" id="home" onClick={() => handleClick("home")}>Home</button>
-                <button className="button" id="wardrobe" onClick={() => handleClick("wardrobe")}>Wardrobe</button>
-                <button className="button" id="outfits" onClick={() => handleClick("outfits")}>Outfits</button>
-                <button className="button" id="feed" onClick={() => handleClick("feed")}>Feed</button>
-                <button className="button" id="about" onClick={() => handleClick("about")}>About</button>
-            </div>
-            <div className="dropdown-container" ref={dropdownRef}>
-                <button 
-                    className={`button login profile-button ${isDropdownOpen ? 'open' : ''}`}
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                >
-                    <span className="username">{username}</span> <span className="arrow">▼</span>
-                </button>
-                {isDropdownOpen && (
-                    <div className="profile-dropdown">
-                        <button 
-                            className="dropdown-button"
-                            onClick={() => handleClick("update-profile")}
-                        >
-                            Update Profile
-                        </button>
-                        <button 
-                            className="dropdown-button"
-                            onClick={() => handleClick("logout")}
-                        >
-                            Logout
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
+        <header>
+            <nav className="menu header user-header">
+                <h1><Link to="/" style={{ color: "inherit"}}>fitchck</Link></h1>
+                <div className="menu-buttons">
+                    <button className="button" id="home" onClick={() => handleClick("home")}>Home</button>
+                    <button className="button" id="wardrobe" onClick={() => handleClick("wardrobe")}>Wardrobe</button>
+                    <button className="button" id="outfits" onClick={() => handleClick("outfits")}>Outfits</button>
+                    <button className="button" id="feed" onClick={() => handleClick("feed")}>Feed</button>
+                    <button className="button" id="about" onClick={() => handleClick("about")}>About</button>
+                </div>
+                <div className="dropdown-container" ref={dropdownRef}>
+                    <button 
+                        className={`button login profile-button ${isDropdownOpen ? 'open' : ''}`}
+                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    >
+                        <span className="username">{username}</span> <span className="arrow">▼</span>
+                    </button>
+                    {isDropdownOpen && (
+                        <div className="profile-dropdown">
+                            <button 
+                                className="dropdown-button"
+                                onClick={() => handleClick("update-profile")}
+                            >
+                                Update Profile
+                            </button>
+                            <button 
+                                className="dropdown-button"
+                                onClick={() => handleClick("logout")}
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </nav>
+        </header>
     );
 }
 

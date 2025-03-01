@@ -6,7 +6,7 @@ const axios2 = axios.create({
   baseURL: 'http://localhost:5001'
 });
 
-const MyWardrobe = () => {
+const MyWardrobe = ({ refreshTrigger }) => {
   const [items, setItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedItem, setSelectedItem] = useState(null);
@@ -61,7 +61,7 @@ const MyWardrobe = () => {
 
   useEffect(() => {
     fetchWardrobeItems();
-  }, []);
+  }, [refreshTrigger]);
 
   const filteredItems = selectedCategory === 'all' 
     ? items 
@@ -139,31 +139,44 @@ const MyWardrobe = () => {
         gap: '10px',
         marginBottom: '30px',
         overflowX: 'auto',
-        padding: '10px 0',
-        maxWidth: '100%'
+        padding: '10px 20px',
+        maxWidth: '100%',
+        WebkitOverflowScrolling: 'touch',
+        msOverflowStyle: 'none',
+        scrollbarWidth: 'none',
+        '&::-webkit-scrollbar': {
+          display: 'none'
+        }
       }}>
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: selectedCategory === category ? '#4CAF50' : '#f0f0f0',
-              color: selectedCategory === category ? 'white' : 'black',
-              border: 'none',
-              borderRadius: '25px',
-              cursor: 'pointer',
-              textTransform: 'capitalize',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.3s',
-              fontSize: '14px',
-              fontWeight: selectedCategory === category ? 'bold' : 'normal',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-            }}
-          >
-            {category}
-          </button>
-        ))}
+        <div style={{
+          display: 'flex',
+          gap: '10px',
+          padding: '0 10px'
+        }}>
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: selectedCategory === category ? '#4CAF50' : '#f0f0f0',
+                color: selectedCategory === category ? 'white' : 'black',
+                border: 'none',
+                borderRadius: '25px',
+                cursor: 'pointer',
+                textTransform: 'capitalize',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.3s',
+                fontSize: '14px',
+                fontWeight: selectedCategory === category ? 'bold' : 'normal',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                minWidth: 'fit-content'
+              }}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Items Grid */}
