@@ -10,7 +10,7 @@
    Heading Styles
    ============================ */
 .main-heading {
-    font-size: 110px;
+    font-size: clamp(40px, 6vw, 110px);
     font-weight: bold;
     margin-top: 0px; /* Removes extra space above */
     padding-top: 0px; /* Ensures no extra padding */
@@ -19,7 +19,7 @@
 
 
 .sub-heading {
-    font-size: 60px; /* Secondary heading */
+    font-size: clamp(24px, 4vw, 60px); /* Secondary heading */
     font-weight: bold;
 }
 
@@ -33,9 +33,12 @@ h1, h2 {
    Profile Image
    ============================ */
 .profile-image {
-    width: 650px;
+    width: 100%;
+    max-width: min(650px, 45vw);
+    height: auto;
     border-radius: 25px;
-    flex-shrink: 0; /* Prevents the image from shrinking */
+    object-fit: cover;
+    flex-shrink: 1; /* allowsshrinking */
     margin: 20px 0;
 }
 
