@@ -147,17 +147,17 @@ function FeedPage() {
 
             setPosts((prevPosts) => {
                 const updatedPosts = prevPosts.map((post) =>
-                  post._id === postId
-                    ? { ...post, comments: [...post.comments, newCommentObj] }
-                    : post
+                    post._id === postId
+                        ? { ...post, comments: [...post.comments, newCommentObj] }
+                        : post
                 );
                 // Update selectedPost if it's the one being commented on
                 const updatedSelectedPost = updatedPosts.find((post) => post._id === postId);
                 setSelectedPost(updatedSelectedPost);
-              
+
                 return updatedPosts;
-              });
-              
+            });
+
 
             setNewComment("");
         } catch (error) {
@@ -174,11 +174,11 @@ function FeedPage() {
     return (
         <div className="page feed">
             <UserHeader />
+            <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                <h3>Community Feed</h3>
+                <PostOutfit onOutfitPosted={fetchPosts}/>
+            </div>
             <div className="feed-container">
-                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-                    <h3>Community Feed</h3>
-                    <PostOutfit />
-                </div>
                 {loading ? (
                     <div>Loading...</div>
                 ) : posts.length === 0 ? (
@@ -186,7 +186,9 @@ function FeedPage() {
                 ) : (
                     posts.map(post => (
                         <div key={post._id} className="feed-card">
-                            <div className="feed-card-header">
+                            <div className="feed-card-header"
+                                onClick={() => setSelectedPost(post)}
+                            >
                                 <img
                                     src={post.user.profileImage}
                                     alt={post.user.username}
@@ -198,8 +200,10 @@ function FeedPage() {
                                 src={post.imageUrl}
                                 alt="Outfit"
                                 className="feed-image"
+                                onClick={() => setSelectedPost(post)}
                             />
-                            <div className="feed-card-actions">
+                            <div className="feed-card-actions"
+                            >
                                 <div className="action-buttons">
                                     <button
                                         className={`action-button ${post.userHasLiked ? 'liked' : ''}`}
@@ -237,12 +241,22 @@ function FeedPage() {
 
             {selectedPost && (
                 <div className="comments-modal" onClick={() => setSelectedPost(null)}>
-                    <button className="close-modal" title="Close">✕</button>
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
                         <div className="modal-image">
                             <img src={selectedPost.imageUrl} alt="Outfit" />
                         </div>
                         <div className="comments-section">
+                            <button
+                                className="close-modal"
+                                title="Close"
+                                style={{
+                                    position: 'absolute',
+                                    right: '22.5%',
+                                    backgroundColor: 'transparent',
+                                    border: 'none'
+                                }}
+                                onClick={() => setSelectedPost(null)}
+                            >✕</button>
                             <div className="comments-header">
                                 <img
                                     src={selectedPost.user.profileImage}
@@ -266,7 +280,39 @@ function FeedPage() {
                                     </div>
                                 ))}
                             </div>
-                            <div className="add-comment">
+                            <div className="add-comment"
+                                style={{
+                                    display: 'flex'
+                                }}
+                            >
+                                <textarea
+                                    className="comment-input"
+                                    placeholder="Add a comment..."
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                    onKeyPress={(e) => {
+                                        if (e.key === 'Enter' && !e.shiftKey) {
+                                            e.preventDefault();
+                                            handleComment(selectedPost._id);
+                                        }
+                                    }}
+                                />
+                                <button
+                                    className="send-comment-btn"
+                                    onClick={() => handleComment(selectedPost._id)}
+                                    disabled={!newComment.trim()}
+                                    title="Send comment"
+                                    style={{
+                                        backgroundColor: 'transparent',
+                                        border: 'none'
+                                    }}
+                                >
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M2.01 21L23 12L2.01 3L2 10L17 12L2 14L2.01 21Z" fill="currentColor" />
+                                    </svg>
+                                </button>
+                            </div>
+                            {/* <div className="add-comment">
                                 <textarea
                                     className="comment-input"
                                     placeholder="Add a comment..."
@@ -287,13 +333,14 @@ function FeedPage() {
                                 >
                                     ➤
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>
-            )}
+            )
+            }
             <Footer />
-        </div>
+        </div >
     );
 }
 
