@@ -1,67 +1,87 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-
-const API_KEY = "3acd2d8703126ae2cb35ac917c98be4c"; // Replace with your OpenWeather API key
 
 const WeatherBox = () => {
   const [weather, setWeather] = useState(null);
-  const [city, setCity] = useState("Loading...");
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchWeather = async (latitude, longitude) => {
+    const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
+
+    if (!apiKey) return;
+
+    const fetchWeather = async (lat, lon) => {
       try {
-        const response = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}`
+        const response = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`
         );
-        setWeather(response.data);
-        setCity(response.data.name);
-      } catch (error) {
-        console.error("Error fetching weather data:", error);
+
+        if (response.status === 404) {
+          throw new Error("Location not found");
+        } else if (!response.ok) {
+          throw new Error("Failed to Fetch Weather");
+        }
+
+        const data = await response.json();
+        setWeather({
+          temperature: Math.round(data.main.temp),
+          condition: capitalizeWords(data.weather[0].description),
+          emoji: getWeatherEmoji(data.weather[0].id),
+        });
+      } catch (err) {
+        setError("Weather data unavailable");
       }
     };
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          fetchWeather(position.coords.latitude, position.coords.longitude);
+          const { latitude, longitude } = position.coords;
+          fetchWeather(latitude, longitude);
         },
         () => {
-          // Default to Cupertino if location access is denied
-          fetchWeather(37.3229, -122.0322);
-          setCity("Cupertino");
+          setError("Location access denied");
         }
       );
     } else {
-      fetchWeather(37.3229, -122.0322);
-      setCity("Cupertino");
+      setError("Geolocation not supported");
     }
   }, []);
 
-  if (!weather) {
-    return <div className="weather-box">Loading weather...</div>;
-  }
-
-  // Map weather descriptions to emojis
-  const weatherEmojis = {
-    Clear: "☀️",
-    Clouds: "☁️",
-    Rain: "🌧️",
-    Thunderstorm: "⛈️",
-    Snow: "❄️",
-    Mist: "🌫️",
-    Fog: "🌁",
-    Drizzle: "🌦️",
+  const getWeatherEmoji = (weatherId) => {
+    const emojiMap = {
+      800: "☀️", // Clear sky
+      801: "⛅", // Few clouds
+      802: "☁️", // Scattered clouds
+      803: "🌥", // Broken clouds
+      804: "🌫", // Overcast clouds
+      300: "🌧", // Drizzle
+      500: "🌦", // Light rain
+      501: "🌧", // Moderate rain
+      502: "⛈", // Heavy rain
+      600: "❄️", // Snow
+      611: "🌨", // Sleet
+      701: "🌫", // Fog
+      771: "🌬", // Windy
+    };
+    return emojiMap[weatherId] || "❓";
   };
 
-  const weatherCondition = weather.weather[0].main;
-  const weatherEmoji = weatherEmojis[weatherCondition] || "❓"; // Default emoji if condition not found
+  const capitalizeWords = (str) => {
+    return str.replace(/\b\w/g, (char) => char.toUpperCase());
+  };
 
   return (
     <div className="weather-box">
-      <p className="weather-city">{city}</p>
-      <p className="weather-info">
-        {Math.round(weather.main.temp)}°F {weatherCondition} {weatherEmoji}
-      </p>
+      {error ? (
+        <span className="weather-error">{error}</span>
+      ) : weather ? (
+        <span className="weather-info">
+          Today's Weather: {weather.temperature}° {weather.condition}{" "}
+          {weather.emoji}
+        </span>
+      ) : (
+        <span className="loading-text">Fetching Weather...</span>
+      )}
     </div>
   );
 };
