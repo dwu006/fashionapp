@@ -17,7 +17,7 @@ function SignUpPage() {
     async function handleSignUp() {
         const userData = { name, email, password };
         try {
-            const response = await fetch('http://localhost:5001/users/register', {
+            const response = await fetch('http://localhost:5000/users/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -47,7 +47,7 @@ function SignUpPage() {
                     <p>Already have an account? <Link to="/login">Login</Link></p>
                 </div>
             </div>
-            <p>©2025 Fitchck All Rights Reserved</p>
+            <center><p>©2025 Fitchck All Rights Reserved</p></center>
         </div>
     )
 }

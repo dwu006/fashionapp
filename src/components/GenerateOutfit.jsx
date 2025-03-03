@@ -82,7 +82,7 @@ function GenerateOutfit() {
 
         setLoading(true);
         try {
-            const { data } = await axios.post('http://localhost:5001/ai/generate-outfit', {
+            const { data } = await axios.post('http://localhost:5000/ai/generate-outfit', {
                 prompt: message,
                 lat: location.lat,
                 lon: location.lon
