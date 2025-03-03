@@ -1,6 +1,22 @@
 # Fashion App
 A digital wardrobe to collect your clothing, generate best outfits, and share fits with the community!
 
+## Project Overview
+
+### Inspiration
+
+### Core Features
+- 
+
+### Tech Stack
+- MongoDB
+- Express
+- React
+- Node
+- Google Gemini API
+- Google Maps API
+- OpenWeather API
+
 ## Prerequisites
 - Node.js 
 - npm (included with Node.js)
@@ -15,16 +31,24 @@ cd fashionapp
 
 ### 2. Install Dependencies
 ```bash
-npm install  
+npm instal
 ```
 
-### 3. Start the Frontend
+### 3. Create Environment Variables
+- Create an .env file
+- Add these environment variables
+```bash
+MONGODB_URI=your_mongodb_uri
+GEMINI_API_KEY=your_gemini_key
+WEATHER_API_KEY= your_weather_key
+```
+
+### 4. Start the Frontend
 ```bash 
 npm run dev  
 ```
 
-
-### 4. Start the Backend
+### 5. Start the Backend
 Split the terminal or open a new one
 ```bash
 cd backend
