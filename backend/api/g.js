@@ -54,7 +54,6 @@ const getWeatherSuggestions = (weatherData) => {
 
 export async function generateOutfit(userId, prompt, lat, lon) {
     try {
-        console.log("user id: ", userId)
         // 1. Get weather data
         const weatherData = await getWeather(lat, lon);
         const weatherSuggestions = getWeatherSuggestions(weatherData);
@@ -102,12 +101,15 @@ export async function generateOutfit(userId, prompt, lat, lon) {
             }))
         ]);
 
+        console.log(result);
+        console.log(result.response.text())
         const response = result.response;
         let outfit;
 
         try {
             // Parse the response to get structured outfit data
-            outfit = JSON.parse(response.text());
+            outfit = response.text();
+            console.log(outfit);
         } catch (error) {
             console.error("Error parsing Gemini response:", error);
             // Fallback to raw response if parsing fails
@@ -116,7 +118,6 @@ export async function generateOutfit(userId, prompt, lat, lon) {
                 rawResponse: response.text()
             };
         }
-
         return {
             outfit,
             weather: {
@@ -134,16 +135,17 @@ export async function generateOutfit(userId, prompt, lat, lon) {
 
 export async function createClothing(req, res) {
     try {
-        const { prompt } = req.body;
-        const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash",
-        });
-        const result = await model.generateContent([`${prompt}`]);
-        const generatedTexts = result.response.text();
+        const { userId, prompt, latitude, longitude } = req.body;
+        const result = await generateOutfit(userId, prompt, latitude, longitude);
+        const outfitData = result.outfit;
+        const cleanedOutfit = outfitData.replace(/```json\n|```/g, '');
+        const weather = result.weather;
+        const parsedOutfit = JSON.parse(cleanedOutfit);
 
         return res.json({
             message: 'Clothing generated successfully',
-            data: generatedTexts
+            data: parsedOutfit,
+            weather: weather
         });
     }
     catch (error) {

@@ -30,7 +30,7 @@ app.use(express.static(path.join(__dirname, '../src')));
 app.use('/users', userRouter);
 app.use('/wardrobe', wardrobeRouter);
 app.use('/outfits', outfitRouter);
-app.use('/ai', generateOutfit);
+app.use('/ai', createClothing);
 app.use('/api', donationCentersRoute);
 
 export const port = process.env.PORT || 5001;
