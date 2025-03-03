@@ -3,7 +3,7 @@ import axios from "axios";
 
 // Connect to backend server
 const axios2 = axios.create({
-  baseURL: "http://localhost:5001",
+  baseURL: "http://localhost:5000",
 });
 
 const UploadClothes = ({ onUploadSuccess }) => {
@@ -17,7 +17,7 @@ const UploadClothes = ({ onUploadSuccess }) => {
     // Fetch user profile to get user ID when component mounts
     const fetchUserId = async () => {
       try {
-        const response = await fetch("http://localhost:5001/users/profile", {
+        const response = await fetch("http://localhost:5000/users/profile", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

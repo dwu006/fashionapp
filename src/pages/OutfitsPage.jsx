@@ -12,7 +12,7 @@ function OutfitsPage() {
     }
 
     return (
-        <div className="page feed">
+        <div className="page feed-page">
             <UserHeader />
             <div className="content" style={{ paddingTop: '0' }}>
                 <div style={{ 

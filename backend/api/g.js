@@ -99,6 +99,9 @@ export async function generateOutfit(userId, prompt, lat, lon) {
         ).join('\n')}
 
         If there are no items in a category, just return N/A for that category.
+        If there are no items suitable for the style, just return No Suitable Items for that category.
+        For example, you only have sweatpants, but the user asks for a date outfit, you will return No Suitable Items 
+        since no one would wear sweatpants on a date.
 
         Return a JSON object with this structure:
         {

@@ -10,7 +10,7 @@ const ProtectedRoute = ({ children }) => {
     // Verify token on component mount and when token changes
     const verifyToken = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/users/profile`, {
+        const response = await fetch(`http://localhost:5000/users/profile`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
