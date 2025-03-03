@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-//connect to backend server
+// Connect to backend server
 const axios2 = axios.create({
-  baseURL: 'http://localhost:5001'
+  baseURL: "http://localhost:5001",
 });
 
 const UploadClothes = ({ onUploadSuccess }) => {
@@ -17,18 +17,18 @@ const UploadClothes = ({ onUploadSuccess }) => {
     // Fetch user profile to get user ID when component mounts
     const fetchUserId = async () => {
       try {
-        const response = await fetch('http://localhost:5001/users/profile', {
+        const response = await fetch("http://localhost:5001/users/profile", {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         });
-        
+
         if (response.ok) {
           const data = await response.json();
           setUserId(data._id);
         }
       } catch (error) {
-        console.error('Error fetching user ID:', error);
+        console.error("Error fetching user ID:", error);
       }
     };
 
@@ -38,25 +38,25 @@ const UploadClothes = ({ onUploadSuccess }) => {
   // Handle image upload
   const handleImageUpload = (e) => {
     const selectedFile = e.target.files[0];
-    
+
     // Clear previous image and file
     setImage(null);
     setFile(null);
-    
+
     if (selectedFile) {
       // Validate file type
-      if (!selectedFile.type.startsWith('image/')) {
-        alert('Upload an image');
+      if (!selectedFile.type.startsWith("image/")) {
+        alert("Upload an image");
         return;
       }
-      
+
       setFile(selectedFile);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImage(reader.result);
       };
       reader.onerror = () => {
-        alert('Error reading file');
+        alert("Error reading file");
         setImage(null);
         setFile(null);
       };
@@ -82,150 +82,96 @@ const UploadClothes = ({ onUploadSuccess }) => {
 
     try {
       setLoading(true);
-      
+
       const formData = new FormData();
-      formData.append('image', file);
-      formData.append('category', selectedCategory);  
+      formData.append("image", file);
+      formData.append("category", selectedCategory);
 
       const config = {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       };
 
-      console.log('Uploading with category:', selectedCategory);
+      console.log("Uploading with category:", selectedCategory);
 
-      const response = await axios2.post('/wardrobe/upload', formData, config);
+      const response = await axios2.post("/wardrobe/upload", formData, config);
 
       if (response.status === 200) {
         // Clear form
         setImage(null);
         setFile(null);
         setSelectedCategory(null);
-        
+
         // Notify parent to refresh wardrobe
         onUploadSuccess();
       }
     } catch (error) {
-      console.error('Error uploading image:', error);
-      console.error('Error details:', error.response?.data);
-      alert('Failed to upload image: ' + (error.response?.data?.error || error.message));
+      console.error("Error uploading image:", error);
+      console.error("Error details:", error.response?.data);
+      alert(
+        "Failed to upload image: " +
+          (error.response?.data?.error || error.message)
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="upload-clothes" style={{ 
-      padding: '15px',
-      backgroundColor: '#2c2c2c',
-      borderRadius: '12px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-      color: 'white',
-      height: image ? '400px' : 'auto',
-      transition: 'all 0.3s ease',
-      overflow: 'hidden'
-    }}>
+    <div className="upload-clothes">
       {/* Hidden file input */}
-      <input 
-        type="file" 
-        accept="image/*" 
+      <input
+        type="file"
+        accept="image/*"
         onChange={handleImageUpload}
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
         id="file-upload"
       />
-      
+
       {/* Styled label as button */}
-      <label 
-        htmlFor="file-upload" 
-        style={{
-          padding: '8px 16px',
-          backgroundColor: '#4CAF50',
-          color: 'white',
-          borderRadius: '5px',
-          cursor: 'pointer',
-          display: 'inline-block',
-          marginBottom: '15px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-          transition: 'background-color 0.3s',
-          fontSize: '0.9rem'
-        }}
-        onMouseOver={(e) => e.target.style.backgroundColor = '#45a049'}
-        onMouseOut={(e) => e.target.style.backgroundColor = '#4CAF50'}
-      >
+      <label htmlFor="file-upload" className="upload-clothing-button">
         Upload Clothing
       </label>
 
       {image && (
-        <div className="image-preview" style={{ 
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          width: '100%'
-        }}>
-          <img 
-            src={image} 
-            alt="Clothes" 
-            style={{ 
-              width: "100%",
-              height: "180px",
-              objectFit: "contain",
-              marginBottom: '15px',
-              borderRadius: '8px',
-              backgroundColor: '#1a1a1a'
-            }} 
-          />
+        <div className="image-preview">
+          <img src={image} alt="Clothes" className="image-preview-img" />
 
           {/* Category Selection Buttons */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '8px',
-            marginBottom: '15px',
-            width: '100%'
-          }}>
-            {['top', 'bottom', 'outerwear', 'shoes', 'accessories', 'other'].map((category) => (
+          <div className="category-buttons">
+            {[
+              "top",
+              "bottom",
+              "outerwear",
+              "shoes",
+              "accessories",
+              "other",
+            ].map((category) => (
               <button
                 key={category}
-                onClick={() => setSelectedCategory(prev => prev === category ? null : category)}
-                style={{
-                  padding: '8px',
-                  backgroundColor: selectedCategory === category ? '#4CAF50' : '#3c3c3c',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  textTransform: 'capitalize',
-                  transition: 'all 0.3s',
-                  fontSize: '0.8rem',
-                  fontWeight: selectedCategory === category ? 'bold' : 'normal',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-                  whiteSpace: 'nowrap'
-                }}
+                onClick={() =>
+                  setSelectedCategory((prev) =>
+                    prev === category ? null : category
+                  )
+                }
+                className={`category-button ${
+                  selectedCategory === category ? "selected" : ""
+                }`}
               >
                 {category}
               </button>
             ))}
           </div>
 
-          <button 
+          <button
             onClick={handleSubmit}
             disabled={loading || !selectedCategory}
-            style={{
-              padding: '8px 20px',
-              backgroundColor: loading || !selectedCategory ? '#404040' : '#4CAF50',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: loading || !selectedCategory ? 'not-allowed' : 'pointer',
-              fontSize: '0.9rem',
-              fontWeight: 'bold',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-              transition: 'all 0.3s',
-              width: 'fit-content'
-            }}
+            className={`submit-button ${
+              loading || !selectedCategory ? "disabled" : ""
+            }`}
           >
-            {loading ? 'Uploading...' : 'Save to Wardrobe'}
+            {loading ? "Uploading..." : "Save to Wardrobe"}
           </button>
         </div>
       )}
