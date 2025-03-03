@@ -85,3 +85,39 @@
 .profile-button.open .arrow {
     transform: rotate(180deg);
 }
+
+@media(prefers-color-scheme:dark) {
+    .menu {
+        background-color: whitesmoke;
+        color: black;
+    }
+    .button {
+        color:rgb(35, 35, 35);
+    }
+    .button:hover, :focus {
+        color:black;
+    }
+    .profile-button .username {
+        color:black;
+    }
+    .profile-dropdown {
+        background-color: white;
+    }
+    .profile-dropdown {
+        background-color: white;
+    }
+    
+    .dropdown-button {
+        border-bottom: 1px solid #444;
+        color: black;
+    }
+    
+    .dropdown-button:hover {
+        background-color: white;
+        color: black;
+    }
+    
+    .profile-button .username {
+        color:black;
+    }
+}

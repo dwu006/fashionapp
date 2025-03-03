@@ -38,3 +38,16 @@
     border-radius: 30px;
     width: 150px;
 }
+
+@media(prefers-color-scheme:light) {
+    .menu {
+        background-color: whitesmoke;
+        color: black;
+    }
+    .button {
+        color:rgb(35, 35, 35);
+    }
+    .button:hover, :focus {
+        color:black;
+    }
+}
