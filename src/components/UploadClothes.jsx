@@ -129,7 +129,7 @@ const UploadClothes = ({ onUploadSuccess }) => {
         id="file-upload"
       />
 
-      {/* Styled label as button */}
+      {/* Styled label as button (fixed position) */}
       <label htmlFor="file-upload" className="upload-clothing-button">
         Upload Clothing
       </label>
@@ -140,14 +140,7 @@ const UploadClothes = ({ onUploadSuccess }) => {
 
           {/* Category Selection Buttons */}
           <div className="category-buttons">
-            {[
-              "top",
-              "bottom",
-              "outerwear",
-              "shoes",
-              "accessories",
-              "other",
-            ].map((category) => (
+            {["top", "bottom", "outerwear", "shoes", "accessories", "other"].map((category) => (
               <button
                 key={category}
                 onClick={() =>
@@ -155,11 +148,9 @@ const UploadClothes = ({ onUploadSuccess }) => {
                     prev === category ? null : category
                   )
                 }
-                className={`category-button ${
-                  selectedCategory === category ? "selected" : ""
-                }`}
+                className={`category-button ${selectedCategory === category ? "selected" : ""}`}
               >
-                {category}
+                {category.charAt(0).toUpperCase() + category.slice(1)}
               </button>
             ))}
           </div>
@@ -167,9 +158,7 @@ const UploadClothes = ({ onUploadSuccess }) => {
           <button
             onClick={handleSubmit}
             disabled={loading || !selectedCategory}
-            className={`submit-button ${
-              loading || !selectedCategory ? "disabled" : ""
-            }`}
+            className={`submit-button ${loading || !selectedCategory ? "disabled" : ""}`}
           >
             {loading ? "Uploading..." : "Save to Wardrobe"}
           </button>
