@@ -39,11 +39,12 @@ cd fashionapp
 
 ### 2. Install Dependencies
 ```bash
-npm instal
+npm install
 ```
 
 ### 3. Create Environment Variables
 - Create an .env file
+- Add .env in gitignore to hide API keys
 - Add these environment variables
 ```bash
 MONGODB_URI=your_mongodb_uri
