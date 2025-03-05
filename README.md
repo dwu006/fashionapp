@@ -1,6 +1,8 @@
 # fitchck 👕
 A digital wardrobe to organize your clothing, generate the best outfits, and share your fits with the community!
 
+![fitchck Image](./fitchck.png)
+
 ## 📌 Project Overview 
 
 ### 🎯 Inspiration
