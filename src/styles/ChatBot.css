@@ -7,7 +7,7 @@
     border-radius: 8px;
     background-color: white;
     max-width: 800px;
-    margin: 0 auto;
+    margin: 10px auto;
 }
 
 .textbox {
@@ -59,7 +59,9 @@
 
 .message-user {
     color: #333;
-    margin-bottom: 8px;
+    background-color: #f7f7f8;
+    padding: 16px;
+    border-radius: 8px;
 }
 
 .message-ai {
@@ -68,4 +70,24 @@
     padding: 16px;
     border-radius: 8px;
     margin-top: 8px;
+}
+
+@media (prefers-color-scheme:dark) {
+    .chat-container {
+        border: 1px solid #e5e5e5;
+        background-color: #333;
+    }
+    .textbox {
+        background: transparent;
+        color: white;
+    }
+    .message-user {
+        color: white;
+        background-color: #333;
+    }
+    
+    .message-ai {
+        color: white;
+        background-color: #444;
+    }
 }

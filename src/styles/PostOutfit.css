@@ -352,3 +352,116 @@ input:checked + .toggle-slider:before {
     margin-bottom: 6px;
     color: #333;
 }
+
+@media (prefers-color-scheme:light) {
+    .post-button {
+        background-color: rgb(207, 207, 207);
+        color:black;
+    }
+    
+    .post-button:hover {
+        background-color: rgb(93, 93, 93);
+        color:white;
+    }
+    
+    .popup-content {
+        background: rgb(207, 207, 207);
+        color: black;
+    }
+    
+    .close-button {
+        color: black;
+    }
+    
+    .image-section {
+        border: 2px dashed #666;
+        background: rgb(193, 193, 193);
+    }
+    
+    .image-section label {
+        color: grey;
+    }
+    
+    .image-section label:hover {
+        background-color: rgb(93, 93, 93);
+        color: white;
+    }
+    
+    .caption-input {
+        border: 1px solid #666;
+        background: rgb(193, 193, 193);
+        color: black;
+    }
+    
+    .caption-input:focus {
+        border-color: rgb(93, 93, 93);
+    }
+    
+    .caption-input::placeholder {
+        color: grey;
+    }
+    
+    .submit-button {
+        background-color: rgb(218, 218, 218);
+        color: black;
+    }
+    
+    .submit-button:hover {
+        background-color: rgb(198, 198, 198);
+        color: rgb(0, 0, 0);
+    }
+    
+    .submit-button:disabled {
+        background-color: rgb(146, 146, 146);
+        color: rgb(0, 0, 0);
+    }
+    
+    .outfit-card {
+        border: 1px solid #ddd;
+        background: rgb(53, 53, 53);
+        color:white;
+    }
+    
+    .outfit-caption {
+        color: #333;
+    }
+    
+    .outfit-actions {
+        border-top: 1px solid #eee;
+    }
+    
+    .action-button {
+        color: #666;
+        transition: color 0.3s;
+    }
+    
+    .action-button:hover {
+        color: #4E8480;
+    }
+    
+    /* Outfit Detail Modal */
+    .outfit-detail-modal {
+        background: white;
+    }
+    
+    .detail-header {
+        border-bottom: 1px solid #eee;
+    }
+    
+    .comment-input {
+        border: 1px solid #ddd;
+    }
+    
+    .comment-input:focus {
+        border-color: #4E8480;
+    }
+
+    .comment {
+        background: #f8f8f8;
+    }
+    
+    .comment-header {
+        margin-bottom: 6px;
+        color: #333;
+    }
+}

@@ -150,3 +150,33 @@ h1, h2 {
     display: flex;
     justify-content: center;
 }
+
+@media (prefers-color-scheme:light) {
+    /* ============================
+   Get Started Button
+   ============================ */
+.get-started-btn {
+    display: inline-block;
+    padding: 15px 40px; /* Increased padding for a larger button */
+    font-size: 40px;
+    border: 2px solid black;
+    border-radius: 50px; /* Makes the button fully rounded */
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    margin-top: 20px;
+    background-color: transparent;
+    transition: background 0.3s ease, color 0.3s ease;
+
+    text-align: center;
+    white-space: nowrap; /* Prevents text from breaking */
+    width: auto; /* Prevents unwanted stretching */
+    max-width: fit-content; /* Button only takes up the space needed */
+}
+
+/* Hover effect for the Get Started button */
+.get-started-btn:hover {
+    background-color: black;
+    color: white;
+}
+}

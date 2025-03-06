@@ -82,7 +82,7 @@ const PostOutfit = ({ onOutfitPosted }) => {
             </button>
 
             {showPopup && (
-                <div className="popup-overlay">
+                <div className="popup-overlay" onClick={() => setShowPopup(false)}>
                     <div className="popup-content">
                         <button className="close-button" onClick={() => setShowPopup(false)}>×</button>
                         <div className="popup-form">
