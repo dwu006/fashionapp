@@ -6,15 +6,14 @@ const axios2 = axios.create({
   baseURL: "http://localhost:5000",
 });
 
-const UploadClothes = ({ onUploadSuccess }) => {
+const UploadClothes = ({ setShowUploadModal, onUploadSuccess }) => {
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
-    // Fetch user profile to get user ID when component mounts
     const fetchUserId = async () => {
       try {
         const response = await fetch("http://localhost:5000/users/profile", {
@@ -35,135 +34,86 @@ const UploadClothes = ({ onUploadSuccess }) => {
     fetchUserId();
   }, []);
 
-  // Handle image upload
-  const handleImageUpload = (e) => {
-    const selectedFile = e.target.files[0];
-
-    // Clear previous image and file
-    setImage(null);
-    setFile(null);
-
-    if (selectedFile) {
-      // Validate file type
-      if (!selectedFile.type.startsWith("image/")) {
-        alert("Upload an image");
-        return;
-      }
-
-      setFile(selectedFile);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result);
-      };
-      reader.onerror = () => {
-        alert("Error reading file");
-        setImage(null);
-        setFile(null);
-      };
-      reader.readAsDataURL(selectedFile);
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setFile(file);
+      setImage(URL.createObjectURL(file)); 
     }
   };
 
-  const handleSubmit = async () => {
-    if (!file) {
-      alert("Select an image");
+  const handleUpload = async () => {
+    if (!file || !selectedCategory) {
+      alert("Please select an image and category!");
       return;
     }
 
-    if (!selectedCategory) {
-      alert("Please select a category for your item");
-      return;
-    }
+    setLoading(true);
 
-    if (!userId) {
-      alert("Please log in to upload clothes");
-      return;
-    }
-
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("category", selectedCategory);
+    
     try {
-      setLoading(true);
-
-      const formData = new FormData();
-      formData.append("image", file);
-      formData.append("category", selectedCategory);
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      };
-
       console.log("Uploading with category:", selectedCategory);
-
-      const response = await axios2.post("/wardrobe/upload", formData, config);
+      
+      const response = await axios2.post("/wardrobe/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+      });
 
       if (response.status === 200) {
-        // Clear form
-        setImage(null);
-        setFile(null);
-        setSelectedCategory(null);
-
-        // Notify parent to refresh wardrobe
-        onUploadSuccess();
+        alert("Clothing uploaded successfully!");
+        setShowUploadModal(false);
+        onUploadSuccess(); 
       }
     } catch (error) {
-      console.error("Error uploading image:", error);
+      console.error("Upload failed:", error);
       console.error("Error details:", error.response?.data);
-      alert(
-        "Failed to upload image: " +
-          (error.response?.data?.error || error.message)
-      );
-    } finally {
-      setLoading(false);
+      alert("Upload failed. Try again: " + (error.response?.data?.error || error.message));
     }
+
+    setLoading(false);
   };
 
   return (
-    <div className="upload-clothes">
-      {/* Hidden file input */}
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleImageUpload}
-        style={{ display: "none" }}
-        id="file-upload"
-      />
+    <div className="modal-overlay" onClick={() => setShowUploadModal(false)}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="close-button" onClick={() => setShowUploadModal(false)}>✖</button>
+        
+        <h2 className="modal-title">Upload Clothing</h2>
 
-      {/* Styled label as button (fixed position) */}
-      <label htmlFor="file-upload" className="upload-clothing-button">
-        Upload Clothing
-      </label>
+        <label className="file-upload">
+          <input type="file" accept="image/*" onChange={handleFileChange} />
+          Choose File
+        </label>
 
-      {image && (
-        <div className="image-preview">
-          <img src={image} alt="Clothes" className="image-preview-img" />
+        {image && <img src={image} alt="Preview" className="image-preview" />}
 
-          {/* Category Selection Buttons */}
-          <div className="category-buttons">
-            {["top", "bottom", "outerwear", "shoes", "accessories", "other"].map((category) => (
-              <button
-                key={category}
-                onClick={() =>
-                  setSelectedCategory((prev) =>
-                    prev === category ? null : category
-                  )
-                }
-                className={`category-button ${selectedCategory === category ? "selected" : ""}`}
-              >
-                {category.charAt(0).toUpperCase() + category.slice(1)}
-              </button>
-            ))}
-          </div>
+        <select 
+          className="category-dropdown"
+          value={selectedCategory} 
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          <option value="">Select Category</option>
+          <option value="top">Top</option>
+          <option value="bottom">Bottom</option>
+          <option value="outerwear">Outerwear</option>
+          <option value="shoes">Shoes</option>
+          <option value="accessories">Accessories</option>
+          <option value="other">Other</option>
+        </select>
 
-          <button
-            onClick={handleSubmit}
-            disabled={loading || !selectedCategory}
-            className={`submit-button ${loading || !selectedCategory ? "disabled" : ""}`}
-          >
-            {loading ? "Uploading..." : "Save to Wardrobe"}
-          </button>
-        </div>
-      )}
+        <button 
+          className="save-button"
+          onClick={handleUpload} 
+          disabled={loading}
+        >
+          {loading ? "Uploading..." : "Save to Wardrobe"}
+        </button>
+      </div>
     </div>
   );
 };

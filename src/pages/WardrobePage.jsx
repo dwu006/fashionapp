@@ -32,6 +32,7 @@ function WardrobePage() {
   const navigate = useNavigate();
   const [shouldRefresh, setShouldRefresh] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -51,14 +52,14 @@ function WardrobePage() {
     <div className="page wardrobe">
       <UserHeader />
       <div className="content">
-        {/* Wardrobe Header */}
         <div className="wardrobe-header">
           <h1>My Wardrobe</h1>
           <WeatherBox />
-          <UploadClothes onUploadSuccess={handleWardrobeUpdate} />
+          <button onClick={() => setShowUploadModal(true)} className="upload-clothing-button">
+            Upload Clothing
+          </button>
         </div>
 
-        {/* Category Selection Grid */}
         <div className="category-grid">
           {categories.map((category) => (
             <div
@@ -72,17 +73,19 @@ function WardrobePage() {
           ))}
         </div>
 
-        {/* Wardrobe Content */}
         <div className="wardrobe-items">
           <MyWardrobe refreshTrigger={shouldRefresh} selectedCategory={selectedCategory} />
         </div>
 
-        {/* Donation Map */}
         <div className="donation-map-container">
           <h2>Find Nearby Donation Centers</h2>
           <DonationMap />
         </div>
       </div>
+
+      {/* Upload Clothing Modal */}
+      {showUploadModal && <UploadClothes setShowUploadModal={setShowUploadModal} onUploadSuccess={handleWardrobeUpdate} />}
+
       <Footer />
     </div>
   );
