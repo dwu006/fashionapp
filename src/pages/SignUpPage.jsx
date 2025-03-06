@@ -37,7 +37,7 @@ function SignUpPage() {
     return (
         <div className="page">
             <div className="center">
-                <h1><Link to="/" style={{ color: "inherit" }}>fitchck</Link></h1>
+                <h1 className="title"><Link to="/" style={{ color: "inherit" }}>fitchck</Link></h1>
                 <div className="box">
                     <h1>Sign Up</h1>
                     <input className="input-info" type="text" id="name" placeholder="Username" value={name} onChange={(e) => setName(e.target.value)} /> <br />

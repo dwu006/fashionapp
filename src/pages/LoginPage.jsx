@@ -37,7 +37,7 @@ function LoginPage() {
     return (
         <div className="page">
             <div className="center">
-                <h1><Link to="/" style={{ color: "inherit" }}>fitchck</Link></h1>
+                <h1 className="title"><Link to="/" style={{ color: "inherit" }}>fitchck</Link></h1>
                 <div className="box">
                     <h1>Login</h1>
                     <input className="input-info" type="text" id="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} /> <br />

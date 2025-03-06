@@ -84,7 +84,7 @@ function UserHeader() {
     return (
         <header>
             <nav className="menu header user-header">
-                <h1><Link to="/" style={{ color: "inherit"}}>fitchck</Link></h1>
+                <h1 style={{ marginLeft: '20px' }}><Link to="/" style={{ color: "inherit"}}>fitchck</Link></h1>
                 <div className="menu-buttons">
                     <button className="button" id="home" onClick={() => handleClick("home")}>Home</button>
                     <button className="button" id="wardrobe" onClick={() => handleClick("wardrobe")}>Wardrobe</button>
