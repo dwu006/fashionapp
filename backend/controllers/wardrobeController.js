@@ -28,7 +28,7 @@ const wardrobeController = {
             }
 
             // Validate category
-            const validCategories = ['top', 'bottom', 'outerwear', 'accessories', 'other'];
+            const validCategories = ['top', 'bottom', 'outerwear', 'accessories', 'shoes', 'other'];
             if (!validCategories.includes(category)) {
                 return res.status(400).json({
                     error: 'invalid category'
