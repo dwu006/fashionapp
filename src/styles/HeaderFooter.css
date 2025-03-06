@@ -51,3 +51,15 @@
         color:black;
     }
 }
+
+@font-face {
+    font-family: 'MagnoliaScript';
+    src: url('../assets/MagnoliaScript.woff2') format('woff2'),
+         url('../assets/MagnoliaScript.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+.menu h1{
+    font-family: 'MagnoliaScript', sans-serif;
+}

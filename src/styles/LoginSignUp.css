@@ -26,3 +26,16 @@
     border: 1px solid black;
     padding: 10px;
 }
+
+@font-face {
+    font-family: 'MagnoliaScript';
+    src: url('../assets/MagnoliaScript.woff2') format('woff2'),
+         url('../assets/MagnoliaScript.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Apply MagnoliaScript font only to the fitchck title */
+.page .center h1.title {
+    font-family: 'MagnoliaScript', sans-serif;
+}

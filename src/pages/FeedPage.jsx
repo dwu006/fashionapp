@@ -174,9 +174,15 @@ function FeedPage() {
     return (
         <div className="page feed">
             <UserHeader />
-            <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-                <h3>Community Feed</h3>
-                <PostOutfit onOutfitPosted={fetchPosts}/>
+            <div className="content">
+                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                    <h1 style={{
+                        margin: '10px'
+                    }}>
+                        Community Feed
+                    </h1>
+                    <PostOutfit onOutfitPosted={fetchPosts} />
+                </div>
             </div>
             <div className="feed-container">
                 {loading ? (
