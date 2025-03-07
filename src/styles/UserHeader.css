@@ -86,7 +86,7 @@
     transform: rotate(180deg);
 }
 
-@media(prefers-color-scheme:dark) {
+@media(prefers-color-scheme:light) {
     .menu {
         background-color: whitesmoke;
         color: black;
