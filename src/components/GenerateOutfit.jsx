@@ -41,7 +41,7 @@ function ControlledEditableDiv({ sendMessage }) {
                         handleSend();
                     }
                 }}
-                placeholder="Message AI..."
+                placeholder="Describe the outfit you want (e.g., 'casual outfit for a coffee date')"
                 rows={1}
             />
             {/* <button
@@ -56,7 +56,7 @@ function ControlledEditableDiv({ sendMessage }) {
             <button
                 className="send-button"
                 onClick={handleSend}
-                title="Send message"
+                title="Generate outfit"
             >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M2.01 21L23 12L2.01 3L2 10L17 12L2 14L2.01 21Z" fill="currentColor" />
@@ -68,29 +68,33 @@ function ControlledEditableDiv({ sendMessage }) {
 
 function GenerateOutfit({ userId }) {
     const [messages, setMessages] = useState([]);
+    const [location, setLocation] = useState(null);
     // const [images, setImages] = useState([]);  // This will store the image(s) returned
-    const [latitude, setLatitude] = useState('');
-    const [longitude, setLongitude] = useState('');
+    // const [latitude, setLatitude] = useState('');
+    // const [longitude, setLongitude] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        // Get user's location when component mounts
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    setLatitude(position.coords.latitude);
-                    setLongitude(position.coords.longitude);
+                    setLocation({
+                        lat: position.coords.latitude,
+                        lon: position.coords.longitude
+                    });
                 },
-                () => {
-                    // Default to Cupertino if location access is denied
-                    fetchWeather(37.3229, -122.0322);
-                    setCity("Cupertino");
+                (error) => {
+                    console.error('Error getting location:', error);
+                    // Default to Los Angeles coordinates if location access is denied
+                    setLocation({
+                        lat: 34.0522,
+                        lon: -118.2437
+                    });
                 }
             );
-        } else {
-            fetchWeather(37.3229, -122.0322);
-            setCity("Cupertino");
         }
-    }, [latitude, longitude]);
+    }, []);
 
     async function handleSubmit(userId, message, latitude, longitude) {
         try {
@@ -100,8 +104,8 @@ function GenerateOutfit({ userId }) {
                 {
                     userId,
                     prompt: message,
-                    latitude,
-                    longitude
+                    latitude: location.lat,
+                    longitude: location.lon
                 },
                 {
                     headers: {
@@ -110,33 +114,50 @@ function GenerateOutfit({ userId }) {
                     }
                 }
             )
-            : await axios.post(
-                'http://localhost:5001/ai',
-                {
-                    userId,
-                    prompt: message,
-                    latitude,
-                    longitude
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                : await axios.post(
+                    'http://localhost:5001/ai',
+                    {
+                        userId,
+                        prompt: message,
+                        latitude,
+                        longitude
+                    },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
                     }
-                }
-            );
+                );
+
+            var formattedResponse = data.data;
+
+            if (message.includes("outfit")) {
+                // Format the outfit recommendation
+                const outfitData = data.outfit;
+                const weatherInfo = data.weather;
+
+                formattedResponse = `Weather: ${weatherInfo.temperature}°F, ${weatherInfo.condition}
+
+                Recommended Outfit:
+                ${outfitData.top ? `• Top: ${outfitData.top}` : ''}
+                ${outfitData.bottom ? `• Bottom: ${outfitData.bottom}` : ''}
+                ${outfitData.outerwear ? `• Outerwear: ${outfitData.outerwear}` : ''}
+                ${outfitData.shoes ? `• Shoes: ${outfitData.shoes}` : ''}
+                ${outfitData.accessories ? `• Accessories: ${outfitData.accessories}` : ''}
+
+                Styling Notes: ${outfitData.explanation}`;
+            }
 
 
             if (!data || !data.data) {
                 throw new Error("Invalid response format from server");
             }
 
-            const aiMessage = data.data;
-
             // Save messages
             setMessages(prevMessages => [
                 ...prevMessages,
-                { type: 'user', content: message }, { type: 'ai', content: aiMessage }
+                { type: 'user', content: message }, { type: 'ai', content: formattedResponse }
             ]);
 
         } catch (error) {
@@ -147,44 +168,122 @@ function GenerateOutfit({ userId }) {
         }
     }
 
-    return (
-        <div>
-            <div className="messages-container">
-                {messages.map((message, index) => (
-                    <div key={index} className="message">
-                        <div className={message.type === 'user' ? 'message-user' : 'message-ai'}>
-                            <strong>{message.type === 'user' ? 'You: ' : 'AI: '}</strong>
-                            {typeof message.content === "object" ? (
-                                <div>
-                                    <p><strong>Top:</strong> {message.content.top}</p>
-                                    <p><strong>Bottom:</strong> {message.content.bottom}</p>
-                                    <p><strong>Outerwear:</strong> {message.content.outerwear}</p>
-                                    <p><strong>Shoes:</strong> {message.content.shoes}</p>
-                                    <p><strong>Accessories:</strong> {message.content.accessories}</p>
-                                    <p><strong>Explanation:</strong> {message.content.explanation}</p>
-                                </div>
-                            ) : (
-                                message.content // Normal text messages
-                            )}
+            // const [loading, setLoading] = useState(false);
+            // const [location, setLocation] = useState(null);
+
+            // useEffect(() => {
+            //     // Get user's location when component mounts
+            //     if (navigator.geolocation) {
+            //         navigator.geolocation.getCurrentPosition(
+            //             (position) => {
+            //                 setLocation({
+            //                     lat: position.coords.latitude,
+            //                     lon: position.coords.longitude
+            //                 });
+            //             },
+            //             (error) => {
+            //                 console.error('Error getting location:', error);
+            //                 // Default to Los Angeles coordinates if location access is denied
+            //                 setLocation({
+            //                     lat: 34.0522,
+            //                     lon: -118.2437
+            //                 });
+            //             }
+            //         );
+            //     }
+            // }, []);
+
+            // async function handleSubmit(message) {
+            //     if (!location) {
+            //         alert('Location data is not yet available. Please try again in a moment.');
+            //         return;
+            //     }
+
+            //     setLoading(true);
+            //     try {
+            //         const { data } = await axios.post('http://localhost:5000/ai/generate-outfit', {
+            //             prompt: message,
+            //             lat: location.lat,
+            //             lon: location.lon
+            //         }, {
+            //             headers: {
+            //                 'Content-Type': 'application/json',
+            //                 'Authorization': `Bearer ${localStorage.getItem('token')}`
+            //             }
+            //         });
+
+            //         // Format the outfit recommendation
+            //         const outfitData = data.outfit;
+            //         const weatherInfo = data.weather;
+
+            //         const formattedResponse = `Weather: ${weatherInfo.temperature}°F, ${weatherInfo.condition}
+
+            // Recommended Outfit:
+            // ${outfitData.top ? `• Top: ${outfitData.top}` : ''}
+            // ${outfitData.bottom ? `• Bottom: ${outfitData.bottom}` : ''}
+            // ${outfitData.outerwear ? `• Outerwear: ${outfitData.outerwear}` : ''}
+            // ${outfitData.shoes ? `• Shoes: ${outfitData.shoes}` : ''}
+            // ${outfitData.accessories ? `• Accessories: ${outfitData.accessories}` : ''}
+
+            // Styling Notes: ${outfitData.explanation}`;
+
+            //         setMessages([...messages,
+            //         { type: 'user', content: message },
+            //         { type: 'ai', content: formattedResponse }
+            //         ]);
+            //     } catch (error) {
+            //         console.error('Error generating outfit:', error);
+            //         let errorMessage = 'Sorry, I encountered an error while generating your outfit.';
+
+            //         if (error.response) {
+            //             // Server responded with an error
+            //             if (error.response.status === 401) {
+            //                 errorMessage = 'Please log in to generate outfits.';
+            //             } else if (error.response.data && error.response.data.message) {
+            //                 errorMessage = error.response.data.message;
+            //             }
+            //         } else if (error.message === 'Network Error') {
+            //             errorMessage = 'Unable to connect to the server. Please check your internet connection.';
+            //         }
+
+            //         setMessages([...messages,
+            //         { type: 'user', content: message },
+            //         { type: 'ai', content: errorMessage }
+            //         ]);
+            //     } finally {
+            //         setLoading(false);
+            //     }
+            // }
+
+            return (
+                <div className="outfit-generator">
+                    <div className="messages-container">
+                        {messages.length === 0 && (
+                            <div className="welcome-message">
+                                <h3>AI Outfit Generator</h3>
+                                <p>Describe what kind of outfit you're looking for, and I'll help you create the perfect look from your wardrobe!</p>
+                            </div>
+                        )}
+                        {messages.map((message, index) => (
+                            <div key={index} className="message">
+                                <div className={message.type === 'user' ? 'message-user' : 'message-ai'}>
+                                    <strong>{message.type === 'user' ? 'You: ' : 'AI: '}</strong>
+                            <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>{message.content}</pre>
                         </div>
                     </div>
                 ))}
-                {/* <div className="outfit-display-container">
-                    {images.length > 0 && images.map((img, index) => (
-                        <div key={index}>
-                            {img.type === 'ai' && (
-                                <OutfitDisplay
-                                    image={img.content}  // Assuming img.content is an image URL or base64 string
-                                />
-                            )}
+                {loading && (
+                    <div className="message">
+                        <div className="message-ai">
+                            <div className="loading">Generating your outfit...</div>
                         </div>
-                    ))}
-                </div> */}
-            </div>
+                    </div>
+                )}
+            </div >
             <ControlledEditableDiv sendMessage={(message) => handleSubmit(userId, message, latitude, longitude)} />
-        </div>
+        </div >
     );
-}
+    }
 
 
-export default GenerateOutfit;
+    export default GenerateOutfit;

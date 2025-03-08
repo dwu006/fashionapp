@@ -1,5 +1,31 @@
-# Fashion App
-A digital wardrobe to collect your clothing, generate best outfits, and share fits with the community!
+# fitchck 👕
+A digital wardrobe to organize your clothing, generate the best outfits, and share your fits with the community!
+
+![fitchck Image](./fitchck.png)
+
+## 📌 Project Overview 
+
+### 🎯 Inspiration
+Many people struggle with organizing their wardrobe or deciding what to wear. That's where fitchck comes in! Keeping track of your clothes can be a hassle, especially if you're a messy person.
+
+With fitchck, you can:
+
+- ✔️ Snap a picture and add it to your digital wardrobe. 
+- ✔️ Get AI-generated outfit recommendations based on your clothes.
+- ✔️ Share your best fits with the community on the feeds page!
+
+### 🚀 Core Features
+- Digital Wardrobe: Easily add and manage your clothing items.
+- Outfit Generator: Get AI-powered outfit recommendations tailored to your wardrobe.
+- Community Feeds: Share your outfits and explore what others are wearing.
+
+### 🛠️ Tech Stack
+- Backend: Node.js, Express, MongoDB
+- Frontend: React
+- APIs:
+   - Google Gemini API
+   - Google Maps API 
+   - OpenWeather API 
 
 ## Prerequisites
 - Node.js 
@@ -15,16 +41,25 @@ cd fashionapp
 
 ### 2. Install Dependencies
 ```bash
-npm install  
+npm install
 ```
 
-### 3. Start the Frontend
+### 3. Create Environment Variables
+- Create an .env file
+- Add .env in gitignore to hide API keys
+- Add these environment variables
+```bash
+MONGODB_URI=your_mongodb_uri
+GEMINI_API_KEY=your_gemini_key
+WEATHER_API_KEY= your_weather_key
+```
+
+### 4. Start the Frontend
 ```bash 
 npm run dev  
 ```
 
-
-### 4. Start the Backend
+### 5. Start the Backend
 Split the terminal or open a new one
 ```bash
 cd backend
