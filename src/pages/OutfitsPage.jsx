@@ -40,14 +40,17 @@ function OutfitsPage() {
     }
 
     return (
-        <div className="page feed">
+        <div className="page feed-page">
             <UserHeader />
-            <div className="content">
-                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-                    <h1>Generate Outfit</h1>
-                    <div className="outfit-button-container">
-                        <button className="button" style={{marginTop: '45px'}} onClick={() => handleClick()}>Saved Outfits</button>
-                    </div>
+            <div className="content" style={{ paddingTop: '0' }}>
+                <div style={{ 
+                    display: 'flex', 
+                    width: '100%', 
+                    justifyContent: 'space-between',
+                    padding: '20px'
+                }}>
+                    <h3>Generate Outfit</h3>
+                    <button className="button">Saved Outfits</button>
                 </div>
                 <GenerateOutfit userId={userId} />
             </div>

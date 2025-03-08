@@ -10,9 +10,10 @@
     display: flex;
     flex-direction: column;
     background-color: white;
-    width: 100vw; /* Ensures no horizontal scrolling */
+    width: 100vw;
     overflow-x: hidden;
-    color:black;
+    color: black;
+    position: relative;
 }
 
 .page .content {
@@ -20,21 +21,71 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    display: flex;
+    padding-top: 60px; /* Space for header */
     flex-direction: column;
+    min-height: calc(100vh - 120px); /* Full height minus header and footer */
     justify-content: center;
     justify-self:center;
 }
 
-
-.page .menu.footer {
-    margin-top: auto;
-    width: 100%;
+/* Fixed header */
+.page header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    z-index: 1000;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+/* Footer */
+.page footer {
+    margin-top: auto;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* Menu styles */
+.menu.footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 0 20px;
+}
+
+/* Dark mode support */
 @media (prefers-color-scheme: dark) {
     .page {
         background-color: #1a1a1a;
         color: white;
+    }
+
+    .page header,
+    .page footer {
+        background-color: #1a1a1a;
+    }
+}
+
+/* When content is shorter than viewport */
+@media screen and (min-height: 100vh) {
+    .page footer {
+        position: fixed;
+        bottom: 0;
+    }
+}
+
+/* When content is taller than viewport */
+@media screen and (max-height: 100vh) {
+    .page footer {
+        position: relative;
     }
 }
