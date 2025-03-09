@@ -85,7 +85,12 @@ function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = n
 
       {/* upload modal */}
       {showModal && (
-        <div className="modal-overlay">
+        <div className="modal-overlay" onClick={(e) => {
+          // Close modal when clicking on the overlay (outside the modal)
+          if (e.target.className === 'modal-overlay') {
+            setShowModal(false);
+          }
+        }}>
           <div className="modal">
             <button className="close-btn" onClick={() => setShowModal(false)}>✕</button>
             <h3>Update Profile Picture</h3>
