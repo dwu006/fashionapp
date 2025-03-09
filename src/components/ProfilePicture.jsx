@@ -6,7 +6,7 @@ import '../styles/ProfilePicture.css';
 const DEFAULT_PROFILE_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
 
 function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = null }) {
-  const [profileImage, setProfileImage] = useState(DEFAULT_PROFILE_IMAGE);
+  const [profileImage, setProfileImage] = useState(localStorage.getItem('profileImageData') || DEFAULT_PROFILE_IMAGE);
   const [showModal, setShowModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [timestamp, setTimestamp] = useState(Date.now());
@@ -24,9 +24,15 @@ function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = n
         responseType: 'blob'
       })
       .then(response => {
-        const imageUrl = URL.createObjectURL(response.data);
-        setProfileImage(imageUrl);
-        localStorage.setItem('profileImageUrl', imageUrl);
+        // use base64 string
+        const reader = new FileReader();
+        reader.readAsDataURL(response.data);
+        reader.onloadend = function() {
+          const base64data = reader.result;
+          setProfileImage(base64data);
+          // store in localStorage for persistence
+          localStorage.setItem('profileImageData', base64data);
+        };
       })
       .catch((error) => {
         console.log('using default pfp', error);
@@ -48,6 +54,15 @@ function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = n
           Authorization: `Bearer ${token}`
         }
       });
+      
+      // convert file
+      const reader = new FileReader();
+      reader.readAsDataURL(selectedFile);
+      reader.onloadend = function() {
+        const base64data = reader.result;
+        setProfileImage(base64data);
+        localStorage.setItem('profileImageData', base64data);
+      };
       
       setTimestamp(Date.now());
       setShowModal(false);
