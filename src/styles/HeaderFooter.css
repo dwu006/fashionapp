@@ -39,6 +39,19 @@
     width: 150px;
 }
 
+@media(prefers-color-scheme:light) {
+    .menu {
+        background-color: whitesmoke;
+        color: black;
+    }
+    .button x{
+        color:rgb(35, 35, 35);
+    }
+    .button:hover, :focus {
+        color:black;
+    }
+}
+
 @font-face {
     font-family: 'MagnoliaScript';
     src: url('../assets/MagnoliaScript.woff2') format('woff2'),

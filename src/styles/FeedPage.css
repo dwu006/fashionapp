@@ -6,7 +6,7 @@
 
 .feed {
     flex: 1;
-    padding: 120px 20px 80px 20px;
+    padding: 120px 20px 80px 0px;
 }
 
 .feed-container {
@@ -141,6 +141,7 @@
 
 .modal-content {
     display: flex;
+    flex-direction:row;
     background: white;
     border-radius: 16px;
     overflow: hidden;
@@ -168,9 +169,17 @@
 .comments-section {
     flex: 1;
     max-width: 40%;
+    height:90vh;
     display: flex;
     flex-direction: column;
     background: white;
+}
+
+.button.close-modal {
+    position: absolute;
+    right: 25%;
+    background-color: transparent;
+    border: none;
 }
 
 .comments-header {
@@ -178,7 +187,7 @@
     padding: 16px;
     display: flex;
     align-items: center;
-    background: white;
+    background: transparent;
 }
 
 .comments-header .user-avatar {
@@ -238,7 +247,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    background: white;
+    background: transparent;
 }
 
 .comment-input {
@@ -339,9 +348,25 @@
     .modal-image {
         background: #1a1a1a;
     }
+
+    .comments-header.username {
+        color:white;
+    }
     
     .comments-section {
         background: #242424;
+    }
+
+    .comment {
+        background-color:rgb(71, 71, 71);
+    }
+
+    .comment-username {
+        color:white;
+    }
+
+    .comment-text {
+        color:white;
     }
     
     .comment-input {

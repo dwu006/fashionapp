@@ -2,6 +2,17 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/ChatBot.css";
 
+function OutfitDisplay({ image }) {
+    return (
+        <div className="outfit-display">
+            {image && (
+                <img src={image} alt="Generated Outfit" />
+            )}
+        </div>
+    );
+}
+
+
 function ControlledEditableDiv({ sendMessage }) {
     const [content, setContent] = useState('');
 
@@ -14,7 +25,6 @@ function ControlledEditableDiv({ sendMessage }) {
 
     const handleChange = (e) => {
         setContent(e.target.value);
-        // Auto-resize the textarea
         e.target.style.height = 'auto';
         e.target.style.height = e.target.scrollHeight + 'px';
     };
@@ -34,23 +44,35 @@ function ControlledEditableDiv({ sendMessage }) {
                 placeholder="Describe the outfit you want (e.g., 'casual outfit for a coffee date')"
                 rows={1}
             />
-            <button 
+            {/* <button
+                className="image-button"
+                onClick={handleSend}
+                title="Send message"
+            >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.01 21L23 12L2.01 3L2 10L17 12L2 14L2.01 21Z" fill="currentColor" />
+                </svg>
+            </button> */}
+            <button
                 className="send-button"
                 onClick={handleSend}
                 title="Generate outfit"
             >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2.01 21L23 12L2.01 3L2 10L17 12L2 14L2.01 21Z" fill="currentColor"/>
+                    <path d="M2.01 21L23 12L2.01 3L2 10L17 12L2 14L2.01 21Z" fill="currentColor" />
                 </svg>
             </button>
         </div>
     );
 }
 
-function GenerateOutfit() {
+function GenerateOutfit({ userId }) {
     const [messages, setMessages] = useState([]);
-    const [loading, setLoading] = useState(false);
     const [location, setLocation] = useState(null);
+    // const [images, setImages] = useState([]);  // This will store the image(s) returned
+    // const [latitude, setLatitude] = useState('');
+    // const [longitude, setLongitude] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         // Get user's location when component mounts
@@ -74,68 +96,78 @@ function GenerateOutfit() {
         }
     }, []);
 
-    async function handleSubmit(message) {
-        if (!location) {
-            alert('Location data is not yet available. Please try again in a moment.');
-            return;
-        }
-
-        setLoading(true);
+    async function handleSubmit(userId, message, latitude, longitude) {
         try {
-            const { data } = await axios.post('http://localhost:5000/ai/generate-outfit', {
-                prompt: message,
-                lat: location.lat,
-                lon: location.lon
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+            setLoading(true);
+            const { data } = message.includes("outfit") ? await axios.post(
+                'http://localhost:5001/ai/image_idea',
+                {
+                    userId,
+                    prompt: message,
+                    latitude: location.lat,
+                    longitude: location.lon
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
                 }
-            });
+            )
+                : await axios.post(
+                    'http://localhost:5001/ai',
+                    {
+                        userId,
+                        prompt: message,
+                        latitude,
+                        longitude
+                    },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
+                    }
+                );
 
-            // Format the outfit recommendation
-            const outfitData = data.outfit;
-            const weatherInfo = data.weather;
-            
-            const formattedResponse = `Weather: ${weatherInfo.temperature}°F, ${weatherInfo.condition}
+            var formattedResponse = data.data;
+            console.log(formattedResponse);
 
-Recommended Outfit:
-${outfitData.top ? `• Top: ${outfitData.top}` : ''}
-${outfitData.bottom ? `• Bottom: ${outfitData.bottom}` : ''}
-${outfitData.outerwear ? `• Outerwear: ${outfitData.outerwear}` : ''}
-${outfitData.shoes ? `• Shoes: ${outfitData.shoes}` : ''}
-${outfitData.accessories ? `• Accessories: ${outfitData.accessories}` : ''}
+            if (message.includes("outfit")) {
+                // Format the outfit recommendation
+                const outfitData = data.data;
+                const weatherInfo = data.weather;
 
-Styling Notes: ${outfitData.explanation}`;
+                formattedResponse = `Weather: ${weatherInfo.temperature}°F, ${weatherInfo.condition}
 
-            setMessages([...messages, 
-                { type: 'user', content: message },
-                { type: 'ai', content: formattedResponse }
+                Recommended Outfit:
+                ${outfitData.top ? `• Top: ${outfitData.top}` : ''}
+                ${outfitData.bottom ? `• Bottom: ${outfitData.bottom}` : ''}
+                ${outfitData.outerwear ? `• Outerwear: ${outfitData.outerwear}` : ''}
+                ${outfitData.shoes ? `• Shoes: ${outfitData.shoes}` : ''}
+                ${outfitData.accessories ? `• Accessories: ${outfitData.accessories}` : ''}
+
+                Styling Notes: ${outfitData.explanation}`;
+            }
+
+
+            if (!data || !data.data) {
+                throw new Error("Invalid response format from server");
+            }
+
+            // Save messages
+            setMessages(prevMessages => [
+                ...prevMessages,
+                { type: 'user', content: message }, { type: 'ai', content: formattedResponse }
             ]);
+
         } catch (error) {
             console.error('Error generating outfit:', error);
-            let errorMessage = 'Sorry, I encountered an error while generating your outfit.';
-            
-            if (error.response) {
-                // Server responded with an error
-                if (error.response.status === 401) {
-                    errorMessage = 'Please log in to generate outfits.';
-                } else if (error.response.data && error.response.data.message) {
-                    errorMessage = error.response.data.message;
-                }
-            } else if (error.message === 'Network Error') {
-                errorMessage = 'Unable to connect to the server. Please check your internet connection.';
-            }
-            
-            setMessages([...messages,
-                { type: 'user', content: message },
-                { type: 'ai', content: errorMessage }
-            ]);
+            alert('Failed to generate outfit: ' + (error.response?.data?.message || error.message));
         } finally {
-            setLoading(false);
+            setLoading(false);  // Hide loading state
         }
     }
-
     return (
         <div className="outfit-generator">
             <div className="messages-container">
@@ -160,10 +192,15 @@ Styling Notes: ${outfitData.explanation}`;
                         </div>
                     </div>
                 )}
-            </div>
-            <ControlledEditableDiv sendMessage={handleSubmit} />
-        </div>
+            </div >
+            {location ? (
+                <ControlledEditableDiv sendMessage={(message) => handleSubmit(userId, message, location.lat, location.lon)} />
+            ) : (
+                <ControlledEditableDiv sendMessage={(message) => handleSubmit(userId, message, null, null)} />
+            )}
+        </div >
     );
 }
+
 
 export default GenerateOutfit;

@@ -3,7 +3,10 @@ import React from 'react';
 
 function Footer() {
     return (
-        <footer>
+        <footer style={{
+            position:'absolute',
+            zIndex:'0'
+        }}>
             <div className="menu footer">
                 <div className="copyright">
                     <p>2025 Fitchck All Rights Reserved</p>

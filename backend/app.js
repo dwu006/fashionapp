@@ -33,7 +33,7 @@ app.use('/outfits', outfitRouter);
 app.use('/ai', aiRouter);
 app.use('/api', donationCentersRoute);
 
-export const port = process.env.PORT || 5000;
+export const port = process.env.PORT || 5001;
 
 const server = http.createServer(app);
 db()

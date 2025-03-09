@@ -15,7 +15,7 @@ function UserHeader() {
         // Fetch user profile when component mounts
         const fetchProfile = async () => {
             try {
-                const response = await fetch('http://localhost:5000/users/profile', {
+                const response = await fetch('http://localhost:5001/users/profile', {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }

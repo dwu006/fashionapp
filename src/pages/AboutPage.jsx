@@ -9,6 +9,7 @@ import team2 from "../assets/team2.jpg";
 import team3 from "../assets/team3.jpg";
 import team4 from "../assets/team4.jpg";
 import team5 from "../assets/team5.jpg";
+import UserHeader from "../components/UserHeader.jsx";
 
 // Team members data
 const teamMembers = [
@@ -52,7 +53,7 @@ const teamMembers = [
 function AboutPage() {
     return (
         <div className="page about">
-            <Header />
+            <UserHeader />
             <div className="about-container">
                 {/* Our Story Section */}
                 <div className="section our-story">

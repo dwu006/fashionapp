@@ -8,9 +8,6 @@ const wardrobeController = {
 
     createWardrobeItem: async (req, res) => {
         try {
-            console.log('Received upload request');
-            console.log('Request body:', req.body);
-            console.log('File:', req.file);
 
             if (!req.file) {
                 return res.status(400).json({ 

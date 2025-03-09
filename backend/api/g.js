@@ -1,10 +1,13 @@
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import WardrobeItem from "../models/WardrobeItem.js";
 import getWeather from "./weather.js";
-import dotenv from 'dotenv';
 
-dotenv.config();
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // Helper function to convert Buffer to base64
@@ -137,13 +140,7 @@ export async function generateOutfit(userId, prompt, lat, lon) {
 
         try {
             // Parse the response to get structured outfit data
-            const responseText = response.text();
-            // Find the JSON object in the response
-            const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-            if (!jsonMatch) {
-                throw new Error("No JSON found in response");
-            }
-            outfit = JSON.parse(jsonMatch[0]);
+            outfit = response.text();
         } catch (error) {
             console.error("Error parsing Gemini response:", error);
             throw new Error("Failed to parse outfit recommendation");
@@ -156,7 +153,6 @@ export async function generateOutfit(userId, prompt, lat, lon) {
                 throw new Error(`Missing required field in outfit: ${field}`);
             }
         }
-
         return {
             outfit,
             weather: {
@@ -174,7 +170,29 @@ export async function generateOutfit(userId, prompt, lat, lon) {
 
 export async function createClothing(req, res) {
     try {
+        const { userId, prompt, latitude, longitude } = req.body;
+        const result = await generateOutfit(userId, prompt, latitude, longitude);
+        const outfitData = result.outfit;
+        const cleanedOutfit = outfitData.replace(/```json\n|```/g, '');
+        const weather = result.weather;
+        const parsedOutfit = JSON.parse(cleanedOutfit);
+
+        return res.json({
+            message: 'Clothing generated successfully',
+            data: parsedOutfit,
+            weather: weather
+        });
+    }
+    catch (error) {
+        console.error("Error generating clothing:", error);
+        throw new Error("Failed to generate clothing.");
+    }
+}
+
+export const createClothing = async (req, res) => {
+    try {
         const { prompt } = req.body;
+        const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
         const model = genAI.getGenerativeModel({
             model: "gemini-1.5-flash",
         });
@@ -184,7 +202,7 @@ export async function createClothing(req, res) {
         return res.json({
             message: 'Clothing generated successfully',
             data: generatedTexts
-        });
+        })
     }
     catch (error) {
         console.error("Error generating clothing:", error);
