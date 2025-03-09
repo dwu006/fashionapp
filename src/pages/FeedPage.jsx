@@ -1,5 +1,5 @@
 import { data, Navigate } from "react-router-dom";
-import axios from 'axios';
+import axios, { AxiosHeaders } from 'axios';
 import UserHeader from "../components/UserHeader.jsx";
 import Footer from "../components/Footer.jsx";
 import PostOutfit from "../components/PostOutfit.jsx";
@@ -44,14 +44,14 @@ function FeedPage() {
                 user: {
                     ...post.user,
                     profileImage: post.user.profilePicturePath
-                    ? `http://localhost:5000/users/profile-picture/${post.user._id}`: DEFAULT_PROFILE_IMAGE
+                    ? `${axios.defaults.baseURL}/users/profile-picture/${post.user._id}`: DEFAULT_PROFILE_IMAGE
                 },
                 comments: (post.comments || []).map(comment => ({
                     ...comment,
                     user: {
                         ...comment.user,
                         profileImage: comment.user.profilePicturePath
-                        ? `http://localhost:5000/users/profile-picture/${comment.user._id}`: DEFAULT_PROFILE_IMAGE
+                        ? `${axios.defaults.baseURL}/users/profile-picture/${comment.user._id}`: DEFAULT_PROFILE_IMAGE
                     }
                 }))
             }));
@@ -254,68 +254,6 @@ function FeedPage() {
                     ))}
             </div>
             )}
-            {/* <div className="feed-container">
-                {loading ? (
-                    <div className="content" style={{ minHeight: '0', paddingTop: '0' }}>
-                        <h1>Loading ...</h1>
-                    </div>
-                ) : posts.length === 0 ? (
-                    <div>No posts to show</div>
-                ) : (
-                    posts.map(post => (
-                        <div key={post._id} className="feed-card">
-                            <div className="feed-card-header"
-                                onClick={() => setSelectedPost(post)}
-                            >
-                                <img
-                                    src={post.user.profileImage}
-                                    alt={post.user.username}
-                                    className="user-avatar"
-                                />
-                                <span className="username">{post.user.username}</span>
-                            </div>
-                            <img
-                                src={post.imageUrl}
-                                alt="Outfit"
-                                className="feed-image"
-                                onClick={() => setSelectedPost(post)}
-                            />
-                            <div className="feed-card-actions"
-                            >
-                                <div className="action-buttons">
-                                    <button
-                                        className={`action-button ${post.userHasLiked ? 'liked' : ''}`}
-                                        onClick={() => handleLike(post._id)}
-                                        title={post.userHasLiked ? "Unlike" : "Like"}
-                                    >
-                                        {post.userHasLiked ? '❤️' : '🤍'}
-                                        <span>{post.likesCount || 0} likes</span>
-                                    </button>
-                                    <button
-                                        className="action-button"
-                                        onClick={() => setSelectedPost(post)}
-                                        title="Comments"
-                                    >
-                                        💬
-                                        <span>{post.comments ? post.comments.length : 0} comments</span>
-                                    </button>
-                                </div>
-                                <div className="caption">
-                                    <strong>{post.user.username}</strong> {post.caption}
-                                </div>
-                                {post.comments && post.comments.length > 0 && (
-                                    <div
-                                        className="view-comments"
-                                        onClick={() => setSelectedPost(post)}
-                                    >
-                                        View all {post.comments.length} comments
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    ))
-                )}
-            </div> */}
 
             {selectedPost && (
                 <div className="comments-modal" onClick={() => setSelectedPost(null)}>

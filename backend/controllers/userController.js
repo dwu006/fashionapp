@@ -192,7 +192,7 @@ const userController = {
           }
           
           // send from uploads folder
-          res.sendFile(path.resolve(user.profilePicturePath));
+          res.sendFile(path.join(user.profilePicturePath));
         } catch (err) {
           res.status(500).json({ error: 'error retrieving pfp' });
         }

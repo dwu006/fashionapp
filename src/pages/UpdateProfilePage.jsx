@@ -49,7 +49,7 @@ function UpdateProfilePage() {
         }
 
         try {
-            const response = await fetch(`http://localhost:5000/users/${userId}`, {
+            const response = await fetch(`http://localhost:5001/users/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

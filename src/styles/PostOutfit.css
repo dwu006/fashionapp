@@ -1,17 +1,22 @@
 .post-button {
     padding: 10px 20px;
-    background-color: rgb(53, 53, 53);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
     font-size: 16px;
-    margin: 20px;
-    transition: background-color 0.3s;
+    font-weight: bold;
+    color: black;
+    background-color: rgb(95, 95, 95);
+    border: 2px solid black;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    flex-shrink: 0;
+    max-width: 200px;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .post-button:hover {
-    background-color: rgb(93, 93, 93);
+    background-color: black;
+    color: white;
 }
 
 .popup-overlay {
@@ -101,7 +106,7 @@
     height: 70vh;
     object-fit: contain;
     border-radius: 4px;
-    overflow:auto;
+    overflow: auto;
 }
 
 .details-section {
@@ -163,11 +168,11 @@
     border-radius: 50%;
 }
 
-input:checked + .toggle-slider {
+input:checked+.toggle-slider {
     background-color: #4CAF50;
 }
 
-input:checked + .toggle-slider:before {
+input:checked+.toggle-slider:before {
     transform: translateX(22px);
 }
 
@@ -240,8 +245,8 @@ input:checked + .toggle-slider:before {
     background: rgb(53, 53, 53);
     aspect-ratio: 1;
     position: relative;
-    color:white;
-    justify-items:center;
+    color: white;
+    justify-items: center;
 }
 
 .outfit-card:hover {
@@ -355,103 +360,103 @@ input:checked + .toggle-slider:before {
 
 @media (prefers-color-scheme:light) {
     .post-button {
-        background-color: rgb(207, 207, 207);
-        color:black;
+        color: black;
+        background-color: white;
     }
-    
+
     .post-button:hover {
-        background-color: rgb(93, 93, 93);
-        color:white;
+        background-color: rgb(35, 35, 35);
+        color: white;
     }
-    
+
     .popup-content {
         background: rgb(207, 207, 207);
         color: black;
     }
-    
+
     .close-button {
         color: black;
     }
-    
+
     .image-section {
         border: 2px dashed #666;
         background: rgb(193, 193, 193);
     }
-    
+
     .image-section label {
         color: grey;
     }
-    
+
     .image-section label:hover {
         background-color: rgb(93, 93, 93);
         color: white;
     }
-    
+
     .caption-input {
         border: 1px solid #666;
         background: rgb(193, 193, 193);
         color: black;
     }
-    
+
     .caption-input:focus {
         border-color: rgb(93, 93, 93);
     }
-    
+
     .caption-input::placeholder {
         color: grey;
     }
-    
+
     .submit-button {
         background-color: rgb(218, 218, 218);
         color: black;
     }
-    
+
     .submit-button:hover {
         background-color: rgb(198, 198, 198);
         color: rgb(0, 0, 0);
     }
-    
+
     .submit-button:disabled {
         background-color: rgb(146, 146, 146);
         color: rgb(0, 0, 0);
     }
-    
+
     .outfit-card {
         border: 1px solid #ddd;
         background: rgb(53, 53, 53);
-        color:white;
+        color: white;
     }
-    
+
     .outfit-caption {
         color: #333;
     }
-    
+
     .outfit-actions {
         border-top: 1px solid #eee;
     }
-    
+
     .action-button {
         color: #666;
         transition: color 0.3s;
     }
-    
+
     .action-button:hover {
         color: #4E8480;
     }
-    
+
     /* Outfit Detail Modal */
     .outfit-detail-modal {
         background: white;
     }
-    
+
     .detail-header {
         border-bottom: 1px solid #eee;
     }
-    
+
     .comment-input {
         border: 1px solid #ddd;
     }
-    
+
     .comment-input:focus {
         border-color: #4E8480;
     }
@@ -459,7 +464,7 @@ input:checked + .toggle-slider:before {
     .comment {
         background: #f8f8f8;
     }
-    
+
     .comment-header {
         margin-bottom: 6px;
         color: #333;

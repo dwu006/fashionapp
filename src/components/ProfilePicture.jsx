@@ -5,6 +5,11 @@ import '../styles/ProfilePicture.css';
 // default pfp
 const DEFAULT_PROFILE_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
 
+// Connect to backend server
+const axios2 = axios.create({
+  baseURL: "http://localhost:5001",
+});
+
 function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = null }) {
   const [profileImage, setProfileImage] = useState(localStorage.getItem('profileImageData') || DEFAULT_PROFILE_IMAGE);
   const [showModal, setShowModal] = useState(false);
@@ -18,8 +23,9 @@ function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = n
   // Loading
   useEffect(() => {
     const token = localStorage.getItem('token');
+    console.log("Token: ", token);
     if (token) {
-      axios.get(`http://localhost:5000/users/profile-picture?t=${timestamp}`, {
+      axios2.get(`/users/profile-picture?t=${timestamp}`, {
         headers: { Authorization: `Bearer ${token}` },
         responseType: 'blob'
       })
@@ -48,7 +54,7 @@ function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = n
     formData.append('profilePicture', selectedFile);
     
     try {
-      await axios.post('http://localhost:5000/users/profile-picture', formData, {
+      await axios2.post(`/users/profile-picture`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
@@ -85,7 +91,12 @@ function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = n
 
       {/* upload modal */}
       {showModal && (
-        <div className="modal-overlay">
+        <div className="modal-overlay" onClick={(e) => {
+          // Close modal when clicking on the overlay (outside the modal)
+          if (e.target.className === 'modal-overlay') {
+            setShowModal(false);
+          }
+        }}>
           <div className="modal">
             <button className="close-btn" onClick={() => setShowModal(false)}>✕</button>
             <h3>Update Profile Picture</h3>
