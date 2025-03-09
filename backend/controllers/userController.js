@@ -55,7 +55,8 @@ const userController = {
                     _id: user._id,
                     name: user.name,
                     email: user.email,
-                    token: generateToken(user._id)
+                    token: generateToken(user._id),
+                    hasProfilePicture: !!user.profilePicture?.data
                 });
             } else {
                 res.status(401).json({ message: 'Invalid email or password' });
@@ -75,7 +76,8 @@ const userController = {
             res.json({
                 _id: user._id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                hasProfilePicture: !!user.profilePicture?.data
             });
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -143,6 +145,61 @@ const userController = {
             res.status(200).json({ message: 'Logged out successfully' });
         } catch (error) {
             res.status(500).json({ message: 'Error during logout', error: error.message });
+        }
+    },
+
+    // Upload profile picture
+    uploadProfilePicture: async (req, res) => {
+        try {
+            if (!req.file) {
+                return res.status(400).json({ error: 'no image' });
+            }
+
+            const userId = req.user._id;
+            
+            const updatedUser = await User.findByIdAndUpdate(
+                userId,
+                {
+                    profilePicture: {
+                        data: req.file.buffer,
+                        contentType: req.file.mimetype
+                    }
+                },
+                { new: true }
+            ).select('-password');
+
+            if (!updatedUser) {
+                return res.status(404).json({ error: 'user not found' });
+            }
+
+            res.status(200).json({ 
+                message: 'pfp uploaded successfully',
+                hasProfilePicture: true
+            });
+        } catch (err) {
+            res.status(500).json({ error: 'uploading error' });
+        }
+    },
+
+    // Get profile picture
+    getProfilePicture: async (req, res) => {
+        try {
+            const userId = req.params.id || req.user._id;
+            
+            const user = await User.findById(userId);
+            if (!user) {
+                return res.status(404).json({ error: 'user not found' });
+            }
+
+            if (!user.profilePicture || !user.profilePicture.data) {
+                return res.status(404).json({ error: 'pfp not found' });
+            }
+
+            res.set('Content-Type', user.profilePicture.contentType);
+            res.send(user.profilePicture.data);
+        } catch (err) {
+
+            res.status(500).json({ error: 'error retrievng pfp' });
         }
     }
 };
