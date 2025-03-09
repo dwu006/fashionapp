@@ -41,7 +41,7 @@ userRouter.delete('/:id', protect, userController.deleteUser);
 
 // Profile picture routes
 userRouter.post('/profile-picture', protect, upload.single('profilePicture'), userController.uploadProfilePicture);
-userRouter.get('/profile-picture', protect, userController.getProfilePicture);
-userRouter.get('/profile-picture/:id', protect, userController.getProfilePicture);
+userRouter.get('/profile-picture',  userController.getProfilePicture);
+userRouter.get('/profile-picture/:id',  userController.getProfilePicture);
 
 export default userRouter;

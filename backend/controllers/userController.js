@@ -4,6 +4,7 @@
 import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import { generateToken } from '../middleware/auth.js';
+import path from 'path';
 
 const userController = {
     // Register new user
@@ -56,7 +57,7 @@ const userController = {
                     name: user.name,
                     email: user.email,
                     token: generateToken(user._id),
-                    hasProfilePicture: !!user.profilePicture?.data
+                    hasProfilePicture: !!user.profilePicturePath
                 });
             } else {
                 res.status(401).json({ message: 'Invalid email or password' });
@@ -77,7 +78,7 @@ const userController = {
                 _id: user._id,
                 name: user.name,
                 email: user.email,
-                hasProfilePicture: !!user.profilePicture?.data
+                hasProfilePicture: !!user.profilePicturePath
             });
         } catch (err) {
             res.status(500).json({ error: err.message });

@@ -48,8 +48,8 @@ const outfitController = {
             }
 
             const outfits = await Outfit.find(filter)
-                .populate('user', 'username profileImage')
-                .populate('comments.user', 'username profileImage')
+                .populate('user', 'username profilePicturePath')
+                .populate('comments.user', 'name profilePicturePath')
                 .sort({ createdAt: -1 });
 
             // Transform outfits to include user-specific like status
@@ -81,7 +81,7 @@ const outfitController = {
     getOutfitById: async (req, res) => {
         try {
             const outfit = await Outfit.findById(req.params.id)
-                .populate('user', 'username');
+                .populate('user', 'name profilePicturePath');
             
             if (!outfit) {
                 return res.status(404).json({ message: 'Outfit not found' });
@@ -250,7 +250,7 @@ const outfitController = {
 
             // Populate the user info for the new comment
             const populatedOutfit = await Outfit.findById(outfit._id)
-                .populate('comments.user', 'username profileImage');
+                .populate('comments.user', 'name profilePicturePath');
 
             const addedComment = populatedOutfit.comments[populatedOutfit.comments.length - 1];
 

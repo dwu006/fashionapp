@@ -15,9 +15,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  profilePicture: {
-    data: Buffer,
-    contentType: String
+  profilePicturePath: {
+    type: String,
+    default: ""
   }
 });
 
