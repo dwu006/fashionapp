@@ -148,60 +148,54 @@ const userController = {
         }
     },
 
-    // Upload profile picture
+    // upload profile picture
     uploadProfilePicture: async (req, res) => {
         try {
-            if (!req.file) {
-                return res.status(400).json({ error: 'no image' });
-            }
-
-            const userId = req.user._id;
-            
-            const updatedUser = await User.findByIdAndUpdate(
-                userId,
-                {
-                    profilePicture: {
-                        data: req.file.buffer,
-                        contentType: req.file.mimetype
-                    }
-                },
-                { new: true }
-            ).select('-password');
-
-            if (!updatedUser) {
-                return res.status(404).json({ error: 'user not found' });
-            }
-
-            res.status(200).json({ 
-                message: 'pfp uploaded successfully',
-                hasProfilePicture: true
-            });
+          if (!req.file) {
+            return res.status(400).json({ error: 'no image' });
+          }
+          
+          const userId = req.user._id;
+          
+          // update with file path
+          const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { profilePicturePath: req.file.path },
+            { new: true }
+          ).select('-password');
+          
+          if (!updatedUser) {
+            return res.status(404).json({ error: 'user not found' });
+          }
+          
+          res.status(200).json({ 
+            message: 'pfp uploaded successfully',
+            hasProfilePicture: true
+          });
         } catch (err) {
-            res.status(500).json({ error: 'uploading error' });
+          res.status(500).json({ error: 'uploading error' });
         }
-    },
+      },
 
-    // Get profile picture
+    // get profile picture
     getProfilePicture: async (req, res) => {
         try {
-            const userId = req.params.id || req.user._id;
-            
-            const user = await User.findById(userId);
-            if (!user) {
-                return res.status(404).json({ error: 'user not found' });
-            }
-
-            if (!user.profilePicture || !user.profilePicture.data) {
-                return res.status(404).json({ error: 'pfp not found' });
-            }
-
-            res.set('Content-Type', user.profilePicture.contentType);
-            res.send(user.profilePicture.data);
+          const userId = req.params.id || req.user._id;
+          const user = await User.findById(userId);
+          if (!user) {
+            return res.status(404).json({ error: 'user not found' });
+          }
+          
+          if (!user.profilePicturePath) {
+            return res.status(404).json({ error: 'pfp not found' });
+          }
+          
+          // send from uploads folder
+          res.sendFile(path.resolve(user.profilePicturePath));
         } catch (err) {
-
-            res.status(500).json({ error: 'error retrievng pfp' });
+          res.status(500).json({ error: 'error retrieving pfp' });
         }
-    }
+      }
 };
 
 export default userController;
