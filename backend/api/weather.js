@@ -1,9 +1,13 @@
 import axios from "axios";
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-const API_KEY = process.env.WEATHER_API_KEY;
+const API_KEY = process.env.VITE_WEATHER_API_KEY;
 
 const getWeather = async (lat, lon) => {
   try {

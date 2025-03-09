@@ -40,7 +40,7 @@ function OutfitsPage() {
     }
 
     return (
-        <div className="page feed-page">
+        <div className="page outfit">
             <UserHeader />
             <div className="content" style={{ paddingTop: '0' }}>
                 <div style={{ 
