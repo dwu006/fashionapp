@@ -4,6 +4,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import ProfilePicture from "./ProfilePicture.jsx";
 
+
+
 function UserHeader() {
     const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -27,6 +29,7 @@ function UserHeader() {
                     const displayName = data.name.length > 8 ? data.name.substring(0, 8) + '...' : data.name;
                     setUsername(displayName);
                     localStorage.setItem('username', displayName);
+                    localStorage.setItem('userId', data._id);
                 }
             } catch (error) {
                 console.error('Failed to fetch profile:', error);
@@ -101,7 +104,7 @@ function UserHeader() {
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     >
                         <div className="profile-button-content">
-                            <ProfilePicture size="small" />
+                            <ProfilePicture key={localStorage.getItem('token')} size="small" userId={localStorage.getItem('userId')} />
                             <span className="username">{username}</span>
                             <span className="arrow">▼</span>
                         </div>

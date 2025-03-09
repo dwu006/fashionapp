@@ -15,6 +15,7 @@ function UpdateProfilePage() {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
+
     useEffect(() => {
         // Fetch user profile when component mounts
         const fetchProfile = async () => {
@@ -39,7 +40,7 @@ function UpdateProfilePage() {
             }
         };
 
-        fetchProfile();
+        fetchProfile() ;
     }, []);
 
     async function handleUpdateProfile() {
@@ -93,11 +94,7 @@ function UpdateProfilePage() {
                     {success && <p style={{ color: 'green' }}>{success}</p>}
                     
                     <div className="profile-picture-container">
-                        <ProfilePicture 
-                            size="large" 
-                            editable={true} 
-                            onUploadSuccess={handleProfilePictureSuccess}
-                        />
+                        <ProfilePicture key={localStorage.getItem('token')} size="large" editable={true} userId={userId} onUploadSuccess={handleProfilePictureSuccess} />
                         <p className="picture-hint">Click to change profile picture</p>
                     </div>
                     
