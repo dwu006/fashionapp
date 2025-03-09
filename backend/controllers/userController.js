@@ -4,6 +4,7 @@
 import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import { generateToken } from '../middleware/auth.js';
+import path from 'path';
 
 const userController = {
     // Register new user
@@ -55,7 +56,8 @@ const userController = {
                     _id: user._id,
                     name: user.name,
                     email: user.email,
-                    token: generateToken(user._id)
+                    token: generateToken(user._id),
+                    hasProfilePicture: !!user.profilePicturePath
                 });
             } else {
                 res.status(401).json({ message: 'Invalid email or password' });
@@ -75,7 +77,8 @@ const userController = {
             res.json({
                 _id: user._id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                hasProfilePicture: !!user.profilePicturePath
             });
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -144,7 +147,56 @@ const userController = {
         } catch (error) {
             res.status(500).json({ message: 'Error during logout', error: error.message });
         }
-    }
+    },
+
+    // upload profile picture
+    uploadProfilePicture: async (req, res) => {
+        try {
+          if (!req.file) {
+            return res.status(400).json({ error: 'no image' });
+          }
+          
+          const userId = req.user._id;
+          
+          // update with file path
+          const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { profilePicturePath: req.file.path },
+            { new: true }
+          ).select('-password');
+          
+          if (!updatedUser) {
+            return res.status(404).json({ error: 'user not found' });
+          }
+          
+          res.status(200).json({ 
+            message: 'pfp uploaded successfully',
+            hasProfilePicture: true
+          });
+        } catch (err) {
+          res.status(500).json({ error: 'uploading error' });
+        }
+      },
+
+    // get profile picture
+    getProfilePicture: async (req, res) => {
+        try {
+          const userId = req.params.id || req.user._id;
+          const user = await User.findById(userId);
+          if (!user) {
+            return res.status(404).json({ error: 'user not found' });
+          }
+          
+          if (!user.profilePicturePath) {
+            return res.status(404).json({ error: 'pfp not found' });
+          }
+          
+          // send from uploads folder
+          res.sendFile(path.resolve(user.profilePicturePath));
+        } catch (err) {
+          res.status(500).json({ error: 'error retrieving pfp' });
+        }
+      }
 };
 
 export default userController;
