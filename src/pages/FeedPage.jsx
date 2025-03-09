@@ -43,8 +43,10 @@ function FeedPage() {
                 likes: Array.isArray(post.likes) ? post.likes : [],
                 user: {
                     ...post.user,
-                    profileImage: post.user.profilePicturePath
-                    ? `${axios.defaults.baseURL}/users/profile-picture/${post.user._id}`: DEFAULT_PROFILE_IMAGE
+                    profileImage: post.user?.profilePicturePath
+                    ? `${axios.defaults.baseURL}/users/profile-picture/${post.user._id}`
+                    : DEFAULT_PROFILE_IMAGE
+                
                 },
                 comments: (post.comments || []).map(comment => ({
                     ...comment,
