@@ -10,7 +10,7 @@ const axios2 = axios.create({
   baseURL: "http://localhost:5001",
 });
 
-function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = null }) {
+function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = null, userId }) {
   const [profileImage, setProfileImage] = useState(localStorage.getItem('profileImageData') || DEFAULT_PROFILE_IMAGE);
   const [showModal, setShowModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -24,8 +24,8 @@ function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = n
   useEffect(() => {
     const token = localStorage.getItem('token');
     console.log("Token: ", token);
-    if (token) {
-      axios2.get(`/users/profile-picture?t=${timestamp}`, {
+    if (token && userId) {
+      axios2.get(`/users/profile-picture/${userId}?t=${timestamp}`, {
         headers: { Authorization: `Bearer ${token}` },
         responseType: 'blob'
       })
@@ -44,7 +44,7 @@ function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = n
         console.log('using default pfp', error);
       });
     }
-  }, [timestamp]);
+  }, [timestamp, userId]);
 
   const handleUpload = async () => {
     if (!selectedFile) return;
