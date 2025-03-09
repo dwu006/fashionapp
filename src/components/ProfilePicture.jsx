@@ -9,6 +9,7 @@ function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = n
   const [profileImage, setProfileImage] = useState(DEFAULT_PROFILE_IMAGE);
   const [showModal, setShowModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [timestamp, setTimestamp] = useState(Date.now());
 
   // sizes
   const sizeClass = size === 'small' ? 'profile-small' : 
@@ -18,18 +19,20 @@ function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = n
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.get('http://localhost:5000/users/profile-picture', {
+      axios.get(`http://localhost:5000/users/profile-picture?t=${timestamp}`, {
         headers: { Authorization: `Bearer ${token}` },
         responseType: 'blob'
       })
       .then(response => {
-        setProfileImage(URL.createObjectURL(response.data));
+        const imageUrl = URL.createObjectURL(response.data);
+        setProfileImage(imageUrl);
+        localStorage.setItem('profileImageUrl', imageUrl);
       })
-      .catch(() => {
-        // use default if error
+      .catch((error) => {
+        console.log('using default pfp', error);
       });
     }
-  }, []);
+  }, [timestamp]);
 
   const handleUpload = async () => {
     if (!selectedFile) return;
@@ -46,10 +49,13 @@ function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = n
         }
       });
       
-      setProfileImage(URL.createObjectURL(selectedFile));
+      setTimestamp(Date.now());
       setShowModal(false);
+      setSelectedFile(null);
+      
       if (onUploadSuccess) onUploadSuccess();
     } catch (error) {
+      console.error('upload error:', error);
       alert('Failed to upload image');
     }
   };
