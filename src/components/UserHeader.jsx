@@ -70,8 +70,9 @@ function UserHeader() {
         }
         if (id === "logout") {
             localStorage.removeItem('token');
-            localStorage.removeItem('username'); // Clear username on logout
-            localStorage.removeItem('profileImageUrl'); // Clear profile image URL on logout
+            localStorage.removeItem('username');
+            localStorage.removeItem('profileImageUrl');
+            localStorage.removeItem('profileImageData'); // Clear profile image data on logout
             navigate("/");
             setIsDropdownOpen(false);
         }
