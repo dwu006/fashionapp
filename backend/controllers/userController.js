@@ -5,6 +5,11 @@ import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import { generateToken } from '../middleware/auth.js';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from "fs";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const userController = {
     // Register new user
@@ -190,10 +195,22 @@ const userController = {
           if (!user.profilePicturePath) {
             return res.status(404).json({ error: 'pfp not found' });
           }
+
+          res.set('Access-Control-Allow-Origin', '*');
+
+          const filePath = user.profilePicturePath.replace(/\\/g, "/");
+        //   await user.save();
+
+          console.log("User ID:", userId);
+          console.log("Stored Profile Picture Path:", user.profilePicturePath);
+          console.log("Resolved File Path:", filePath);
+          console.log("Does file exist?", fs.existsSync(filePath) ? "✅ Yes" : "❌ No");
+          
           
           // send from uploads folder
-          res.sendFile(path.join(user.profilePicturePath));
+          res.sendFile(path.join(__dirname, filePath));
         } catch (err) {
+            console.log("error: ", err);
           res.status(500).json({ error: 'error retrieving pfp' });
         }
       }

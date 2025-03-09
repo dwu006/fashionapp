@@ -45,13 +45,16 @@ function FeedPage() {
                     ...post.user,
                     profileImage: post.user.profilePicturePath
                     ? `http://localhost:5001/users/profile-picture/${post.user._id}`: DEFAULT_PROFILE_IMAGE
+                    // profileImage: post.user.profilePicturePath
+                    //     ? `${axios.defaults.baseURL}/users/profile-picture/${post.user.profilePicturePath.replace(/\\/g, "/")}`
+                    //     : DEFAULT_PROFILE_IMAGE
                 },
                 comments: (post.comments || []).map(comment => ({
                     ...comment,
                     user: {
                         ...comment.user,
                         profileImage: comment.user.profilePicturePath
-                        ? `http://localhost:5001/users/profile-picture/${comment.user._id}`: DEFAULT_PROFILE_IMAGE
+                            ? `http://localhost:5001/users/profile-picture/${comment.user._id}` : DEFAULT_PROFILE_IMAGE
                     }
                 }))
             }));
@@ -187,11 +190,11 @@ function FeedPage() {
                 </div>
             </div>
             {loading ? (
-                <div className="content" style={{ 
-                    minHeight: '0', 
+                <div className="content" style={{
+                    minHeight: '0',
                     paddingTop: '0',
-                    justifyItems:'center'
-                    }}>
+                    justifyItems: 'center'
+                }}>
                     <h1>Loading ...</h1>
                 </div>
             ) : posts.length === 0 ? (
@@ -252,7 +255,7 @@ function FeedPage() {
                             </div>
                         </div>
                     ))}
-            </div>
+                </div>
             )}
 
             {selectedPost && (
