@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 tasks.txt
 request.rest
+.env

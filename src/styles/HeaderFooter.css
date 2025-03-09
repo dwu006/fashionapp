@@ -44,7 +44,7 @@
         background-color: whitesmoke;
         color: black;
     }
-    .button {
+    .button x{
         color:rgb(35, 35, 35);
     }
     .button:hover, :focus {

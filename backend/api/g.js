@@ -8,7 +8,7 @@ import getWeather from "./weather.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
-const genAI = new GoogleGenerativeAI(process.env.MAIN_GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // Helper function to convert Buffer to base64
 const bufferToBase64 = (buffer) => {
