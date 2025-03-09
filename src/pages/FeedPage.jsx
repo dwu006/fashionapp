@@ -44,14 +44,14 @@ function FeedPage() {
                 user: {
                     ...post.user,
                     profileImage: post.user.profilePicturePath
-                    ? `http://localhost:5000/users/profile-picture/${post.user._id}`: DEFAULT_PROFILE_IMAGE
+                    ? `http://localhost:5001/users/profile-picture/${post.user._id}`: DEFAULT_PROFILE_IMAGE
                 },
                 comments: (post.comments || []).map(comment => ({
                     ...comment,
                     user: {
                         ...comment.user,
                         profileImage: comment.user.profilePicturePath
-                        ? `http://localhost:5000/users/profile-picture/${comment.user._id}`: DEFAULT_PROFILE_IMAGE
+                        ? `http://localhost:5001/users/profile-picture/${comment.user._id}`: DEFAULT_PROFILE_IMAGE
                     }
                 }))
             }));
