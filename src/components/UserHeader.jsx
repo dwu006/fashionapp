@@ -2,6 +2,7 @@ import "../styles/HeaderFooter.css";
 import "../styles/UserHeader.css";
 import { useNavigate, Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
+import ProfilePicture from "./ProfilePicture.jsx";
 
 function UserHeader() {
     const navigate = useNavigate();
@@ -69,7 +70,9 @@ function UserHeader() {
         }
         if (id === "logout") {
             localStorage.removeItem('token');
-            localStorage.removeItem('username'); // Clear username on logout
+            localStorage.removeItem('username');
+            localStorage.removeItem('profileImageUrl');
+            localStorage.removeItem('profileImageData'); // Clear profile image data on logout
             navigate("/");
             setIsDropdownOpen(false);
         }
@@ -97,7 +100,11 @@ function UserHeader() {
                         className={`button login profile-button ${isDropdownOpen ? 'open' : ''}`}
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     >
-                        <span className="username">{username}</span> <span className="arrow">▼</span>
+                        <div className="profile-button-content">
+                            <ProfilePicture size="small" />
+                            <span className="username">{username}</span>
+                            <span className="arrow">▼</span>
+                        </div>
                     </button>
                     {isDropdownOpen && (
                         <div className="profile-dropdown">

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserHeader from "../components/UserHeader.jsx";
 import Footer from "../components/Footer.jsx";
+import ProfilePicture from "../components/ProfilePicture.jsx";
 import "../styles/LoginSignUp.css";
+import "../styles/UpdateProfilePage.css";
 
 function UpdateProfilePage() {
     const navigate = useNavigate();
@@ -11,6 +13,7 @@ function UpdateProfilePage() {
     const [password, setPassword] = useState("");
     const [userId, setUserId] = useState(null);
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
     useEffect(() => {
         // Fetch user profile when component mounts
@@ -60,7 +63,11 @@ function UpdateProfilePage() {
             });
 
             if (response.ok) {
-                navigate('/wardrobe');
+                setSuccess("Profile updated successfully!");
+                // Update username in localStorage
+                localStorage.setItem('username', name);
+                // Clear password field
+                setPassword("");
             } else {
                 const data = await response.json();
                 setError(data.message || 'Failed to update profile');
@@ -71,34 +78,57 @@ function UpdateProfilePage() {
         }
     }
 
+    const handleProfilePictureSuccess = () => {
+        setSuccess("Profile picture updated successfully!");
+    };
+
     return (
         <div className="page">
-            <UserHeader /> <br />
-            <div className="box">
-                <h1>Update Profile</h1>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                <input 
-                    className="input-info" 
-                    type="text" 
-                    placeholder="Name" 
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                /> <br />
-                <input 
-                    className="input-info" 
-                    type="email" 
-                    placeholder="Email" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                /> <br />
-                <input 
-                    className="input-info" 
-                    type="password" 
-                    placeholder="New Password (optional)" 
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                /> <br />
-                <button className="button" onClick={handleUpdateProfile}>Update Profile</button> <br />
+            <UserHeader />
+            <div className="center">
+                <div className="box profile-box">
+                    <h1>My Profile</h1>
+                    
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                    {success && <p style={{ color: 'green' }}>{success}</p>}
+                    
+                    <div className="profile-picture-container">
+                        <ProfilePicture 
+                            size="large" 
+                            editable={true} 
+                            onUploadSuccess={handleProfilePictureSuccess}
+                        />
+                        <p className="picture-hint">Click to change profile picture</p>
+                    </div>
+                    
+                    <input 
+                        className="input-info" 
+                        type="text" 
+                        placeholder="Name" 
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                    /> <br />
+                    
+                    <input 
+                        className="input-info" 
+                        type="email" 
+                        placeholder="Email" 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    /> <br />
+                    
+                    <input 
+                        className="input-info" 
+                        type="password" 
+                        placeholder="New Password (optional)" 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    /> <br />
+                    
+                    <button className="button" onClick={handleUpdateProfile}>
+                        Update Profile
+                    </button>
+                </div>
             </div>
             <Footer />
         </div>
