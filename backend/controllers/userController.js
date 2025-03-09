@@ -181,19 +181,26 @@ const userController = {
     // get profile picture
     getProfilePicture: async (req, res) => {
         try {
-          const userId = req.params.id || req.user._id;
+          const userId = req.params.id || req.user?._id;
+          console.log("getProfilePicture called for user:", userId); // <-- Logging added
+      
           const user = await User.findById(userId);
           if (!user) {
+            console.log("User not found:", userId);
             return res.status(404).json({ error: 'user not found' });
           }
           
           if (!user.profilePicturePath) {
+            console.log("No profilePicturePath for user:", userId);
             return res.status(404).json({ error: 'pfp not found' });
           }
           
-          // send from uploads folder
-          res.sendFile(path.join(user.profilePicturePath));
+          const resolvedPath = path.resolve(user.profilePicturePath);
+          console.log("Serving file from:", resolvedPath); // <-- Logging added
+      
+          res.sendFile(resolvedPath);
         } catch (err) {
+          console.error("Error in getProfilePicture:", err);
           res.status(500).json({ error: 'error retrieving pfp' });
         }
       }
