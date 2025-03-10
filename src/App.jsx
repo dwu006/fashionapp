@@ -1,47 +1,36 @@
-import './styles/App.css';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage.jsx";
-import AboutPage from "./pages/AboutPage.jsx";
-import LoginPage from "./pages/LoginPage.jsx";
-import SignUpPage from "./pages/SignUpPage.jsx";
-import WardrobePage from "./pages/WardrobePage.jsx";
-import OutfitsPage from "./pages/OutfitsPage.jsx";
-import FeedPage from "./pages/FeedPage.jsx";
-import UpdateProfilePage from "./pages/UpdateProfilePage.jsx";
-import ProtectedRoute from "./components/ProtectedRoute";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
+import LoginPage from "./pages/LoginPage";
+import SignUpPage from "./pages/SignUpPage";
+import WardrobePage from "./pages/WardrobePage";
+import OutfitsPage from "./pages/OutfitsPage";
+import FeedPage from "./pages/FeedPage";
+import UpdateProfilePage from "./pages/UpdateProfilePage";
+import "./App.css";
+import "./styles/Theme.css"; // Import the theme styles
 
 function App() {
+  // Initialize theme from localStorage or default to dark
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }, []);
+
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
-        
-        {/* Protected Routes */}
-        <Route path="/wardrobe" element={
-          <ProtectedRoute>
-            <WardrobePage />
-          </ProtectedRoute>
-        } />
-        <Route path="/outfits" element={
-          <ProtectedRoute>
-            <OutfitsPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/feed" element={
-          <ProtectedRoute>
-            <FeedPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/update-profile" element={
-          <ProtectedRoute>
-            <UpdateProfilePage />
-          </ProtectedRoute>
-        } />
+        <Route path="/wardrobe" element={<WardrobePage />} />
+        <Route path="/outfits" element={<OutfitsPage />} />
+        <Route path="/feed" element={<FeedPage />} />
+        <Route path="/profile" element={<UpdateProfilePage />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
 
