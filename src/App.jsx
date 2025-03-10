@@ -11,43 +11,49 @@ import UpdateProfilePage from "./pages/UpdateProfilePage";
 import "./styles/App.css";
 import "./styles/Theme.css"; // Import the theme styles
 
-const usePageTitle = () => {
+const PageTitleUpdater = () => {
   const location = useLocation();
   useEffect(() => {
     switch (location.pathname) {
-      case '/signup':
-        document.title = 'Signup';
+      case "/signup":
+        document.title = "Signup";
         break;
-      case '/play':
-        document.title = "Play";
+      case "/login":
+        document.title = "Login";
         break;
-      case '/play/computer':
-      case '/play/online':
-        document.title = "Game is in Session";
+      case "/about":
+        document.title = "About";
         break;
-      case '/settings':
-        document.title = "Settings";
+      case "/update-profile":
+        document.title = "Update Profile";
         break;
-      case '/help':
-        document.title = "Help";
+      case "/wardrobe":
+        document.title = "Wardrobe";
+        break;
+      case "/outfits":
+        document.title = "Outfit Generator";
+        break;
+      case "/feed":
+        document.title = "Community Feed";
         break;
       default:
         document.title = "fitchck";
     }
   }, [location]);
-}
+
+  return null; 
+};
 
 function App() {
   // Initialize theme from localStorage or default to dark
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    document.documentElement.setAttribute("data-theme", savedTheme);
   }, []);
-
-  usePageTitle();
 
   return (
     <Router>
+      <PageTitleUpdater />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
@@ -56,6 +62,7 @@ function App() {
         <Route path="/wardrobe" element={<WardrobePage />} />
         <Route path="/outfits" element={<OutfitsPage />} />
         <Route path="/feed" element={<FeedPage />} />
+        <Route path="/update-profile" element={<UpdateProfilePage />} />
         <Route path="/profile" element={<UpdateProfilePage />} />
       </Routes>
     </Router>
