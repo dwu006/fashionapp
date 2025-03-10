@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "../styles/UploadClothes.css";
 
-// Connect to backend server
+// Connect to backend server with correct port
 const axios2 = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "http://localhost:5001",
 });
 
 const UploadClothes = ({ setShowUploadModal, onUploadSuccess }) => {
@@ -12,6 +13,7 @@ const UploadClothes = ({ setShowUploadModal, onUploadSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [dragActive, setDragActive] = useState(false);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -38,7 +40,30 @@ const UploadClothes = ({ setShowUploadModal, onUploadSuccess }) => {
     const file = event.target.files[0];
     if (file) {
       setFile(file);
-      setImage(URL.createObjectURL(file)); 
+      setImage(URL.createObjectURL(file));
+    }
+  };
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      setFile(file);
+      setImage(URL.createObjectURL(file));
     }
   };
 
@@ -65,7 +90,7 @@ const UploadClothes = ({ setShowUploadModal, onUploadSuccess }) => {
       });
 
       if (response.status === 200) {
-        alert("Clothing uploaded successfully!");
+        setLoading(false);
         setShowUploadModal(false);
         onUploadSuccess(); 
       }
@@ -73,45 +98,81 @@ const UploadClothes = ({ setShowUploadModal, onUploadSuccess }) => {
       console.error("Upload failed:", error);
       console.error("Error details:", error.response?.data);
       alert("Upload failed. Try again: " + (error.response?.data?.error || error.message));
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
-    <div className="modal-overlay" onClick={() => setShowUploadModal(false)}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="close-button" onClick={() => setShowUploadModal(false)}>✖</button>
+    <div className="upload-modal-overlay" onClick={() => setShowUploadModal(false)}>
+      <div className="upload-modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="upload-close-button" onClick={() => setShowUploadModal(false)}>×</button>
         
-        <h2 className="modal-title">Upload Clothing</h2>
-
-        <label className="file-upload">
-          <input type="file" accept="image/*" onChange={handleFileChange} />
-          Choose File
-        </label>
-
-        {image && <img src={image} alt="Preview" className="image-preview" />}
-
-        <select 
-          className="category-dropdown"
-          value={selectedCategory} 
-          onChange={(e) => setSelectedCategory(e.target.value)}
+        <h2 className="upload-modal-title">Add to Your Wardrobe</h2>
+        
+        <div 
+          className={`drop-area ${dragActive ? 'drag-active' : ''} ${image ? 'has-image' : ''}`}
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
         >
-          <option value="">Select Category</option>
-          <option value="top">Top</option>
-          <option value="bottom">Bottom</option>
-          <option value="outerwear">Outerwear</option>
-          <option value="shoes">Shoes</option>
-          <option value="accessories">Accessories</option>
-          <option value="other">Other</option>
-        </select>
+          {image ? (
+            <div className="image-preview-container">
+              <img src={image} alt="Preview" className="upload-image-preview" />
+              <button 
+                className="remove-image-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setImage(null);
+                  setFile(null);
+                }}
+              >
+                Remove
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="upload-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <p className="drop-text">Drag & drop your photo here or</p>
+              <label className="upload-file-btn">
+                <input type="file" accept="image/*" onChange={handleFileChange} />
+                Browse Files
+              </label>
+              <p className="file-support-text">Supports: JPG, PNG, GIF (Max 5MB)</p>
+            </>
+          )}
+        </div>
+
+        <div className="upload-category-section">
+          <label className="category-label">Category:</label>
+          <div className="category-buttons">
+            {['Top', 'Bottom', 'Outerwear', 'Shoes', 'Accessories', 'Other'].map((category) => (
+              <button
+                key={category}
+                type="button"
+                className={`category-select-btn ${selectedCategory === category.toLowerCase() ? 'selected' : ''}`}
+                onClick={() => setSelectedCategory(category.toLowerCase())}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
 
         <button 
-          className="save-button"
+          className={`upload-save-button ${(!file || !selectedCategory || loading) ? 'disabled' : ''}`}
           onClick={handleUpload} 
-          disabled={loading}
+          disabled={!file || !selectedCategory || loading}
         >
-          {loading ? "Uploading..." : "Save to Wardrobe"}
+          {loading ? (
+            <div className="loader"></div>
+          ) : (
+            "Add to Wardrobe"
+          )}
         </button>
       </div>
     </div>
