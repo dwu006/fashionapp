@@ -6,11 +6,10 @@
 .box {
     display: flex;
     flex-direction: column;
-    background-color:rgb(220, 220, 220);
     border: 1px solid black;
     border-radius: 20px;
     width: 300px;
-    margin: auto;
+    margin:50px;
     align-items: center;
     padding: 20px;
 }
@@ -18,13 +17,28 @@
 .input-info {
     width: 80%;
     padding: 10px;
+    background-color:white;
 }
 
-.login-btn {
-    width: 100px;
-    color:black;
-    border: 1px solid black;
-    padding: 10px;
+.button.login-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    background-color: rgb(95, 95, 95);
+    border: 2px solid black;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    flex-shrink: 0;
+    max-width: 200px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.button.login-btn:hover {
+    background-color: black;
+    color: white;
 }
 
 @font-face {
@@ -34,6 +48,19 @@
     font-weight: normal;
     font-style: normal;
 }
+
+@media (prefers-color-scheme:light) {
+    .button.login-btn {
+        color: black;
+        background-color: white;
+    }
+
+    .button.login-btn:hover {
+        background-color: rgb(35, 35, 35);
+        color: white;
+    }
+}
+
 
 /* Apply MagnoliaScript font only to the fitchck title */
 .page .center h1.title {

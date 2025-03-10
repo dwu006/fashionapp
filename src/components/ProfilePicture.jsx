@@ -22,8 +22,7 @@ function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = n
 
   // Loading
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    console.log("Token: ", token);
+    const token = localStorage.getItem('token');  
     if (token && userId) {
       axios2.get(`/users/profile-picture/${userId}?t=${timestamp}`, {
         headers: { Authorization: `Bearer ${token}` },

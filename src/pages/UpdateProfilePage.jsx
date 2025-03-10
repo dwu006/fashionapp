@@ -122,7 +122,7 @@ function UpdateProfilePage() {
                         onChange={(e) => setPassword(e.target.value)}
                     /> <br />
                     
-                    <button className="button" onClick={handleUpdateProfile}>
+                    <button className="button login-btn" onClick={handleUpdateProfile}>
                         Update Profile
                     </button>
                 </div>

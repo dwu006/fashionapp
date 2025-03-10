@@ -37,15 +37,15 @@ function LoginPage() {
     return (
         <div className="page">
             <div className="center">
-                <h1 className="title"><Link to="/" style={{ color: "inherit" }}>fitchck</Link></h1>
                 <div className="box">
-                    <h1>Login</h1>
+                    <h1 className="title" style={{ color: "inherit" }}>fitchck</h1>
+                    <p>Login to view your clothes and your impact with your local community.</p>
                     <input className="input-info" type="text" id="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} /> <br />
                     <input className="input-info" type="password" id="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} /> <br />
                     <button className="button login-btn" onClick={handleLogin}>Login</button>
                     <p>Don't have an account? <Link to="/signup">Register</Link></p>
                 </div>
-                <p>©2025 Fitchck All Rights Reserved</p>
+                <center><p>©2025 Fitchck All Rights Reserved</p></center>
             </div>
         </div>
     )

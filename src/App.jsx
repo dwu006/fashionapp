@@ -1,5 +1,5 @@
 import './styles/App.css';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation} from "react-router-dom";
 import HomePage from "./pages/HomePage.jsx";
 import AboutPage from "./pages/AboutPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
@@ -9,6 +9,32 @@ import OutfitsPage from "./pages/OutfitsPage.jsx";
 import FeedPage from "./pages/FeedPage.jsx";
 import UpdateProfilePage from "./pages/UpdateProfilePage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute";
+
+const usePageTitle = () => {
+  const location = useLocation();
+  useEffect(() => {
+    switch (location.pathname) {
+      case '/signup':
+        document.title = 'Signup';
+        break;
+      case '/play':
+        document.title = "Play";
+        break;
+      case '/play/computer':
+      case '/play/online':
+        document.title = "Game is in Session";
+        break;
+      case '/settings':
+        document.title = "Settings";
+        break;
+      case '/help':
+        document.title = "Help";
+        break;
+      default:
+        document.title = "fitchck";
+    }
+  }, [location]);
+}
 
 function App() {
   return (
