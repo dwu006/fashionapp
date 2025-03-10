@@ -1,0 +1,300 @@
+/* Upload Modal Overlay */
+.upload-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+  }
+  
+  /* Modal Content */
+  .upload-modal-content {
+    background: var(--box-bg, white);
+    color: var(--box-text, black);
+    padding: 40px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 480px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    animation: modalFadeIn 0.3s ease-out;
+  }
+  
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Modal Title */
+  .upload-modal-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+    width: 100%;
+  }
+  
+  /* Close Button */
+  .upload-close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--button-color, #555);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+  
+  .upload-close-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--button-hover-text, black);
+  }
+  
+  /* Drop Area */
+  .drop-area {
+    width: 100%;
+    min-height: 220px;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    margin-bottom: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+  
+  .drop-area:hover {
+    border-color: var(--button-hover-bg, #888);
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+  
+  .drop-area.drag-active {
+    border-color: var(--button-hover-text, black);
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: scale(1.01);
+  }
+  
+  .drop-area.has-image {
+    border-style: solid;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  /* Upload Icon */
+  .upload-icon {
+    margin-bottom: 16px;
+    color: #888;
+  }
+  
+  /* Drop Text */
+  .drop-text {
+    font-size: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+    color: var(--text-color, black);
+  }
+  
+  .file-support-text {
+    font-size: 14px;
+    color: #888;
+    margin-top: 10px;
+  }
+  
+  /* File Upload Button */
+  .upload-file-btn {
+    background-color: var(--bg-color, white);
+    color: var(--text-color, black);
+    border: 2px solid var(--button-color, #888);
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-block;
+  }
+  
+  .upload-file-btn:hover {
+    background-color: var(--button-hover-bg, #e0e0e0);
+    border-color: var(--button-hover-text, black);
+  }
+  
+  .upload-file-btn input {
+    display: none;
+  }
+  
+  /* Image Preview */
+  .image-preview-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .upload-image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px;
+  }
+  
+  .remove-image-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .remove-image-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  /* Category Section */
+  .upload-category-section {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+  
+  .category-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: var(--text-color, black);
+  }
+  
+  .category-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  
+  .category-select-btn {
+    background-color: transparent;
+    border: 2px solid var(--button-color, #888);
+    color: var(--text-color, black);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .category-select-btn:hover {
+    border-color: var(--button-hover-text, black);
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+  
+  .category-select-btn.selected {
+    background-color: var(--button-hover-bg, #e0e0e0);
+    border-color: var(--button-hover-text, black);
+    color: var(--button-hover-text, black);
+    font-weight: 600;
+  }
+  
+  /* Save Button */
+  .upload-save-button {
+    background-color: var(--button-hover-bg, #e0e0e0);
+    color: var(--button-hover-text, black);
+    border: none;
+    border-radius: 25px;
+    padding: 14px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    max-width: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .upload-save-button:hover {
+    background-color: var(--button-hover-text, black);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .upload-save-button.disabled {
+    background-color: #ddd;
+    color: #999;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  /* Loading Animation */
+  .loader {
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 3px solid var(--button-hover-text, black);
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 480px) {
+    .upload-modal-content {
+      padding: 25px 15px;
+      width: 95%;
+    }
+    
+    .upload-modal-title {
+      font-size: 24px;
+    }
+    
+    .category-buttons {
+      gap: 6px;
+    }
+    
+    .category-select-btn {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+  }

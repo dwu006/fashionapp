@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import UserHeader from "../components/UserHeader.jsx";
 import Footer from "../components/Footer.jsx";
 import ProfilePicture from "../components/ProfilePicture.jsx";
+import ThemeToggle from "../components/ThemeToggle.jsx";
 import "../styles/LoginSignUp.css";
 import "../styles/UpdateProfilePage.css";
 
@@ -122,7 +123,10 @@ function UpdateProfilePage() {
                         onChange={(e) => setPassword(e.target.value)}
                     /> <br />
                     
-                    <button className="button login-btn" onClick={handleUpdateProfile}>
+                    {/* Theme toggle component */}
+                    <ThemeToggle />
+                    
+                    <button className="button" onClick={handleUpdateProfile}>
                         Update Profile
                     </button>
                 </div>

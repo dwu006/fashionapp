@@ -27,11 +27,6 @@ With fitchck, you can:
    - Google Maps API 
    - OpenWeather API 
 
-## Prerequisites
-- Node.js 
-- npm (included with Node.js)
-- git
-
 ## Setup
 ### 1. Clone the Repository
 ```bash
