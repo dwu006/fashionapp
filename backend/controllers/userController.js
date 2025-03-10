@@ -54,7 +54,7 @@ const userController = {
 
             // Find user by email
             const user = await User.findOne({ email });
-            
+
             // Check if user exists and password matches
             if (user && (await bcrypt.compare(password, user.password))) {
                 res.json({
@@ -157,69 +157,72 @@ const userController = {
     // upload profile picture
     uploadProfilePicture: async (req, res) => {
         try {
-          if (!req.file) {
-            return res.status(400).json({ error: 'no image' });
-          }
-          
-          const userId = req.user._id;
-          
-          // update with file path
-          const updatedUser = await User.findByIdAndUpdate(
-            userId,
-            { profilePicturePath: req.file.path },
-            { new: true }
-          ).select('-password');
-          
-          if (!updatedUser) {
-            return res.status(404).json({ error: 'user not found' });
-          }
-          
-          res.status(200).json({ 
-            message: 'pfp uploaded successfully',
-            hasProfilePicture: true
-          });
+            if (!req.file) {
+                return res.status(400).json({ error: 'No image uploaded' });
+            }
+
+            console.log('Uploaded file:', req.file); // Log the file object to check what it contains
+
+            const userId = req.user._id;
+            const updatedUser = await User.findByIdAndUpdate(
+                userId,
+                { profilePicturePath: req.file.path },
+                { new: true }
+            ).select('-password');
+
+            if (!updatedUser) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+
+            res.status(200).json({
+                message: 'Profile picture uploaded successfully!',
+                hasProfilePicture: true,
+                filePath: req.file.path
+            });
         } catch (err) {
-          res.status(500).json({ error: 'uploading error' });
+            console.error(err);
+            res.status(500).json({ error: 'Error uploading profile picture' });
         }
-      },
+    },
+
 
     // get profile picture
     getProfilePicture: async (req, res) => {
         try {
-          const userId = req.params.id || req.user?._id;
-          console.log("getProfilePicture called for user:", userId); // <-- Logging added
-      
-          const user = await User.findById(userId);
-          if (!user) {
-            console.log("User not found:", userId);
-            return res.status(404).json({ error: 'user not found' });
-          }
-          
-          if (!user.profilePicturePath) {
-            console.log("No profilePicturePath for user:", userId);
-            return res.status(404).json({ error: 'pfp not found' });
-          }
+            const userId = req.params.id || req.user?._id;
+            console.log("getProfilePicture called for user:", userId); // <-- Logging added
 
-          res.set('Access-Control-Allow-Origin', '*');
+            const user = await User.findById(userId);
+            if (!user) {
+                console.log("User not found:", userId);
+                return res.status(404).json({ error: 'user not found' });
+            }
 
-          const filePath = user.profilePicturePath.replace(/\\/g, "/");
-        //   await user.save();
+            if (!user.profilePicturePath) {
+                console.log("No profilePicturePath for user:", userId);
+                return res.status(404).json({ error: 'pfp not found' });
+            }
 
-          console.log("User ID:", userId);
-          console.log("Stored Profile Picture Path:", user.profilePicturePath);
-          console.log("Resolved File Path:", filePath);
-          console.log("Does file exist?", fs.existsSync(filePath) ? "✅ Yes" : "❌ No");
-          
-          
-          const resolvedPath = path.resolve(user.profilePicturePath);
-          console.log("Serving file from:", resolvedPath); // <-- Logging added
-      
-          res.sendFile(resolvedPath);
+            res.set('Access-Control-Allow-Origin', '*');
+
+            const filePath = user.profilePicturePath.replace(/\\/g, "/");
+            //   await user.save();
+
+            console.log("User ID:", userId);
+            console.log("Stored Profile Picture Path:", user.profilePicturePath);
+            console.log("Resolved File Path:", filePath);
+            console.log("Does file exist?", fs.existsSync(filePath) ? "✅ Yes" : "❌ No");
+
+
+            const resolvedPath = filePath.includes("backend") ? path.resolve(filePath) : path.resolve('backend/' + filePath);
+            console.log("Serving file from:", resolvedPath); // <-- Logging added
+
+            res.sendFile(resolvedPath);
         } catch (err) {
-          console.error("Error in getProfilePicture:", err);
-          res.status(500).json({ error: 'error retrieving pfp' });
+            console.error("Error in getProfilePicture:", err);
+            res.status(500).json({ error: 'error retrieving pfp' });
         }
-      }
+    }
 };
 
 export default userController;
