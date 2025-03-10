@@ -8,7 +8,7 @@ import WardrobePage from "./pages/WardrobePage";
 import OutfitsPage from "./pages/OutfitsPage";
 import FeedPage from "./pages/FeedPage";
 import UpdateProfilePage from "./pages/UpdateProfilePage";
-import "./App.css";
+import "./styles/App.css";
 import "./styles/Theme.css"; // Import the theme styles
 
 function App() {
