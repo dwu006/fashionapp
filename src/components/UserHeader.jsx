@@ -68,7 +68,7 @@ function UserHeader() {
             navigate("/wardrobe");
         }
         if (id === "update-profile") {
-            navigate("/update-profile");
+            navigate("/profile");
             setIsDropdownOpen(false);
         }
         if (id === "logout") {
