@@ -1,0 +1,88 @@
+:root {
+    /* Base theme variables (dark mode) */
+    --bg-color: #121212;
+    --text-color: white;
+    --menu-bg: rgb(53, 53, 53);
+    --menu-text: white;
+    --button-color: grey;
+    --button-hover-bg: rgb(93, 93, 93);
+    --button-hover-text: white;
+    --box-bg: rgb(220, 220, 220);
+    --box-text: black;
+    --input-bg: #333;
+    --input-text: white;
+    --input-border: #444;
+    --link-color: #6b9fff;
+    --card-bg: #252525;
+    --border-color: #333;
+  }
+  
+  /* Light theme overrides */
+  [data-theme='light'] {
+    --bg-color: #f8f8f8;
+    --text-color: black;
+    --menu-bg: whitesmoke;
+    --menu-text: black;
+    --button-color: #555;
+    --button-hover-bg: #e0e0e0;
+    --button-hover-text: black;
+    --box-bg: white;
+    --box-text: black;
+    --input-bg: white;
+    --input-text: black;
+    --input-border: #ccc;
+    --link-color: #0066cc;
+    --card-bg: white;
+    --border-color: #ddd;
+  }
+  
+  /* Apply theme to elements */
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .menu {
+    background-color: var(--menu-bg);
+    color: var(--menu-text);
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .button {
+    color: var(--button-color);
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .button:hover, .button:focus {
+    background-color: var(--button-hover-bg);
+    color: var(--button-hover-text);
+  }
+  
+  .box {
+    background-color: var(--box-bg);
+    color: var(--box-text);
+    border-color: var(--border-color);
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  }
+  
+  .input-info {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border-color: var(--input-border);
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  }
+  
+  a {
+    color: var(--link-color);
+    transition: color 0.3s;
+  }
+  
+  /* Feed card styling */
+  .feed-card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  /* Additional theme-specific styles can be added here */
