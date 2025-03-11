@@ -9,7 +9,7 @@ import OutfitsPage from "./pages/OutfitsPage";
 import FeedPage from "./pages/FeedPage";
 import UpdateProfilePage from "./pages/UpdateProfilePage";
 import "./styles/App.css";
-import "./styles/Theme.css"; // Import the theme styles
+// import "./styles/Theme.css"; // Import the theme styles
 
 const PageTitleUpdater = () => {
   const location = useLocation();
@@ -46,10 +46,10 @@ const PageTitleUpdater = () => {
 
 function App() {
   // Initialize theme from localStorage or default to dark
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "dark";
-    document.documentElement.setAttribute("data-theme", savedTheme);
-  }, []);
+  // useEffect(() => {
+  //   const savedTheme = localStorage.getItem("theme") || "dark";
+  //   document.documentElement.setAttribute("data-theme", savedTheme);
+  // }, []);
 
   return (
     <Router>
