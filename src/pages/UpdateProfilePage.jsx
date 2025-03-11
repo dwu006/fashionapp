@@ -123,8 +123,8 @@ function UpdateProfilePage() {
                         onChange={(e) => setPassword(e.target.value)}
                     /> <br />
                     
-                    {/* Theme toggle component */}
-                    <ThemeToggle />
+                    {/* Theme toggle component
+                    <ThemeToggle /> */}
                     
                     <button className="button" onClick={handleUpdateProfile}>
                         Update Profile
