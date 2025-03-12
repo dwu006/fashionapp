@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "../styles/App.css";
 
 // Connect to backend server
 const axios2 = axios.create({
@@ -91,7 +92,8 @@ const MyWardrobe = ({ refreshTrigger, selectedCategory, handleImageClick=null })
       : items.filter((item) => item.category.toLowerCase() === selectedCategory);
 
   if (error) return <div className="error-message">{error}</div>;
-  if (loading) return <div className="loading-text">Loading your wardrobe...</div>;
+  // if (loading) return <div className="loading-text">Loading your wardrobe...</div>;
+  if (loading) return <div className="loading-text">Loading your wardrobe</div>;
 
   return (
     <div className="wardrobe-grid">
