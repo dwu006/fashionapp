@@ -6,7 +6,7 @@ const axios2 = axios.create({
   baseURL: "http://localhost:5001",
 });
 
-const MyWardrobe = ({ refreshTrigger, selectedCategory, logo }) => {
+const MyWardrobe = ({ refreshTrigger, selectedCategory }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

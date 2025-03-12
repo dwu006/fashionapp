@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Upload Modal Overlay */
 .upload-modal-overlay {
   position: fixed;
@@ -435,10 +436,278 @@
   }
 
   .category-select-btn.selected {
+=======
+.upload-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+  }
+  
+  /* Modal Content */
+  .upload-modal-content {
+    background: var(--box-bg, white);
+    color: var(--text-color, black);
+    padding: 40px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 480px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    animation: modalFadeIn 0.3s ease-out;
+  }
+  
+  /* Dark mode specific adjustments */
+  [data-theme='dark'] .upload-modal-content {
+    background: #1a1a1a;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+  }
+  
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Modal Title */
+  .upload-modal-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+    width: 100%;
+    color: var(--text-color, black);
+  }
+  
+  /* Close Button */
+  .upload-close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--text-color, black);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+  
+  .upload-close-button:hover {
+    background-color: rgba(128, 128, 128, 0.2);
+  }
+  
+  /* Drop Area */
+  .drop-area {
+    width: 100%;
+    min-height: 220px;
+    border: 2px dashed var(--border-color, #888);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    margin-bottom: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: rgba(128, 128, 128, 0.1);
+  }
+  
+  [data-theme='dark'] .drop-area {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: #444;
+  }
+  
+  .drop-area:hover {
+    border-color: var(--text-color, black);
+    background-color: rgba(128, 128, 128, 0.15);
+  }
+  
+  [data-theme='dark'] .drop-area:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #888;
+  }
+  
+  .drop-area.drag-active {
+    border-color: var(--text-color, black);
+    background-color: rgba(128, 128, 128, 0.2);
+    transform: scale(1.01);
+  }
+  
+  [data-theme='dark'] .drop-area.drag-active {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: #aaa;
+  }
+  
+  .drop-area.has-image {
+    border-style: solid;
+    border-color: var(--text-color, black);
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  /* Upload Icon */
+  .upload-icon {
+    margin-bottom: 16px;
+    color: var(--text-color, black);
+  }
+  
+  /* Drop Text */
+  .drop-text {
+    font-size: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+    color: var(--text-color, black);
+    font-weight: 500;
+  }
+  
+  .file-support-text {
+    font-size: 14px;
+    color: var(--text-color, black);
+    opacity: 0.7;
+    margin-top: 10px;
+  }
+  
+  /* File Upload Button */
+  .upload-file-btn {
+    background-color: transparent;
+    color: var(--text-color, black);
+    border: 2px solid var(--text-color, black);
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-block;
+  }
+  
+  .upload-file-btn:hover {
+    background-color: var(--text-color, black);
+    color: var(--bg-color, white);
+  }
+  
+  .upload-file-btn input {
+    display: none;
+  }
+  
+  /* Image Preview */
+  .image-preview-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .upload-image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px;
+  }
+  
+  .remove-image-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: 600;
+  }
+  
+  [data-theme='dark'] .remove-image-btn {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+  }
+  
+  .remove-image-btn:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+  
+  /* Category Section */
+  .upload-category-section {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+  
+  .category-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: var(--text-color, black);
+  }
+  
+  .category-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  
+  .category-select-btn {
+    background-color: transparent;
+    border: 2px solid var(--text-color, black);
+    color: var(--text-color, black);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+  }
+  
+  .category-select-btn:hover {
+    background-color: rgba(128, 128, 128, 0.2);
+  }
+  
+  [data-theme='dark'] .category-select-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .category-select-btn.selected {
+    background-color: var(--text-color, black);
+    color: var(--bg-color, white);
+    font-weight: 600;
+  }
+  
+  [data-theme='dark'] .category-select-btn.selected {
+>>>>>>> 1adbccd4d007b1672930f220d557d932c7969f41
     background-color: #fff;
     color: #121212;
     border-color: #fff;
   }
+<<<<<<< HEAD
 
   .upload-save-button {
     background-color: black;
@@ -450,3 +719,89 @@
     color: #999;
   }
 }
+=======
+  
+  /* Save Button */
+  .upload-save-button {
+    background-color: var(--text-color, black);
+    color: var(--bg-color, white);
+    border: none;
+    border-radius: 25px;
+    padding: 14px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    max-width: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  [data-theme='dark'] .upload-save-button {
+    background-color: #fff;
+    color: #121212;
+  }
+  
+  .upload-save-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .upload-save-button.disabled {
+    background-color: #888;
+    color: #eee;
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  [data-theme='dark'] .upload-save-button.disabled {
+    background-color: #555;
+    color: #999;
+  }
+  
+  /* Loading Animation */
+  .loader {
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 3px solid white;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+  }
+  
+  [data-theme='dark'] .loader {
+    border: 3px solid rgba(0, 0, 0, 0.3);
+    border-top: 3px solid #121212;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 480px) {
+    .upload-modal-content {
+      padding: 25px 15px;
+      width: 95%;
+    }
+    
+    .upload-modal-title {
+      font-size: 24px;
+    }
+    
+    .category-buttons {
+      gap: 6px;
+    }
+    
+    .category-select-btn {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+  }
+>>>>>>> 1adbccd4d007b1672930f220d557d932c7969f41

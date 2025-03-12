@@ -26,6 +26,7 @@ const getWeatherSuggestions = (weatherData) => {
     const temp = weatherData.main.temp;
     const weather = weatherData.weather[0].main.toLowerCase();
 
+    
     let suggestions = {
         outerwear: [],
         general: []
@@ -66,7 +67,6 @@ export async function generateOutfit(userId, prompt, lat, lon) {
 
         // 2. Fetch user's wardrobe items
         const wardrobeItems = await WardrobeItem.find({ user: userId });
-
         // 3. Prepare wardrobe data for Gemini
         const wardrobeData = wardrobeItems.map(item => ({
             category: item.category,

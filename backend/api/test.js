@@ -16,7 +16,7 @@ const uploadResult = await fileManager.uploadFile(imagePath, {
 
 console.log(
   `Uploaded file ${uploadResult.file.displayName} as: ${uploadResult.file.uri}`,
-);
+);it 
 
 // Helper function to convert Buffer to base64
 const bufferToBase64 = (buffer) => {

@@ -6,10 +6,18 @@
 .box {
     display: flex;
     flex-direction: column;
+<<<<<<< HEAD
     border: 1px solid black;
     border-radius: 20px;
     width: 300px;
     margin:50px;
+=======
+    background-color:rgb(220, 220, 220);
+    border: 1px solid black;
+    border-radius: 20px;
+    width: 300px;
+    margin: auto;
+>>>>>>> 1adbccd4d007b1672930f220d557d932c7969f41
     align-items: center;
     padding: 20px;
 }
@@ -20,6 +28,7 @@
     background-color:white;
 }
 
+<<<<<<< HEAD
 .button.login-btn {
     padding: 10px 20px;
     font-size: 16px;
@@ -39,6 +48,13 @@
 .button.login-btn:hover {
     background-color: black;
     color: white;
+=======
+.login-btn {
+    width: 100px;
+    color:black;
+    border: 1px solid black;
+    padding: 10px;
+>>>>>>> 1adbccd4d007b1672930f220d557d932c7969f41
 }
 
 @font-face {
@@ -49,6 +65,7 @@
     font-style: normal;
 }
 
+<<<<<<< HEAD
 @media (prefers-color-scheme:light) {
     .button.login-btn {
         color: black;
@@ -62,6 +79,8 @@
 }
 
 
+=======
+>>>>>>> 1adbccd4d007b1672930f220d557d932c7969f41
 /* Apply MagnoliaScript font only to the fitchck title */
 .page .center h1.title {
     font-family: 'MagnoliaScript', sans-serif;
