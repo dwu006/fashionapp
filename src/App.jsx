@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
-=======
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
->>>>>>> 1adbccd4d007b1672930f220d557d932c7969f41
 import { useEffect } from "react";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
@@ -13,7 +9,6 @@ import OutfitsPage from "./pages/OutfitsPage";
 import FeedPage from "./pages/FeedPage";
 import UpdateProfilePage from "./pages/UpdateProfilePage";
 import "./styles/App.css";
-<<<<<<< HEAD
 // import "./styles/Theme.css"; // Import the theme styles
 
 const PageTitleUpdater = () => {
@@ -59,19 +54,6 @@ function App() {
   return (
     <Router>
       <PageTitleUpdater />
-=======
-import "./styles/Theme.css"; // Import the theme styles
-
-function App() {
-  // Initialize theme from localStorage or default to dark
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-  }, []);
-
-  return (
-    <Router>
->>>>>>> 1adbccd4d007b1672930f220d557d932c7969f41
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
@@ -80,18 +62,11 @@ function App() {
         <Route path="/wardrobe" element={<WardrobePage />} />
         <Route path="/outfits" element={<OutfitsPage />} />
         <Route path="/feed" element={<FeedPage />} />
-<<<<<<< HEAD
         <Route path="/update-profile" element={<UpdateProfilePage />} />
-=======
->>>>>>> 1adbccd4d007b1672930f220d557d932c7969f41
         <Route path="/profile" element={<UpdateProfilePage />} />
       </Routes>
     </Router>
   );
 }
 
-<<<<<<< HEAD
 export default App;
-=======
-export default App;
->>>>>>> 1adbccd4d007b1672930f220d557d932c7969f41
