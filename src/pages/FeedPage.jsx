@@ -324,28 +324,6 @@ function FeedPage() {
                                     </svg>
                                 </button>
                             </div>
-                            {/* <div className="add-comment">
-                                <textarea
-                                    className="comment-input"
-                                    placeholder="Add a comment..."
-                                    value={newComment}
-                                    onChange={(e) => setNewComment(e.target.value)}
-                                    onKeyPress={(e) => {
-                                        if (e.key === 'Enter' && !e.shiftKey) {
-                                            e.preventDefault();
-                                            handleComment(selectedPost._id);
-                                        }
-                                    }}
-                                />
-                                <button
-                                    className="send-comment-btn"
-                                    onClick={() => handleComment(selectedPost._id)}
-                                    disabled={!newComment.trim()}
-                                    title="Send comment"
-                                >
-                                    ➤
-                                </button>
-                            </div> */}
                         </div>
                     </div>
                 </div>

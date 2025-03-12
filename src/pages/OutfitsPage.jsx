@@ -1,14 +1,22 @@
 import UserHeader from "../components/UserHeader.jsx";
 import Footer from "../components/Footer.jsx";
 import GenerateOutfit from "../components/GenerateOutfit.jsx";
+import MyWardrobe from "../components/MyWardrobe.jsx";
 import { useState, useEffect } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import "../styles/PageLayout.css";
+import "../styles/ChatBot.css";
 
 function OutfitsPage() {
-    const [userId, setUserId] = useState('')
+    const [userId, setUserId] = useState('');
+    const [showPopup, setShowPopup] = useState(false);
     const isAuthenticated = localStorage.getItem('token');
-    const navigate = useNavigate();
+    const [shouldRefresh, setShouldRefresh] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState("all");
+
+    const handleWardrobeUpdate = () => {
+        setShouldRefresh((prev) => !prev);
+    };
 
     if (!isAuthenticated) {
         return <Navigate to="/login" />;
@@ -35,25 +43,42 @@ function OutfitsPage() {
         fetchUserId();
     }, [userId]);
 
-    function handleClick() {
-        navigate('/wardrobe');
-    }
-
     return (
         <div className="page outfit">
             <UserHeader />
-            <div className="content" style={{ paddingTop: '0' }}>
-                <div style={{ 
-                    display: 'flex', 
-                    width: '100%', 
+            <div className="content" style={{ marginTop: '60px' }}>
+                <div style={{
+                    display: 'flex',
+                    width: '100%',
                     justifyContent: 'space-between',
                     padding: '20px'
                 }}>
-                    <h3>Generate Outfit</h3>
-                    <button className="button">Saved Outfits</button>
+                    <h1 style={{
+                        margin: '0px'
+                    }}>
+                        AI Outfit Generator
+                    </h1>
+                    <div className="saved-outfit-container">
+                        <button className="saved-button"
+                            onClick={() => setShowPopup(!showPopup)}
+                        >
+                            Saved Outfits
+                        </button>
+                    </div>
                 </div>
                 <GenerateOutfit userId={userId} />
             </div>
+            {showPopup && (
+                <div className="saved-outfits-popup" onClick={() => setShowPopup(false)}>
+                    <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+                        <h2>Saved Outfits</h2>
+                        <button className="close-button" onClick={() => setShowPopup(false)}>X</button>
+                        <div className="wardrobe-items">
+                            <MyWardrobe refreshTrigger={shouldRefresh} selectedCategory={selectedCategory} />
+                        </div>
+                    </div>
+                </div>
+            )}
             <Footer />
         </div>
     )

@@ -1,6 +1,27 @@
+.saved-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    background-color: rgb(95, 95, 95);
+    border: 2px solid black;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    flex-shrink: 0;
+    max-width: 200px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.saved-button:hover {
+    background-color: black;
+    color: white;
+}
+
 .outfit-generator {
     max-width: 800px;
-    margin: 0 auto;
+    margin: 20px auto;
     padding-top: 20px;
     background: transparent;
     border-radius: 16px;
@@ -38,6 +59,19 @@
     color: #8e8e8e;
 }
 
+.image-button {
+    background:none;
+    border:none;
+    padding:8px;
+    align-items:center;
+    transition: all 0.2s;
+}
+
+.image-button:hover {
+    transform:scale(1.1);
+    color:#2a2a2a
+}
+
 .send-button {
     background: none;
     border: none;
@@ -52,6 +86,20 @@
 .send-button:hover {
     transform: scale(1.1);
     color: #00376b;
+}
+
+.image-preview {
+    margin-top: 10px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.uploaded-image {
+    width: 20%;
+    height: auto;
+    border-radius: 5px;
 }
 
 .messages-container {
@@ -117,6 +165,23 @@
     text-align: left;
 }
 
+.saved-outfits-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    place-items:center;
+}
+
 @keyframes loading {
     0% { content: "."; }
     33% { content: ".."; }
@@ -148,5 +213,17 @@
 
     .send-button:hover {
         color: #1da1f2;
+    }
+}
+
+@media (prefers-color-scheme:light) {
+    .saved-button {
+        color: black;
+        background-color: white;
+    }
+
+    .saved-button:hover {
+        background-color: rgb(35, 35, 35);
+        color: white;
     }
 }

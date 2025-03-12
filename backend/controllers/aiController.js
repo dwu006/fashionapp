@@ -1,14 +1,19 @@
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import WardrobeItem from "../models/WardrobeItem.js";
 import getWeather from "../api/weather.js";
+import { createCanvas } from 'canvas';
+import fs from 'fs';
+import { SchemaType } from '@google/generative-ai';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const fileManager = new GoogleAIFileManager(GEMINI_API_KEY);
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 // Helper function to convert Buffer to base64
@@ -20,7 +25,7 @@ const bufferToBase64 = (buffer) => {
 const getWeatherSuggestions = (weatherData) => {
     const temp = weatherData.main.temp;
     const weather = weatherData.weather[0].main.toLowerCase();
-    
+
     let suggestions = {
         outerwear: [],
         general: []
@@ -61,7 +66,7 @@ export async function generateOutfit(userId, prompt, lat, lon) {
 
         // 2. Fetch user's wardrobe items
         const wardrobeItems = await WardrobeItem.find({ user: userId });
-        
+
         // 3. Prepare wardrobe data for Gemini
         const wardrobeData = wardrobeItems.map(item => ({
             category: item.category,
@@ -131,27 +136,6 @@ export async function generateOutfit(userId, prompt, lat, lon) {
     }
 }
 
-export async function createClothing(req, res) {
-    try {
-        const { userId, prompt, latitude, longitude } = req.body;
-        const result = await generateOutfit(userId, prompt, latitude, longitude);
-        const outfitData = result.outfit;
-        const cleanedOutfit = outfitData.replace(/```json\n|```/g, '');
-        const weather = result.weather;
-        const parsedOutfit = JSON.parse(cleanedOutfit);
-
-        return res.json({
-            message: 'Clothing generated successfully',
-            data: parsedOutfit,
-            weather: weather
-        });
-    }
-    catch (error) {
-        console.error("Error generating clothing:", error);
-        throw new Error("Failed to generate clothing.");
-    }
-}
-
 const aiController = {
     respondToPrompt: async (req, res) => {
         try {
@@ -173,77 +157,60 @@ const aiController = {
             throw new Error("Failed to respond.");
         }
     },
-    analyzeClothing: async (imagePath) => {
+    analyzeClothing: async (req, res) => {
         try {
-            const uploadResult = await fileManager.uploadFile(imagePath, {
-                mimeType: "image/jpg",
-                displayName: "fit",
-            });
 
-            console.log(`Uploaded file as: ${uploadResult.file.uri}`);
-            const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-            const model = genAI.getGenerativeModel({
-                model: "gemini-1.5-flash",
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        description: "Wardrobe items detected in the image",
-                        type: SchemaType.OBJECT,
-                        properties: {
-                            wardrobeItems: {
-                                type: SchemaType.ARRAY,
-                                description: "List of detected wardrobe items",
-                                items: {
-                                    type: SchemaType.OBJECT,
-                                    properties: {
-                                        itemName: {
-                                            type: SchemaType.STRING,
-                                            description: "Name of the clothing item",
-                                        },
-                                        description: {
-                                            type: SchemaType.STRING,
-                                            description: "A short description of the clothing item",
-                                        },
-                                        color: {
-                                            type: SchemaType.STRING,
-                                            description: "Primary color of the clothing item",
-                                        },
-                                        imageURL: {
-                                            type: SchemaType.STRING,
-                                            description: "URL of the detected clothing item image",
-                                        },
-                                        category: {
-                                            type: SchemaType.STRING,
-                                            description: "Category of the clothing item (e.g., shirt, pants, shoes)",
-                                        },
-                                        style: {
-                                            type: SchemaType.STRING,
-                                            description: "One-two word summary of the item's style (e.g., casual, formal)",
-                                        },
-                                    },
-                                    required: ["itemName", "description", "color", "category", "style"],
-                                },
-                            },
-                        },
-                        required: [],
-                    },
-                },
-            });
+            if (!req.file) {
+                return res.status(400).json({ message: 'No image uploaded' });
+            }
 
-            const result = await model.generateContent([
-                "Analyze the clothing in the image and provide structured output. Identify individual pieces (e.g., 'blue shirt', 'Nike shoes') and summarize the style in one word.",
-                {
-                    fileData: {
-                        fileUri: uploadResult.file.uri,
-                        mimeType: uploadResult.file.mimeType,
-                    },
-                },
+            const path = req.file?.path; // Ensure file exists
+            const { userId, category, prompt, latitude, longitude } = req.body;
+
+            // Fetch weather data & wardrobe items in parallel
+            const [weatherData, wardrobeItems] = await Promise.all([
+                getWeather(latitude, longitude),
+                WardrobeItem.find({ user: userId })
             ]);
 
-            return result.response.json();
+            const weatherSuggestions = getWeatherSuggestions(weatherData);
+
+            // Read & encode image only if path exists
+            const base64Image = path ? bufferToBase64(fs.readFileSync(path)) : null;
+
+            // Prepare wardrobe data
+            const wardrobeData = wardrobeItems.map(({ category, image }) => ({
+                category,
+                imageBase64: image ? bufferToBase64(image.data) : null
+            }));
+
+            // Format the prompt
+            const formattedPrompt = `
+                Given this prompt: ${prompt},
+                and considering the weather: ${weatherData.main.temp}°F, ${weatherData.weather[0].main},
+                please analyze the clothing in the image and provide a recommendation.
+            `;
+
+            // Initialize Gemini Model
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+            // Generate outfit suggestion
+            const result = await model.generateContent([
+                base64Image ? { inlineData: { data: base64Image, mimeType: "image/jpeg" } } : null,
+                formattedPrompt
+            ].filter(Boolean)); // Removes null values
+
+            console.log(result);
+
+
+            return res.json({
+                message: 'Clothing analyzed successfully',
+                data: result.response.text()
+            });
+
         } catch (error) {
             console.error("Error analyzing clothing:", error);
-            throw new Error("Failed to analyze clothing.");
+            res.status(500).json({ message: "Failed to analyze clothing", error: error.message });
         }
     },
 
@@ -255,11 +222,13 @@ const aiController = {
             const cleanedOutfit = outfitData.replace(/```json\n|```/g, '');
             const weather = result.weather;
             const parsedOutfit = JSON.parse(cleanedOutfit);
+            const image = result.image;
 
             return res.json({
                 message: 'Clothing generated successfully',
                 data: parsedOutfit,
-                weather: weather
+                weather: weather,
+                image: image,
             });
         }
         catch (error) {
