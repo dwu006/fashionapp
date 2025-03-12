@@ -6,7 +6,7 @@ const axios2 = axios.create({
   baseURL: "http://localhost:5001",
 });
 
-const MyWardrobe = ({ refreshTrigger, selectedCategory, logo }) => {
+const MyWardrobe = ({ refreshTrigger, selectedCategory, handleImageClick=null }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -100,7 +100,7 @@ const MyWardrobe = ({ refreshTrigger, selectedCategory, logo }) => {
       ) : (
         filteredItems.map((item) => (
           <div key={item._id} className="wardrobe-item">
-            <img src={item.imageUrl} alt="Wardrobe item" />
+            <img src={item.imageUrl} alt="Wardrobe item" onClick={() => handleImageClick(item.imageUrl)}/>
             <button className="delete-button" onClick={() => handleDeleteItem(item._id)}>✖</button>
           </div>
         ))
