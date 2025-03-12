@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "../styles/App.css";
 
 // Connect to backend server
 const axios2 = axios.create({
   baseURL: "http://localhost:5001",
 });
 
-const MyWardrobe = ({ refreshTrigger, selectedCategory }) => {
+const MyWardrobe = ({ refreshTrigger, selectedCategory, handleImageClick=null }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -91,7 +92,8 @@ const MyWardrobe = ({ refreshTrigger, selectedCategory }) => {
       : items.filter((item) => item.category.toLowerCase() === selectedCategory);
 
   if (error) return <div className="error-message">{error}</div>;
-  if (loading) return <div className="loading-text">Loading your wardrobe...</div>;
+  // if (loading) return <div className="loading-text">Loading your wardrobe...</div>;
+  if (loading) return <div className="loading-text">Loading your wardrobe</div>;
 
   return (
     <div className="wardrobe-grid">
@@ -100,7 +102,7 @@ const MyWardrobe = ({ refreshTrigger, selectedCategory }) => {
       ) : (
         filteredItems.map((item) => (
           <div key={item._id} className="wardrobe-item">
-            <img src={item.imageUrl} alt="Wardrobe item" />
+            <img src={item.imageUrl} alt="Wardrobe item" onClick={() => handleImageClick(item.imageUrl)}/>
             <button className="delete-button" onClick={() => handleDeleteItem(item._id)}>✖</button>
           </div>
         ))

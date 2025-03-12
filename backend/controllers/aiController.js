@@ -160,11 +160,18 @@ const aiController = {
     analyzeClothing: async (req, res) => {
         try {
 
-            if (!req.file) {
+            var path;
+            if (req.file) {
+                path = req.file?.path; // Ensure file exists
+            }
+
+            if (!req.file && !req.body.image) {
                 return res.status(400).json({ message: 'No image uploaded' });
             }
 
-            const path = req.file?.path; // Ensure file exists
+            console.log("Base64 Image (first 100 chars):", req.body.image?.substring(0, 100));
+
+            // const path = req.file?.path; // Ensure file exists
             const { userId, category, prompt, latitude, longitude } = req.body;
 
             // Fetch weather data & wardrobe items in parallel
@@ -176,18 +183,26 @@ const aiController = {
             const weatherSuggestions = getWeatherSuggestions(weatherData);
 
             // Read & encode image only if path exists
-            const base64Image = path ? bufferToBase64(fs.readFileSync(path)) : null;
+            const base64Image = path
+                ? bufferToBase64(fs.readFileSync(path))
+                : req.body.image.replace(/^data:image\/\w+;base64,/, '');
+
+            console.log("Final base64 length:", base64Image.length);
+
 
             // Prepare wardrobe data
-            const wardrobeData = wardrobeItems.map(({ category, image }) => ({
-                category,
-                imageBase64: image ? bufferToBase64(image.data) : null
+            const wardrobeData = wardrobeItems.map(item => ({
+                category: item.category,
+                imageBase64: item.image && item.image.data ? bufferToBase64(item.image.data) : null
             }));
+            
+            const filteredWardrobeData = wardrobeData.filter(item => item.imageBase64 !== null);
 
             // Format the prompt
             const formattedPrompt = `
                 Given this prompt: ${prompt},
-                and considering the weather: ${weatherData.main.temp}°F, ${weatherData.weather[0].main},
+                , considering the weather: ${weatherData.main.temp}°F, ${weatherData.weather[0].main},
+                and Weather Suggestions: ${JSON.stringify(weatherSuggestions)}
                 please analyze the clothing in the image and provide a recommendation.
             `;
 
@@ -197,10 +212,14 @@ const aiController = {
             // Generate outfit suggestion
             const result = await model.generateContent([
                 base64Image ? { inlineData: { data: base64Image, mimeType: "image/jpeg" } } : null,
-                formattedPrompt
+                formattedPrompt,
+                ...filteredWardrobeData.map(item => ({
+                    inlineData: {
+                        mimeType: "image/jpeg",
+                        data: item.imageBase64
+                    }
+                }))
             ].filter(Boolean)); // Removes null values
-
-            console.log(result);
 
 
             return res.json({

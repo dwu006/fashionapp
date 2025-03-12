@@ -92,7 +92,12 @@ const UploadClothes = ({ setShowUploadModal, onUploadSuccess }) => {
       if (response.status === 200) {
         setLoading(false);
         setShowUploadModal(false);
-        onUploadSuccess(); 
+        if (onUploadSuccess.length === 0) {
+          onUploadSuccess(); 
+        }
+        else {
+          onUploadSuccess(file, selectedCategory);
+        }
       }
     } catch (error) {
       console.error("Upload failed:", error);

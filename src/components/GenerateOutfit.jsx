@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import UploadClothesGen from "./UploadClothesGen.jsx";
+import { useState, useEffect } from "react";
+import UploadClothes from "./UploadClothes.jsx";
 import axios from "axios";
 import "../styles/ChatBot.css";
 import "../styles/UploadClothes.css";
@@ -68,7 +68,7 @@ async function handleSubmit(userId, message, latitude, longitude, setLoading, se
 
         // Save messages
         setMessages(prevMessages => {
-            if (!Array.isArray(prevMessages)){
+            if (!Array.isArray(prevMessages)) {
                 console.error("prevMessages is not an Array")
             }
             return [
@@ -110,7 +110,7 @@ async function handleImageSubmit(userId, message, imageFile, latitude, longitude
 
         console.log("Response data:", data);
 
-        const imageURL = URL.createObjectURL(imageFile);
+        const imageURL = typeof imageFile != 'string' ? URL.createObjectURL(imageFile) : imageFile;
         setMessages((prevMessages) => [
             ...prevMessages,
             {
@@ -132,12 +132,17 @@ async function handleImageSubmit(userId, message, imageFile, latitude, longitude
     }
 }
 
-function ControlledEditableDiv({ sendMessage, sendImageMessage }) {
+function ControlledEditableDiv({ sentImage, setSentImages, sendMessage, sendImageMessage }) {
     const [content, setContent] = useState('');
-    const [image, setImage] = useState(null);
-    const [file, setFile] = useState(null); // Added a file state
+    const [image, setImage] = useState(sentImage);
+    const [file, setFile] = useState(sentImage); // Added a file state
     const [imageSettings, setImageSettings] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState('other');
+
+    useEffect(() => {
+        setImage(sentImage);
+        setFile(sentImage);
+    }, [sentImage]);
 
     const handleSend = () => {
         if (content.trim()) {
@@ -148,6 +153,7 @@ function ControlledEditableDiv({ sendMessage, sendImageMessage }) {
             }
             setImage(null);
             setFile(null);
+            setSentImages(null);
             setContent('');
             setSelectedCategory('other');
         }
@@ -161,7 +167,6 @@ function ControlledEditableDiv({ sendMessage, sendImageMessage }) {
 
     const handleImageUpload = (file, category) => {
         setFile(file);
-        console.log(file);
         setSelectedCategory(category);
         setImage(URL.createObjectURL(file));
     }
@@ -210,7 +215,7 @@ function ControlledEditableDiv({ sendMessage, sendImageMessage }) {
                 </button>
             </div>
             {imageSettings && (
-                <UploadClothesGen setShowUploadModal={setImageSettings} onUploadSuccess={handleImageUpload} />
+                <UploadClothes setShowUploadModal={setImageSettings} onUploadSuccess={handleImageUpload} />
             )}
         </>
     );
@@ -229,10 +234,16 @@ function formatUserMessage({ message }) {
     );
 }
 
-function GenerateOutfit({ userId }) {
+function GenerateOutfit({ userId, image = null }) {
     const [messages, setMessages] = useState([]);
     const [location, setLocation] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [sentImage, setSentImages] = useState(image);
+
+    useEffect(() => {
+        setSentImages(image);
+    }, [image]);
+
 
     useEffect(() => {
         if (navigator.geolocation) {
@@ -281,6 +292,8 @@ function GenerateOutfit({ userId }) {
             </div>
             {location ? (
                 <ControlledEditableDiv
+                    sentImage={sentImage}
+                    setSentImages={setSentImages}
                     sendMessage={(message) =>
                         handleSubmit(userId, message, location.lat, location.lon, setLoading, setMessages)
                     }
@@ -290,6 +303,8 @@ function GenerateOutfit({ userId }) {
                 />
             ) : (
                 <ControlledEditableDiv
+                    sentImage={sentImage}
+                    setSentImages={setSentImages}
                     sendMessage={(message) => handleSubmit(userId, message, null, null, setLoading, setMessages)}
                     sendImageMessage={(message, image, category) =>
                         handleImageSubmit(userId, message, image, null, null, category, setLoading, setMessages)

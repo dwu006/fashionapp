@@ -1,11 +1,12 @@
-import { data, Navigate } from "react-router-dom";
-import axios, { AxiosHeaders } from 'axios';
+import { Navigate } from "react-router-dom";
+import axios from 'axios';
 import UserHeader from "../components/UserHeader.jsx";
 import Footer from "../components/Footer.jsx";
 import PostOutfit from "../components/PostOutfit.jsx";
 import { useState, useEffect } from "react";
 import "../styles/PageLayout.css";
 import "../styles/FeedPage.css";
+import "../styles/App.css";
 
 // Set default base URL for API requests
 axios.defaults.baseURL = 'http://localhost:5001';
@@ -194,7 +195,7 @@ function FeedPage() {
                     paddingTop: '0',
                     justifyItems: 'center'
                 }}>
-                    <h1>Loading ...</h1>
+                    <div className="loader"></div>
                 </div>
             ) : posts.length === 0 ? (
                 <div className="content" style={{ minHeight: '0', paddingTop: '0' }}>

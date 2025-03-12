@@ -85,7 +85,7 @@ const PostOutfit = ({ onOutfitPosted }) => {
                 <div className="popup-overlay" onClick={() => setShowPopup(false)}>
                     <div className="popup-content">
                         <button className="close-button" onClick={() => setShowPopup(false)}>×</button>
-                        <div className="popup-form">
+                        <div className="popup-form" onClick={(e) => e.stopPropagation()}>
                             <div className="image-section">
                                 <label htmlFor="image-upload" className="upload-label">
                                     {!image ? 'Upload Image' : 'Change Image'}
