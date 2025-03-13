@@ -137,16 +137,74 @@ async function analyzeWardrobe(userId) {
         
         // Fetch wardrobe items
         const wardrobeItems = await WardrobeItem.find({ user: userId });
-        // 3. Prepare wardrobe data for Gemini
-        const wardrobeData = wardrobeItems
-            .map(item => ({
-                category: item.category,
-                imageBase64: item.image && item.image.data ? bufferToBase64(item.image.data) : null
-            }))
-            .filter(item => item.imageBase64 !== null)  // Remove null images
-            .slice(0, 9); // Take only 9 images max
+        
+        if (!wardrobeItems || wardrobeItems.length === 0) {
+            console.log("No wardrobe items found");
+            return [];
+        }
+        
+        console.log(`Found ${wardrobeItems.length} wardrobe items`);
+        
+        // Process items one by one to avoid overwhelming the API
+        const analyzedItems = [];
+        
+        for (const item of wardrobeItems) {
+            try {
+                console.log(`Analyzing item ${item._id} (${item.category})`);
+                const analyzedItem = await analyzeWardrobeItem(item);
+                
+                if (analyzedItem) {
+                    analyzedItems.push(analyzedItem);
+                    console.log(`Successfully analyzed: ${analyzedItem.description}`);
+                }
+                
+                // Small delay to avoid rate limits
+                await new Promise(resolve => setTimeout(resolve, 500));
+            } catch (itemError) {
+                console.error(`Error processing item ${item._id}:`, itemError);
+                // Continue with next item even if one fails
+            }
+        }
+        
+        console.log(`Successfully analyzed ${analyzedItems.length} of ${wardrobeItems.length} items`);
+        return analyzedItems;
+    } catch (error) {
+        console.error("Error analyzing wardrobe:", error);
+        throw error;
+    }
+}
 
-        // 4. Initialize Gemini model
+// Format wardrobe items for the outfit generator
+function formatWardrobeForOutfitGenerator(analyzedItems) {
+    // Group by category
+    const categorized = {};
+    
+    analyzedItems.forEach(item => {
+        if (!categorized[item.category]) {
+            categorized[item.category] = [];
+        }
+        categorized[item.category].push(item);
+    });
+    
+    // Format as text
+    let inventoryText = "WARDROBE INVENTORY:\n\n";
+    
+    for (const [category, items] of Object.entries(categorized)) {
+        if (items.length > 0) {
+            inventoryText += `${category.toUpperCase()} (${items.length} items):\n`;
+            items.forEach((item, index) => {
+                inventoryText += `- ${category.toUpperCase()} #${index + 1}: ${item.description}\n`;
+            });
+            inventoryText += "\n";
+        }
+    }
+    
+    return { categorized, inventoryText };
+}
+
+// Generate outfit based on analyzed wardrobe
+async function generateOutfitWithAnalyzedWardrobe(userId, analyzedWardrobe, prompt, weatherData) {
+    try {
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         const weatherSuggestions = getWeatherSuggestions(weatherData);
         
@@ -191,34 +249,22 @@ async function analyzeWardrobe(userId) {
         
         Format your response as a JSON object with the following structure:
         {
-            "top": "description or empty string",
-            "bottom": "description or empty string",
-            "outerwear": "description or empty string",
-            "shoes": "description or empty string",
-            "accessories": "description or empty string",
-            "explanation": "brief explanation of choices"
+            "top": "the exact description of a top from their wardrobe (e.g., 'TOP #1: blue t-shirt')",
+            "bottom": "the exact description of a bottom from their wardrobe",
+            "outerwear": "the exact description of outerwear from their wardrobe if needed and available",
+            "shoes": "the exact description of shoes from their wardrobe",
+            "accessories": "the exact description of accessories from their wardrobe if appropriate",
+            "explanation": "detailed explanation of why these items work for the occasion and weather"
         }`;
 
-        // 6. Generate outfit recommendation
-        const result = await model.generateContent([
-            systemPrompt,
-            ...wardrobeData.map(item => ({
-                inlineData: {
-                    mimeType: "image/jpeg",
-                    data: item.imageBase64
-                }
-            }))
-        ]);
-
-        const response = result.response;
-        let outfit, matchingItems;
-
+        const result = await model.generateContent(systemPrompt);
+        const response = result.response.text();
+        
         try {
-            // Parse the response to get structured outfit data
-            outfit = response.text();
-            matchingItems = wardrobeData.filter(item =>
-                outfit.includes(item.category)  // Match based on category names in response
-            );
+            // Clean the response to handle potential markdown code blocks
+            const cleanedResponse = response.replace(/```json\n|```/g, '');
+            const outfitData = JSON.parse(cleanedResponse);
+            return { error: false, outfit: outfitData };
         } catch (error) {
             console.error("Error parsing Gemini response:", error);
             
@@ -277,11 +323,9 @@ export async function generateOutfit(userId, prompt, lat, lon) {
         return {
             outfit: JSON.stringify(outfitResult.outfit, null, 2),
             weather: {
-                temperature: weatherData.main.temp,
-                condition: weatherData.weather[0].main,
-                suggestions: weatherSuggestions
-            },
-            images: matchingItems ? matchingItems.map(item => item.imageBase64) : null
+                temperature: weatherData.main?.temp || 70,
+                condition: weatherData.weather?.[0]?.main || "Clear"
+            }
         };
     } catch (error) {
         console.error("Error in generateOutfit:", error);
@@ -354,24 +398,18 @@ const aiController = {
 
             // Generate outfit suggestion
             const result = await model.generateContent([
-                { inlineData: { data: base64Image, mimeType: "image/jpeg" } },
-                formattedPrompt,
-                ...wardrobeData.map(item => ({
-                    inlineData: { mimeType: "image/jpeg", data: item.imageBase64 }
-                }))
+                {
+                    inlineData: {
+                        data: base64Image,
+                        mimeType: "image/jpeg"
+                    }
+                },
+                formattedPrompt
             ]);
-
-            // Extract matching items from Gemini response
-            const responseText = result.response.text();
-            const matchingItems = wardrobeData.filter(item =>
-                responseText.includes(item.category)  // Match based on category names in response
-            );
 
             return res.json({
                 message: 'Clothing analyzed successfully',
-                matchingItems: matchingItems.map(item => item.category),  // Return categories of matched items
-                images: matchingItems.map(item => item.imageBase64),  // Return matching images
-                data: responseText,
+                data: result.response.text()
             });
 
         } catch (error) {
@@ -382,7 +420,6 @@ const aiController = {
             });
         }
     },
-
 
     createClothing: async (req, res) => {
         try {
@@ -398,11 +435,18 @@ const aiController = {
             
             console.log(`Generating outfit for user ${userId} with prompt: "${prompt}"`);
             const result = await generateOutfit(userId, prompt, latitude, longitude);
-            const outfitData = result.outfit;
-            const cleanedOutfit = outfitData.replace(/```json\n|```/g, '');
-            const weather = result.weather;
-            const parsedOutfit = JSON.parse(cleanedOutfit);
-            const image = result.images;
+            
+            // Parse the outfit data if it's a string
+            let parsedOutfit;
+            try {
+                parsedOutfit = typeof result.outfit === 'string' ? JSON.parse(result.outfit) : result.outfit;
+            } catch (error) {
+                console.warn("Could not parse outfit data as JSON:", error.message);
+                // Create a simple object with the raw text
+                parsedOutfit = {
+                    explanation: result.outfit,
+                };
+            }
 
             return res.json({
                 message: 'Outfit generated successfully',
