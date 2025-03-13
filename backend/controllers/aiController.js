@@ -26,7 +26,7 @@ const getWeatherSuggestions = (weatherData) => {
     const temp = weatherData.main.temp;
     const weather = weatherData.weather[0].main.toLowerCase();
 
-    
+
     let suggestions = {
         outerwear: [],
         general: []
@@ -159,7 +159,6 @@ const aiController = {
     },
     analyzeClothing: async (req, res) => {
         try {
-
             var path;
             if (req.file) {
                 path = req.file?.path; // Ensure file exists
@@ -169,41 +168,41 @@ const aiController = {
                 return res.status(400).json({ message: 'No image uploaded' });
             }
 
-            console.log("Base64 Image (first 100 chars):", req.body.image?.substring(0, 100));
-
-            // const path = req.file?.path; // Ensure file exists
+            // Extract request data
             const { userId, category, prompt, latitude, longitude } = req.body;
 
             // Fetch weather data & wardrobe items in parallel
-            const [weatherData, wardrobeItems] = await Promise.all([
-                getWeather(latitude, longitude),
-                WardrobeItem.find({ user: userId })
-            ]);
+            const weatherData = await getWeather(latitude, longitude);
+            let wardrobeItems = await WardrobeItem.find({ user: userId });
 
+            if (!wardrobeItems || wardrobeItems.length === 0) {
+                return res.status(400).json({ message: 'No wardrobe items found' });
+            }
+
+            // Get weather suggestions
             const weatherSuggestions = getWeatherSuggestions(weatherData);
 
-            // Read & encode image only if path exists
+            // Convert uploaded image to Base64
             const base64Image = path
                 ? bufferToBase64(fs.readFileSync(path))
                 : req.body.image.replace(/^data:image\/\w+;base64,/, '');
 
-            console.log("Final base64 length:", base64Image.length);
-
-
-            // Prepare wardrobe data
-            const wardrobeData = wardrobeItems.map(item => ({
-                category: item.category,
-                imageBase64: item.image && item.image.data ? bufferToBase64(item.image.data) : null
-            }));
-            
-            const filteredWardrobeData = wardrobeData.filter(item => item.imageBase64 !== null);
+            // Prepare wardrobe data (limit to 9 images)
+            const wardrobeData = wardrobeItems
+                .map(item => ({
+                    category: item.category,
+                    imageBase64: item.image && item.image.data ? bufferToBase64(item.image.data) : null
+                }))
+                .filter(item => item.imageBase64 !== null)  // Remove null images
+                .slice(0, 9); // Take only 9 images max
 
             // Format the prompt
             const formattedPrompt = `
                 Given this prompt: ${prompt},
-                , considering the weather: ${weatherData.main.temp}°F, ${weatherData.weather[0].main},
-                and Weather Suggestions: ${JSON.stringify(weatherSuggestions)}
-                please analyze the clothing in the image and provide a recommendation.
+                considering the weather: ${weatherData.main.temp}°F, ${weatherData.weather[0].main},
+                and the following wardrobe items, analyze the uploaded clothing image
+                and determine if any wardrobe items match or complement the outfit.
+                Return the categories of matching items.
             `;
 
             // Initialize Gemini Model
@@ -211,20 +210,24 @@ const aiController = {
 
             // Generate outfit suggestion
             const result = await model.generateContent([
-                base64Image ? { inlineData: { data: base64Image, mimeType: "image/jpeg" } } : null,
+                { inlineData: { data: base64Image, mimeType: "image/jpeg" } },
                 formattedPrompt,
-                ...filteredWardrobeData.map(item => ({
-                    inlineData: {
-                        mimeType: "image/jpeg",
-                        data: item.imageBase64
-                    }
+                ...wardrobeData.map(item => ({
+                    inlineData: { mimeType: "image/jpeg", data: item.imageBase64 }
                 }))
-            ].filter(Boolean)); // Removes null values
+            ]);
 
+            // Extract matching items from Gemini response
+            const responseText = await result.response.text();
+            const matchingItems = wardrobeData.filter(item =>
+                responseText.includes(item.category)  // Match based on category names in response
+            );
 
             return res.json({
                 message: 'Clothing analyzed successfully',
-                data: result.response.text()
+                matchingItems: matchingItems.map(item => item.category),  // Return categories of matched items
+                images: matchingItems.map(item => item.imageBase64),  // Return matching images
+                data: responseText,
             });
 
         } catch (error) {
@@ -232,6 +235,7 @@ const aiController = {
             res.status(500).json({ message: "Failed to analyze clothing", error: error.message });
         }
     },
+
 
     createClothing: async (req, res) => {
         try {
