@@ -163,9 +163,10 @@ const userController = {
             console.log('Uploaded file:', req.file); // Log the file object to check what it contains
 
             const userId = req.user._id;
+            const relativePath = 'uploads/' + req.file.filename;
             const updatedUser = await User.findByIdAndUpdate(
                 userId,
-                { profilePicturePath: req.file.path },
+                { profilePicturePath: relativePath },
                 { new: true }
             ).select('-password');
 
@@ -204,10 +205,14 @@ const userController = {
 
             res.set('Access-Control-Allow-Origin', '*');
 
-            const filePath = user.profilePicturePath.replace(/\\/g, "/");
+            console.log("profile picture path ", user.profilePicturePath); // <-- Logging added
 
+            var filePath = user.profilePicturePath.replace(/\\/g, "/");
+            if (!filePath.startsWith("uploads/")) {
+                filePath = `uploads/${path.basename(filePath)}`;
+            }
 
-            const resolvedPath = filePath.includes("backend") ? path.resolve(filePath) : path.resolve('backend/' + filePath);
+            const resolvedPath = path.resolve('backend/' + filePath);
             console.log("Serving file from:", resolvedPath); // <-- Logging added
 
             res.sendFile(resolvedPath);
