@@ -45,29 +45,29 @@ h1, h2 {
 /* ============================
    Get Started Button
    ============================ */
+/* Update the Get Started button to use theme variables */
 .get-started-btn {
     display: inline-block;
-    padding: 15px 40px; /* Increased padding for a larger button */
+    padding: 15px 40px;
     font-size: 40px;
-    border: 2px solid rgb(255, 255, 255);
-    border-radius: 50px; /* Makes the button fully rounded */
+    border: 2px solid var(--text-color);
+    border-radius: 50px;
     text-decoration: none;
-    color: rgb(255, 255, 255);
+    color: var(--text-color);
     font-weight: bold;
     margin-top: 20px;
     background-color: transparent;
     transition: background 0.3s ease, color 0.3s ease;
-
     text-align: center;
-    white-space: nowrap; /* Prevents text from breaking */
-    width: auto; /* Prevents unwanted stretching */
-    max-width: fit-content; /* Button only takes up the space needed */
+    white-space: nowrap;
+    width: auto;
+    max-width: fit-content;
 }
 
 /* Hover effect for the Get Started button */
 .get-started-btn:hover {
-    background-color: rgb(255, 255, 255);
-    color: black;
+    background-color: var(--text-color);
+    color: var(--bg-color);
 }
 
 /* ============================
@@ -150,11 +150,9 @@ h1, h2 {
     display: flex;
     justify-content: center;
 }
-
-@media (prefers-color-scheme:light) {
-    /* ============================
+ /* ============================
    Get Started Button
-   ============================ */
+============================ */
 .get-started-btn {
     display: inline-block;
     padding: 15px 40px; /* Increased padding for a larger button */
@@ -178,5 +176,4 @@ h1, h2 {
 .get-started-btn:hover {
     background-color: black;
     color: white;
-}
 }

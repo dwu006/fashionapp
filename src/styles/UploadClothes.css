@@ -273,10 +273,8 @@
 
 /* Save Button */
 .upload-save-button {
-  /* background-color: var(--text-color, black);
-  color: var(--bg-color, white); */
-  background-color: #fff;
-  color: #121212;
+  background-color: var(--text-color);
+  color: var(--bg-color);
   border: none;
   border-radius: 25px;
   padding: 14px 30px;
@@ -289,11 +287,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-[data-theme='dark'] .upload-save-button {
-  background-color: #fff;
-  color: #121212;
 }
 
 .upload-save-button:hover {
@@ -359,94 +352,5 @@
   .category-select-btn {
     padding: 6px 12px;
     font-size: 13px;
-  }
-}
-
-
-@media (prefers-color-scheme:dark) {
-
-  /* Dark mode specific adjustments */
-  .upload-modal-content {
-    background: #1a1a1a;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-    color:white;
-  }
-
-  .upload-close-button {
-    color:white;
-  }
-
-  .upload-modal-title {
-    color: white;
-  }
-
-  .drop-area {
-    background-color: rgba(255, 255, 255, 0.05);
-    border-color: #444;
-    color:white;
-  }
-
-  .upload-icon {
-    color:white
-  }
-
-  .drop-text {
-    color:white;
-  }
-
-  .file-support-text {
-    color:white;
-  }
-
-  .upload-file-btn {
-    border-color:white;
-    color:white;
-  }
-
-  .drop-area:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: #888;
-  }
-
-  .drop-area.drag-active {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-color: #aaa;
-  }
-
-  .remove-image-btn {
-    background-color: rgba(0, 0, 0, 0.8);
-    color: #fff;
-  }
-
-  .upload-category-section {
-    color:white;
-  }
-
-  .category-label {
-    color:white;
-  }
-
-  .category-select-btn {
-    color:white;
-  }
-
-  .category-select-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .category-select-btn.selected {
-    background-color: #fff;
-    color: #121212;
-    border-color: #fff;
-  }
-
-  .upload-save-button {
-    background-color: black;
-    color: white
-  }
-
-  .upload-save-button.disabled {
-    background-color: #555;
-    color: #999;
   }
 }
