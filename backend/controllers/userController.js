@@ -212,7 +212,7 @@ const userController = {
                 filePath = `uploads/${path.basename(filePath)}`;
             }
 
-            const resolvedPath = path.resolve('backend/' + filePath);
+            const resolvedPath = filePath.includes('backend') ? path.resolve(filePath) : path.resolve('backend/' + filePath);
             console.log("Serving file from:", resolvedPath); // <-- Logging added
 
             res.sendFile(resolvedPath);
