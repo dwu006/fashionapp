@@ -84,9 +84,9 @@
   padding: 10px 20px;
   font-size: 16px;
   font-weight: bold;
-  color: black;
-  background-color: white;
-  border: 2px solid black;
+  color: var(--text-color);
+  background-color: var(--card-bg);
+  border: 2px solid var(--text-color);
   border-radius: 25px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
@@ -97,8 +97,8 @@
 }
 
 .upload-clothing-button:hover {
-  background-color: black;
-  color: white;
+  background-color: var(--text-color);
+  color: var(--bg-color);
 }
 
 /* =================== DONATION MAP STYLING =================== */

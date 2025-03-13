@@ -24,9 +24,9 @@
     padding: 10px 20px;
     font-size: 16px;
     font-weight: bold;
-    color: black;
-    background-color: rgb(95, 95, 95);
-    border: 2px solid black;
+    color: var(--text-color);
+    background-color: var(--card-bg);
+    border: 2px solid var(--text-color);
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
@@ -37,8 +37,8 @@
 }
 
 .button.login-btn:hover {
-    background-color: black;
-    color: white;
+    background-color: var(--text-color);
+    color: var(--bg-color);
 }
 
 @font-face {
@@ -47,18 +47,6 @@
          url('../assets/MagnoliaScript.woff') format('woff');
     font-weight: normal;
     font-style: normal;
-}
-
-@media (prefers-color-scheme:light) {
-    .button.login-btn {
-        color: black;
-        background-color: white;
-    }
-
-    .button.login-btn:hover {
-        background-color: rgb(35, 35, 35);
-        color: white;
-    }
 }
 
 

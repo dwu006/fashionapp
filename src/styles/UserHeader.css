@@ -36,7 +36,7 @@
     position: absolute;
     top: 100%;
     right: 0;
-    background-color: rgb(53, 53, 53);
+    background-color: var(--bg-color);
     border: 1px solid #444;
     border-radius: 4px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
@@ -82,7 +82,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color:white;
+    color:var(--text-color);
 }
 
 .profile-button .arrow {
@@ -93,40 +93,4 @@
 
 .profile-button.open .arrow {
     transform: rotate(180deg);
-}
-
-@media(prefers-color-scheme:light) {
-    .menu {
-        background-color: whitesmoke;
-        color: black;
-    }
-    .button {
-        color:rgb(35, 35, 35);
-    }
-    .button:hover, :focus {
-        color:black;
-    }
-    .profile-button .username {
-        color:black;
-    }
-    .profile-dropdown {
-        background-color: white;
-    }
-    .profile-dropdown {
-        background-color: white;
-    }
-    
-    .dropdown-button {
-        border-bottom: 1px solid #444;
-        color: black;
-    }
-    
-    .dropdown-button:hover {
-        background-color: white;
-        color: black;
-    }
-    
-    .profile-button .username {
-        color:black;
-    }
 }

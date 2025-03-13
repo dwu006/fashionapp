@@ -10,17 +10,17 @@
 
 /* Loading Animation */
 .loader {
-  border: 3px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
-  border-top: 3px solid white;
+  border: 3px solid rgba(0, 0, 0, 0.3);
+  border-top: 3px solid #121212;
   width: 20px;
   height: 20px;
   animation: spin 1s linear infinite;
 }
 
 [data-theme='dark'] .loader {
-  border: 3px solid rgba(0, 0, 0, 0.3);
-  border-top: 3px solid #121212;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid white;
 }
 
 @keyframes spin {
@@ -30,12 +30,5 @@
 
   100% {
     transform: rotate(360deg);
-  }
-}
-
-@media (prefers-color-scheme:light) {
-  .loader {
-    border: 3px solid rgba(0, 0, 0, 0.3);
-    border-top: 3px solid #121212;
   }
 }

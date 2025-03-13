@@ -157,10 +157,10 @@ h1, h2 {
     display: inline-block;
     padding: 15px 40px; /* Increased padding for a larger button */
     font-size: 40px;
-    border: 2px solid black;
+    border: 2px solid var(--text-color);
     border-radius: 50px; /* Makes the button fully rounded */
     text-decoration: none;
-    color: black;
+    color: var(--text-color);
     font-weight: bold;
     margin-top: 20px;
     background-color: transparent;
@@ -176,4 +176,9 @@ h1, h2 {
 .get-started-btn:hover {
     background-color: black;
     color: white;
+}
+
+[ data-theme='dark'] .get-started-btn:hover {
+    background-color: white;
+    color: black;
 }

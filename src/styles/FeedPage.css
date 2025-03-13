@@ -78,13 +78,17 @@
 .feed-card-actions {
     padding: 12px;
     opacity: 0;
-    background: white;
     transition: opacity 0.2s ease;
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     background: linear-gradient(0deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.8) 100%);
+}
+
+[data-theme='dark'] .feed-card-actions {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 100%);
+
 }
 
 .feed-card:hover .feed-card-actions {
@@ -142,7 +146,8 @@
 .modal-content {
     display: flex;
     flex-direction:row;
-    background: white;
+    background: var(--card-bg);
+    color: var(--text-color);
     border-radius: 16px;
     overflow: hidden;
     max-width: 1200px;
@@ -172,7 +177,8 @@
     height:90vh;
     display: flex;
     flex-direction: column;
-    background: white;
+    background: var(--card-bg);
+    color: var(--text-color);
 }
 
 .button.close-modal {
@@ -200,7 +206,7 @@
 
 .comments-header .username {
     font-weight: 600;
-    color: #262626;
+    color: var(--text-color);
     font-size: 14px;
 }
 
@@ -230,13 +236,13 @@
 
 .comment-username {
     font-weight: 600;
-    color: #262626;
+    color: var(--text-color);
     margin-right: 8px;
     font-size: 14px;
 }
 
 .comment-text {
-    color: #262626;
+    color: var(--text-color);
     font-size: 14px;
     line-height: 1.4;
 }
@@ -258,8 +264,8 @@
     font-size: 14px;
     resize: none;
     height: 36px;
-    background: white;
-    color: #262626;
+    background: var(--card-bg);
+    color: var(--text-color);
 }
 
 .comment-input::placeholder {
@@ -300,7 +306,8 @@
     right: 16px;
     background: none;
     border: none;
-    color: white;
+    background: var(--card-bg);
+    color: var(--text-color);
     font-size: 24px;
     cursor: pointer;
     z-index: 1001;
@@ -325,52 +332,5 @@
     }
     .feed {
         padding: 100px 15px 80px 15px;
-    }
-}
-
-@media(prefers-color-scheme: dark) {
-    .feed-card {
-        background: #242424;
-    }
-    
-    .feed-card-actions {
-        background: linear-gradient(0deg, rgba(36,36,36,0.95) 0%, rgba(36,36,36,0.8) 100%);
-    }
-    
-    .action-button {
-        color: #e1e1e1;
-    }
-    
-    .modal-content {
-        background: #242424;
-    }
-    
-    .modal-image {
-        background: #1a1a1a;
-    }
-
-    .comments-header.username {
-        color:white;
-    }
-    
-    .comments-section {
-        background: #242424;
-    }
-
-    .comment {
-        background-color:rgb(71, 71, 71);
-    }
-
-    .comment-username {
-        color:white;
-    }
-
-    .comment-text {
-        color:white;
-    }
-    
-    .comment-input {
-        background: #333;
-        color: #e1e1e1;
     }
 }
