@@ -9,7 +9,7 @@ import path from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const uploadDir = path.resolve(__dirname, 'uploads');
+const parentDir = path.resolve(__dirname, '..');
 
 const userRouter = express.Router();
 
@@ -17,7 +17,7 @@ const userRouter = express.Router();
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     // Make sure the path points to 'backend/uploads/'
-    const uploadDir = path.resolve(__dirname, 'uploads');
+    const uploadDir = path.resolve(parentDir, 'uploads');
     console.log("Upload Directory: ", uploadDir); // Log to check the full path
 
     // Check if the folder exists, if not, create it

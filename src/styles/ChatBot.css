@@ -5,9 +5,9 @@
     padding: 10px 20px;
     font-size: 16px;
     font-weight: bold;
-    color: black;
-    background-color: rgb(95, 95, 95);
-    border: 2px solid black;
+    color: var(--text-color);
+    background-color: var(--button-hover-bg);
+    border: 2px solid var(--text-color);
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
@@ -18,8 +18,8 @@
 }
 
 .saved-button:hover {
-    background-color: black;
-    color: white;
+    background-color: var(--text-color);
+    color: var(--bg-color);
 }
 
 .outfit-generator {
@@ -35,9 +35,9 @@
     align-items: center;
     gap: 10px;
     padding: 12px 16px;
-    border: 1px solid #e5e5e5;
+    border: 1px solid var(--border-color);
     border-radius: 24px;
-    background-color: white;
+    background-color: var(--card-bg);
     margin: 0 auto;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
@@ -54,25 +54,27 @@
     max-height: 200px;
     height: auto;
     background: transparent;
-    color: inherit;
+    color: var(--text-color);
     overflow-y: auto;
 }
 
 .textbox::placeholder {
-    color: #8e8e8e;
+    color: var(--text-color);
+    opacity: 0.5;
 }
 
 .image-button {
-    background:none;
-    border:none;
-    padding:8px;
-    align-items:center;
+    background: none;
+    border: none;
+    padding: 8px;
+    align-items: center;
     transition: all 0.2s;
+    color: var(--button-color);
 }
 
 .image-button:hover {
-    transform:scale(1.1);
-    color:#2a2a2a
+    transform: scale(1.1);
+    color: var(--button-hover-text);
 }
 
 .send-button {
@@ -80,7 +82,7 @@
     border: none;
     padding: 8px;
     cursor: pointer;
-    color: #0095f6;
+    color: var(--link-color);
     display: flex;
     align-items: center;
     transition: all 0.2s;
@@ -88,7 +90,8 @@
 
 .send-button:hover {
     transform: scale(1.1);
-    color: #00376b;
+    color: var(--link-color);
+    opacity: 0.8;
 }
 
 .image-preview {
@@ -119,11 +122,11 @@
 .welcome-message {
     text-align: center;
     padding: 40px 20px;
-    color: inherit;
+    color: var(--text-color);
 }
 
 .welcome-message p {
-    color: inherit;
+    color: var(--text-color);
     opacity: 0.8;
     font-size: 16px;
     line-height: 1.5;
@@ -179,7 +182,7 @@
 .loading {
     display: flex;
     align-items: center;
-    color: inherit;
+    color: var(--text-color);
     opacity: 0.7;
     font-style: italic;
 }

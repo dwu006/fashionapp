@@ -46,10 +46,10 @@ const PageTitleUpdater = () => {
 
 function App() {
   // Initialize theme from localStorage or default to dark
-  // useEffect(() => {
-  //   const savedTheme = localStorage.getItem("theme") || "dark";
-  //   document.documentElement.setAttribute("data-theme", savedTheme);
-  // }, []);
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    document.documentElement.setAttribute("data-theme", savedTheme);
+  }, []);
 
   return (
     <Router>

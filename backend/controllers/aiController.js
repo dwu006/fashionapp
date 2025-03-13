@@ -409,7 +409,9 @@ const aiController = {
 
             return res.json({
                 message: 'Clothing analyzed successfully',
-                data: result.response.text()
+                matchingItems: matchingItems.map(item => item.category),  // Return categories of matched items
+                images: matchingItems.map(item => item.imageBase64),  // Return matching images
+                data: responseText,
             });
 
         } catch (error) {
@@ -420,6 +422,7 @@ const aiController = {
             });
         }
     },
+
 
     createClothing: async (req, res) => {
         try {
