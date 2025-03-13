@@ -41,24 +41,34 @@ async function handleSubmit(userId, message, latitude, longitude, setLoading, se
 
         console.log(data);
         var formattedResponse = data.data;
+        var imagesSent = data.images;
 
         if (message.includes("outfit")) {
             // Format the outfit recommendation
             const outfitData = data.data;
             const weatherInfo = data.weather;
-            const imageSRC = data.image;
+            var arrayOfImages = [];
 
             formattedResponse = `Weather: ${weatherInfo.temperature}°F, ${weatherInfo.condition}
 
             Recommended Outfit:
-            ${outfitData.top ? `• Top: ${outfitData.top}` : ''}
-            ${outfitData.bottom ? `• Bottom: ${outfitData.bottom}` : ''}
-            ${outfitData.outerwear ? `• Outerwear: ${outfitData.outerwear}` : ''}
-            ${outfitData.shoes ? `• Shoes: ${outfitData.shoes}` : ''}
-            ${outfitData.accessories ? `• Accessories: ${outfitData.accessories}` : ''}
+            ${outfitData.top ? `• Top: ${outfitData.top}` : ''}\n
+            ${outfitData.bottom ? `• Bottom: ${outfitData.bottom}` : ''}\n
+            ${outfitData.outerwear ? `• Outerwear: ${outfitData.outerwear}` : ''}\n
+            ${outfitData.shoes ? `• Shoes: ${outfitData.shoes}` : ''}\n
+            ${outfitData.accessories ? `• Accessories: ${outfitData.accessories}` : ''}\n
 
-            link: ${imageSRC}
             Styling Notes: ${outfitData.explanation}`;
+
+            if (imagesSent) {
+                for (let i = 0; i < imagesSent.length; i++) {
+                    if (imagesSent[i].image) {
+                        arrayOfImages.push(imagesSent[i].image)
+                    }
+                }
+            }
+            imagesSent = arrayOfImages;
+
         }
 
 
@@ -73,7 +83,7 @@ async function handleSubmit(userId, message, latitude, longitude, setLoading, se
             }
             return [
                 ...prevMessages,
-                { type: 'user', content: message }, { type: 'ai', content: formattedResponse }
+                { type: 'user', content: message }, { type: 'ai', content: [formattedResponse, imagesSent] }
             ];
         });
 
@@ -108,7 +118,36 @@ async function handleImageSubmit(userId, message, imageFile, latitude, longitude
             }
         );
 
+        if (!data) {
+            throw new Error("Invalid response format from server");
+        }
+
         console.log("Response data:", data);
+        var imagesSent = data.images;
+        var formattedResponse = '';
+
+        // Format the outfit recommendation
+        const outfitData = data.outfit;
+        var arrayOfImages = [];
+
+        formattedResponse = `Recommended Outfit:
+            ${outfitData.top ? `• Top: ${outfitData.top}` : ''}\n
+            ${outfitData.bottom ? `• Bottom: ${outfitData.bottom}` : ''}\n
+            ${outfitData.outerwear ? `• Outerwear: ${outfitData.outerwear}` : ''}\n
+            ${outfitData.shoes ? `• Shoes: ${outfitData.shoes}` : ''}\n
+            ${outfitData.accessories ? `• Accessories: ${outfitData.accessories}` : ''}\n
+
+            Styling Notes: ${outfitData.explanation}`;
+
+        if (imagesSent) {
+            for (let i = 0; i < imagesSent.length; i++) {
+                if (imagesSent[i].image) {
+                    arrayOfImages.push(imagesSent[i].image)
+                }
+            }
+        }
+        imagesSent = arrayOfImages;
+
 
         const imageURL = typeof imageFile != 'string' ? URL.createObjectURL(imageFile) : imageFile;
         setMessages((prevMessages) => [
@@ -120,7 +159,7 @@ async function handleImageSubmit(userId, message, imageFile, latitude, longitude
             },
             {
                 type: 'ai',
-                content: data.data
+                content: [formattedResponse, imagesSent]
             }
         ]);
 
@@ -234,6 +273,37 @@ function formatUserMessage({ message }) {
     );
 }
 
+function formatAIMessage({ message }) {
+    return (
+        <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: message.type === 'user' ? 'flex-end' : 'flex-start'
+        }}>
+            {Array.isArray(message.content) ? message.content[0] : message.content}
+            <div style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                marginTop: '10px'
+            }} >
+                {Array.isArray(message.content[1]) &&
+                    message.content[1].map((image, index) => (
+                        <img
+                            key={index}
+                            src={`data:image/jpeg;base64,${image}`} // Ensure correct base64 format
+                            alt={`Generated ${index}`}
+                            className="generated-image"
+                        />
+                    ))}
+            </div>
+
+        </div >
+    );
+}
+
 function GenerateOutfit({ userId, image = null }) {
     const [messages, setMessages] = useState([]);
     const [location, setLocation] = useState(null);
@@ -278,7 +348,7 @@ function GenerateOutfit({ userId, image = null }) {
                         <div key={index} className="message">
                             <div className={message.type === 'user' ? 'message-user' : 'message-ai'}>
                                 <strong>{message.type === 'user' ? 'You: ' : 'AI: '}</strong>
-                                {formatUserMessage({ message })}
+                                {message.type === 'user' ? (formatUserMessage({ message })) : (formatAIMessage({ message }))}
                             </div>
                         </div>
                     ))}
