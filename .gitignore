@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 tasks.txt
 request.rest
+backend/test_one.js
+backend/test_outfit_generation.js

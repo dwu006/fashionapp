@@ -68,10 +68,13 @@ export async function generateOutfit(userId, prompt, lat, lon) {
         // 2. Fetch user's wardrobe items
         const wardrobeItems = await WardrobeItem.find({ user: userId });
         // 3. Prepare wardrobe data for Gemini
-        const wardrobeData = wardrobeItems.map(item => ({
-            category: item.category,
-            imageBase64: item.image ? bufferToBase64(item.image.data) : null
-        }));
+        const wardrobeData = wardrobeItems
+            .map(item => ({
+                category: item.category,
+                imageBase64: item.image && item.image.data ? bufferToBase64(item.image.data) : null
+            }))
+            .filter(item => item.imageBase64 !== null)  // Remove null images
+            .slice(0, 9); // Take only 9 images max
 
         // 4. Initialize Gemini model
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -108,11 +111,14 @@ export async function generateOutfit(userId, prompt, lat, lon) {
         ]);
 
         const response = result.response;
-        let outfit;
+        let outfit, matchingItems;
 
         try {
             // Parse the response to get structured outfit data
             outfit = response.text();
+            matchingItems = wardrobeData.filter(item =>
+                outfit.includes(item.category)  // Match based on category names in response
+            );
         } catch (error) {
             console.error("Error parsing Gemini response:", error);
             // Fallback to raw response if parsing fails
@@ -127,7 +133,8 @@ export async function generateOutfit(userId, prompt, lat, lon) {
                 temperature: weatherData.main.temp,
                 condition: weatherData.weather[0].main,
                 suggestions: weatherSuggestions
-            }
+            },
+            images: matchingItems ? matchingItems.map(item => item.imageBase64) : null
         };
 
     } catch (error) {
@@ -218,7 +225,7 @@ const aiController = {
             ]);
 
             // Extract matching items from Gemini response
-            const responseText = await result.response.text();
+            const responseText = result.response.text();
             const matchingItems = wardrobeData.filter(item =>
                 responseText.includes(item.category)  // Match based on category names in response
             );
@@ -245,7 +252,7 @@ const aiController = {
             const cleanedOutfit = outfitData.replace(/```json\n|```/g, '');
             const weather = result.weather;
             const parsedOutfit = JSON.parse(cleanedOutfit);
-            const image = result.image;
+            const image = result.images;
 
             return res.json({
                 message: 'Clothing generated successfully',

@@ -39,7 +39,7 @@ async function handleSubmit(userId, message, latitude, longitude, setLoading, se
                 }
             );
 
-        console.log(data.data);
+        console.log(data);
         var formattedResponse = data.data;
 
         if (message.includes("outfit")) {
