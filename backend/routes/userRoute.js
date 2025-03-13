@@ -2,37 +2,32 @@ import express from 'express';
 import userController from '../controllers/userController.js';
 import { protect } from '../middleware/auth.js';
 import multer from 'multer';
+import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-import path from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const userRouter = express.Router();
-const storage = multer.memoryStorage();
-// const upload = multer({ storage: storage });
 
-// // Create the 'uploads/' folder inside 'backend' directory if it doesn't exist
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     // Make sure the path points to 'backend/uploads/'
-//     const uploadDir = path.resolve(__dirname, '../uploads');
-//     console.log("Upload Directory: ", uploadDir); // Log to check the full path
+// Create the 'uploads/' folder inside 'backend' directory if it doesn't exist
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = path.resolve(__dirname, '../uploads');
 
-//     // Check if the folder exists, if not, create it
-//     if (!fs.existsSync(uploadDir)) {
-//       fs.mkdirSync(uploadDir, { recursive: true });
-//     }
+    // Check if the folder exists, if not, create it
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
 
-//     cb(null, uploadDir); // Pass the correct directory to Multer
-//   },
-//   filename: function (req, file, cb) {
-//     const filename = Date.now() + '-' + file.originalname;
-//     console.log("Saving file as: ", filename); // Log filename to check
-//     cb(null, filename); // Set the file name
-//   }
-// });
+    cb(null, uploadDir); // Pass the correct directory to Multer
+  },
+  filename: function (req, file, cb) {
+    const filename = Date.now() + '-' + file.originalname;
+    cb(null, filename); // Set the file name
+  }
+});
 
 const upload = multer({
   storage: storage,

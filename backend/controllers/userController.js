@@ -205,12 +205,6 @@ const userController = {
             res.set('Access-Control-Allow-Origin', '*');
 
             const filePath = user.profilePicturePath.replace(/\\/g, "/");
-            //   await user.save();
-
-            console.log("User ID:", userId);
-            console.log("Stored Profile Picture Path:", user.profilePicturePath);
-            console.log("Resolved File Path:", filePath);
-            console.log("Does file exist?", fs.existsSync(filePath) ? "✅ Yes" : "❌ No");
 
 
             const resolvedPath = filePath.includes("backend") ? path.resolve(filePath) : path.resolve('backend/' + filePath);
