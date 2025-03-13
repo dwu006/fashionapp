@@ -9,10 +9,10 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: white;
+    background-color: var(--bg-color); /* Use theme variable instead of hardcoded color */
     width: 100vw;
     overflow-x: hidden;
-    color: black;
+    color: var(--text-color); /* Use theme variable instead of hardcoded color */
     position: relative;
 }
 
@@ -36,7 +36,7 @@
     right: 0;
     height: 60px;
     z-index: 1000;
-    background-color: white;
+    background-color: var(--bg-color); /* Use theme variable instead of hardcoded color */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
@@ -44,7 +44,7 @@
 .page footer {
     margin-top: auto;
     width: 100%;
-    background-color: white;
+    background-color: var(--bg-color); /* Use theme variable instead of hardcoded color */
     box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
     height: 60px;
     display: flex;
@@ -60,19 +60,6 @@
     justify-content: center;
     gap: 20px;
     padding: 0 20px;
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    .page {
-        background-color: #1a1a1a;
-        color: white;
-    }
-
-    .page header,
-    .page footer {
-        background-color: #1a1a1a;
-    }
 }
 
 /* When content is shorter than viewport */

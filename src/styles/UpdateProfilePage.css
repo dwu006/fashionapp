@@ -83,18 +83,14 @@
   background-color: #f0f0f0;
 }
 
-/* Make sure the input fields look good */
 .input-info {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
-  border: 1px solid #444;
+  border: 1px solid var(--input-border);
   border-radius: 4px;
-<<<<<<< HEAD
-=======
-  background-color: #333;
-  color: white;
->>>>>>> 1adbccd4d007b1672930f220d557d932c7969f41
+  background-color: var(--input-bg);
+  color: var(--input-text);
 }
 
 @media (max-width: 600px) {
