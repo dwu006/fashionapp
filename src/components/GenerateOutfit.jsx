@@ -11,7 +11,7 @@ async function handleSubmit(userId, message, latitude, longitude, setLoading, se
         const { data } = message.includes("outfit") ? await axios.post(
             'http://localhost:5001/ai/image_idea',
             {
-                userId,
+                userId: userId,
                 prompt: message,
                 latitude: latitude,
                 longitude: longitude
@@ -26,7 +26,7 @@ async function handleSubmit(userId, message, latitude, longitude, setLoading, se
             : await axios.post(
                 'http://localhost:5001/ai',
                 {
-                    userId,
+                    userId: userId,
                     prompt: message,
                     latitude,
                     longitude
@@ -39,7 +39,7 @@ async function handleSubmit(userId, message, latitude, longitude, setLoading, se
                 }
             );
 
-        console.log(data.data);
+        console.log(data);
         var formattedResponse = data.data;
 
         if (message.includes("outfit")) {

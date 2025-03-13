@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url';
 import http from 'http';
 import db from './config/db.js';
 import dotenv from 'dotenv';
+import fs from 'fs'; // Added for directory creation
 
 dotenv.config();
 
@@ -26,6 +27,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 app.use(express.static(path.join(__dirname, '../src')));
+
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(uploadsDir));
 
 app.use('/users', userRouter);
 app.use('/wardrobe', wardrobeRouter);

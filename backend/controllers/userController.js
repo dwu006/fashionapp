@@ -54,7 +54,6 @@ const userController = {
 
             // Find user by email
             const user = await User.findOne({ email });
-
             // Check if user exists and password matches
             if (user && (await bcrypt.compare(password, user.password))) {
                 res.json({

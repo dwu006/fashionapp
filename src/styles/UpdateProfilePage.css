@@ -25,6 +25,7 @@
 .profile-box {
   max-width: 500px;
   margin: 80px;
+  margin-top: 80px;
 }
 
 .profile-picture-container {
@@ -82,13 +83,14 @@
   background-color: #f0f0f0;
 }
 
-/* Make sure the input fields look good */
 .input-info {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
-  border: 1px solid #444;
+  border: 1px solid var(--input-border);
   border-radius: 4px;
+  background-color: var(--input-bg);
+  color: var(--input-text);
 }
 
 @media (max-width: 600px) {
