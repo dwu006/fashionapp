@@ -15,6 +15,7 @@ function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = n
   const [showModal, setShowModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [timestamp, setTimestamp] = useState(Date.now());
+  const [isUploading, setIsUploading] = useState(false);
 
   // sizes
   const sizeClass = size === 'small' ? 'profile-small' : 
@@ -40,43 +41,86 @@ function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = n
         };
       })
       .catch((error) => {
-        console.log('using default pfp', error);
+        console.log('Using default profile picture', error);
       });
     }
   }, [timestamp, userId]);
 
   const handleUpload = async () => {
-    if (!selectedFile) return;
+    if (!selectedFile) {
+      console.error('No file selected');
+      return;
+    }
     
     const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No authentication token found');
+      alert('You need to be logged in to upload a profile picture');
+      return;
+    }
+    
+    setIsUploading(true);
     const formData = new FormData();
     formData.append('profilePicture', selectedFile);
     
+    // Debug logging
+    console.log('File details:', {
+      name: selectedFile.name,
+      type: selectedFile.type,
+      size: `${Math.round(selectedFile.size / 1024)} KB`
+    });
+    
     try {
-      await axios2.post(`/users/profile-picture`, formData, {
+      // The server extracts userId from the JWT token, so we don't need to include it in the URL
+      console.log('Uploading profile picture to:', `${axios2.defaults.baseURL}/users/profile-picture`);
+      console.log('Using auth token:', token ? 'Token available' : 'No token');
+      
+      // Try with timeout and more detailed error handling
+      const response = await axios2.post('/users/profile-picture', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          // Don't manually set Content-Type for FormData, let the browser set it with the boundary
           Authorization: `Bearer ${token}`
+        },
+        timeout: 30000, // 30 second timeout
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          console.log(`Upload progress: ${percentCompleted}%`);
         }
       });
       
-      // convert file
+      console.log('Upload response:', response);
+      
+      // convert file to base64 for local display
       const reader = new FileReader();
       reader.readAsDataURL(selectedFile);
       reader.onloadend = function() {
         const base64data = reader.result;
         setProfileImage(base64data);
         localStorage.setItem('profileImageData', base64data);
+        
+        // Refresh the component
+        setTimestamp(Date.now());
+        setShowModal(false);
+        setSelectedFile(null);
+        
+        if (onUploadSuccess) onUploadSuccess();
       };
-      
-      setTimestamp(Date.now());
-      setShowModal(false);
-      setSelectedFile(null);
-      
-      if (onUploadSuccess) onUploadSuccess();
     } catch (error) {
-      console.error('upload error:', error);
-      alert('Failed to upload image');
+      console.error('Upload error:', error);
+      
+      // More detailed error message
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+        alert(`Failed to upload image: ${error.response.data.message || error.response.data.error || error.response.statusText}`);
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+        alert('Failed to upload image: No response from server');
+      } else {
+        console.error('Error setting up request:', error.message);
+        alert(`Failed to upload image: ${error.message}`);
+      }
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -113,9 +157,9 @@ function ProfilePicture({ size = 'medium', editable = false, onUploadSuccess = n
             <button 
               className="upload-btn"
               onClick={handleUpload}
-              disabled={!selectedFile}
+              disabled={!selectedFile || isUploading}
             >
-              Upload
+              {isUploading ? 'Uploading...' : 'Upload'}
             </button>
           </div>
         </div>
