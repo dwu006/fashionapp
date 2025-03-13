@@ -190,6 +190,7 @@ const userController = {
     getProfilePicture: async (req, res) => {
         try {
             const userId = req.params.id || req.user?._id;
+            console.log("getProfilePicture called for user:", userId); // <-- Logging added
 
             const user = await User.findById(userId);
             if (!user) {
@@ -205,9 +206,16 @@ const userController = {
             res.set('Access-Control-Allow-Origin', '*');
 
             const filePath = user.profilePicturePath.replace(/\\/g, "/");
+            //   await user.save();
+
+            console.log("User ID:", userId);
+            console.log("Stored Profile Picture Path:", user.profilePicturePath);
+            console.log("Resolved File Path:", filePath);
+            console.log("Does file exist?", fs.existsSync(filePath) ? "✅ Yes" : "❌ No");
 
 
             const resolvedPath = filePath.includes("backend") ? path.resolve(filePath) : path.resolve('backend/' + filePath);
+            console.log("Serving file from:", resolvedPath); // <-- Logging added
 
             res.sendFile(resolvedPath);
         } catch (err) {
