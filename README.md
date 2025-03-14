@@ -46,7 +46,8 @@ npm install
 ```bash
 MONGODB_URI=your_mongodb_uri
 GEMINI_API_KEY=your_gemini_key
-WEATHER_API_KEY= your_weather_key
+WEATHER_API_KEY=your_weather_key
+JWT_SECRET=any_secret
 ```
 
 ### 4. Start the Frontend
